@@ -1,12 +1,16 @@
 package com.revature.models;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,4 +35,9 @@ public class Post {
 	private List<Post> comments;
 	@ManyToOne
 	private User author;
+	@ManyToMany
+	@JoinTable(name="liked_posts",
+			joinColumns=@JoinColumn(name="post_id"),
+			inverseJoinColumns=@JoinColumn(name="user_id"))
+	private List<User> users;
 }
