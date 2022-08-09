@@ -12,7 +12,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -20,4 +19,14 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+    private String profileimg;
+    
+    //dtos/registerrequest constructor
+	public User(String email, String password, String firstName, String lastName) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 }
