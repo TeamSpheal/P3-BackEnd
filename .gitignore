@@ -4,9 +4,6 @@
 database.properties
 cov.xml
 
-# To ignore the debug logs that Spring generates
-logs
-
 ### Eclipse ###
 .metadata
 bin/

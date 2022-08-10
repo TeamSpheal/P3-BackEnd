@@ -21,6 +21,5 @@ public class SocialMediaApplication {
 "   ##    ######## ##     ## ##     ##    ######  ##        ##     ## ######## ##     ## ######## \n" +
 "-------------------------------------------------------------------------------------------------\n"
 		);
-		System.out.println("Social Media Application is now running! Press CTRL+C to shutdown.");
 	}	
 }
