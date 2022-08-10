@@ -4,7 +4,9 @@ import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -22,4 +24,14 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
+    
+    public Set<User> getFollowers(int id) {
+    	Optional<User> user = userRepository.findById(id); 
+    	if (user.isPresent()) {
+    		return user.get().getFollowers(); 
+    	}
+    	return new HashSet<User>(); 
+    }
+    
+    //Todo: Following
 }

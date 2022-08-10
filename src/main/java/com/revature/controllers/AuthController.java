@@ -46,13 +46,23 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest) {
-        User created = new User(0,
+        User created = new User(4,
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 registerRequest.getFirstName(),
-                registerRequest.getLastName(),
-                new HashSet<>());
+                registerRequest.getLastName());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
     }
+    
+    
+    //TODO:
+    	// The following end point need to be implemented in User Controller
+    	// user\{id}\followers, user\{id}\following
+    //TODO
+    	//POST METHOD: 
+    	 // user\{id}\follower
+    	// 
+    
+    
 }
