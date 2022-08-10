@@ -54,6 +54,5 @@ public class User {
 		this.likes = new LinkedHashSet<Post>();
 		this.followers = new LinkedHashSet<User>();
 		this.following = new LinkedHashSet<User>();
-		
 	}
 }
