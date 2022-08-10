@@ -28,6 +28,11 @@ public class UserControllerTest {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Tests getting a user by id
+     * @throws JsonProcessingException
+     * @throws Exception
+     */
     @Test
     void getUserById() throws JsonProcessingException, Exception {
         User mockUser = new User();
