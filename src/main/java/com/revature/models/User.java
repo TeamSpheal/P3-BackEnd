@@ -1,6 +1,5 @@
 package com.revature.models;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -50,8 +49,5 @@ public class User {
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.likes = new LinkedHashSet<Post>();
-		this.followers = new LinkedHashSet<User>();
-		this.following = new LinkedHashSet<User>();
 	}
 }
