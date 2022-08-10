@@ -17,7 +17,6 @@ import com.revature.dtos.RegisterRequest;
 import com.revature.models.User;
 import com.revature.services.AuthService;
 
-
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -56,6 +55,7 @@ public class AuthController {
                 registerRequest.getFirstName(),
                 registerRequest.getLastName()
                 );
+
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
     }
 }
