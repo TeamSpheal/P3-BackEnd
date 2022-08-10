@@ -39,5 +39,5 @@ public class Post {
 	@JoinTable(name="liked_posts",
 			joinColumns=@JoinColumn(name="post_id"),
 			inverseJoinColumns=@JoinColumn(name="user_id"))
-	private List<User> users;
+	private Set<User> users;
 }
