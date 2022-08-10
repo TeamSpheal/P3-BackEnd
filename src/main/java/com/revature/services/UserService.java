@@ -19,10 +19,6 @@ public class UserService {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
-    public Optional<User> findById(long id) {
-        return userRepository.findById(id);
-    }
-
     public User save(User user) {
         return userRepository.save(user);
     }
