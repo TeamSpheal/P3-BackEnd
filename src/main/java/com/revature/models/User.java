@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     private long id;
     private String email;
     private String password;
@@ -39,10 +40,8 @@ public class User {
 		joinColumns=@JoinColumn(name="follower_id"),
 		inverseJoinColumns=@JoinColumn(name="followed_id"))
 	private Set<User> followers;
-	@ManyToMany
-	@JoinTable(name="follow",
-		joinColumns=@JoinColumn(name="followed_id"),
-		inverseJoinColumns=@JoinColumn(name="follower_id"))
+	
+	@ManyToMany(mappedBy = "followers")
 	private Set<User> following;
 	
 	public User(String email, String password, String firstName, String lastName) {
@@ -55,4 +54,5 @@ public class User {
 		this.followers = new LinkedHashSet<User>();
 		this.following = new LinkedHashSet<User>();
 	}
+
 }

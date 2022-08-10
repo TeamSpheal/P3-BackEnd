@@ -1,6 +1,5 @@
 package com.revature.controllers;
 
-import java.util.LinkedHashSet;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -15,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.dtos.LoginRequest;
 import com.revature.dtos.RegisterRequest;
-import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.AuthService;
+
 
 @RestController
 @RequestMapping("/auth")
