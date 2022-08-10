@@ -56,6 +56,18 @@ public class AuthController {
                 registerRequest.getLastName()
                 );
 
+
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
     }
+    
+    
+    //TODO:
+    	// The following end point need to be implemented in User Controller
+    	// user\{id}\followers, user\{id}\following
+    //TODO
+    	//POST METHOD: 
+    	 // user\{id}\follower
+    	// 
+    
+    
 }
