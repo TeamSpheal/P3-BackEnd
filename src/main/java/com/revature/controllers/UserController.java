@@ -2,12 +2,15 @@ package com.revature.controllers;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 import com.revature.annotations.Authorized;
 import com.revature.models.User;
@@ -37,4 +40,54 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+    
+    
+    @PostMapping("/{followedId}/follower/{followerId}") 
+    	public ResponseEntity<Void> addFollower(@PathVariable("followedId") Long followed_id, 
+    											@PathVariable("followerId") Long follower_id) {
+    		boolean isAdded = userService.addFollower(followed_id, follower_id); 
+    		if (isAdded) {
+    			return ResponseEntity.status(HttpStatus.OK).build();
+    		} else {
+    			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    	
+    	}
+    	
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

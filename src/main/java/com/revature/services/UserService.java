@@ -30,6 +30,7 @@ public class UserService {
         return userRepository.save(user);
     }
     
+    // Returns user's followers
     public Set<User> getFollowers(User user) {
     	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
     	if (userOpt.isPresent()) {
@@ -40,5 +41,23 @@ public class UserService {
     	}
     }
     
-    //Todo: Following
+    // Returns set of individuals the user is following
+    public Set<User> getFollowing(User user) {
+    	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
+    	if (userOpt.isPresent()) {
+    		return userOpt.get().getFollowing(); 
+    	}else {
+    		return new HashSet<User>();
+    	}
+    }
+    
+    public boolean addFollower(long followedId, long follwerId) {
+    	try {
+        	userRepository.addFollower(followedId, follwerId);
+        	return true; 
+    	}catch (Exception e) {
+    		e.getStackTrace(); 
+    		return false; 
+    	}
+    }
 }
