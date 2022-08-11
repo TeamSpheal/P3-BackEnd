@@ -1,6 +1,5 @@
 package com.revature.controllers;
 
-import java.util.LinkedHashSet;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
