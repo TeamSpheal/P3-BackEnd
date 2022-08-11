@@ -29,6 +29,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    /**
+     * Takes in a list of user ids and returns a list of users that
+     * are in the list.
+     * @param userIds
+     * @return
+     */
     public List<User> findAllUsersFromList (List<Long> userIds) {
         return userRepository.findAllById(userIds);
     }
