@@ -24,8 +24,6 @@ import com.revature.models.User;
 @AllArgsConstructor
 public class UserDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String username;
     private String email;

@@ -6,7 +6,6 @@ import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.annotations.Authorized;
 import com.revature.dtos.LikeRequest;
+import com.revature.dtos.PostDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
@@ -45,7 +45,7 @@ public class PostController {
     }
     
     @PutMapping("/like")
-    public ResponseEntity<Post> likePost(@RequestBody LikeRequest like) {
+    public ResponseEntity<PostDTO> likePost(@RequestBody LikeRequest like) {
     	User user = userService.getUser(like.getUserId());
     	Post post = postService.getPost(like.getPostId());
     	if (user == null || post == null) {
@@ -54,11 +54,12 @@ public class PostController {
         Set<User> users = post.getUsers();
         users.add(user);
         post.setUsers(users);
-        return ResponseEntity.ok(post);
+        PostDTO postDto = new PostDTO(post);
+        return ResponseEntity.ok(postDto);
     }
     
     @PutMapping("/unlike")
-    public ResponseEntity<Post> unlikePost(@RequestBody LikeRequest unlike) {
+    public ResponseEntity<PostDTO> unlikePost(@RequestBody LikeRequest unlike) {
     	User user = userService.getUser(unlike.getUserId());
     	Post post = postService.getPost(unlike.getPostId());
     	if (user == null || post == null) {
@@ -67,6 +68,7 @@ public class PostController {
         Set<User> users = post.getUsers();
         users.remove(user);
         post.setUsers(users);
-        return ResponseEntity.ok(post);
+        PostDTO postDto = new PostDTO(post);
+        return ResponseEntity.ok(postDto);
     }
 }
