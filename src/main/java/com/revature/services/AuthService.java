@@ -1,5 +1,7 @@
 package com.revature.services;
 
+import com.revature.exceptions.EmailAlreadyExistsException;
+import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,15 @@ public class AuthService {
     }
 
     public User register(User user) {
-        return userService.save(user);
+        try {
+			return userService.save(user);
+		} catch (EmailAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UsernameAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return null;
     }
 }

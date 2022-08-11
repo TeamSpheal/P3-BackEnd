@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - mvn clean && mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TeamSpheal_P3-BackEnd
+
+  post_build:
+    commands:
+      - mv target/*.jar ./social-media-0.0.1-SNAPSHOT.jar
+
+artifacts:
+    files:
+      - social-media-0.0.1-SNAPSHOT.jar
