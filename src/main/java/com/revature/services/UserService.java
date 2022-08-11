@@ -4,6 +4,8 @@ import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,14 @@ public class UserService {
 
     public Optional<User> findById(long id) {
         return userRepository.findById(id);
+    }
+
+    public List<User> findAllUsers () {
+        return userRepository.findAll();
+    }
+
+    public List<User> findAllUsersFromList (List<Long> userIds) {
+        return userRepository.findAllById(userIds);
     }
 
     public User save(User user) {
