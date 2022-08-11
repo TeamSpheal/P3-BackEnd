@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.dtos.LoginRequest;
 import com.revature.dtos.RegisterRequest;
+import com.revature.exceptions.EmailAlreadyExistsException;
+import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.AuthService;
@@ -51,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         User created = new User(
                 registerRequest.getUsername(),
                 registerRequest.getEmail(),
@@ -59,6 +61,7 @@ public class AuthController {
                 registerRequest.getFirstName(),
                 registerRequest.getLastName()
             );
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
+		return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
     }
+    
 }
