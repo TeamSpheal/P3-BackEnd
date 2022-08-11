@@ -14,6 +14,14 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+    
+    public User getUser(long id) {
+    	Optional<User> userOpt = userRepository.findById(id);
+    	if (userOpt.isPresent()) {
+    		return userOpt.get();
+    	}
+    	return null;
+    }
 
     public Optional<User> findByCredentials(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
