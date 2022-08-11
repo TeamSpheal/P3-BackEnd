@@ -59,4 +59,5 @@ public class AuthController {
                 );
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
     }
+    
 }
