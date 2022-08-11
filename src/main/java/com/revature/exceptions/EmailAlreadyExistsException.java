@@ -1,9 +1,13 @@
 package com.revature.exceptions;
 
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
+
 /**
  * Exception for when email is already in the database.
  * @author Colby Tang
  */
+@ResponseStatus(value = HttpStatus.CONFLICT, reason="The email you entered already exists")
 public class EmailAlreadyExistsException extends Exception {
 
     public EmailAlreadyExistsException () {

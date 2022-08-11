@@ -1,9 +1,14 @@
 package com.revature.exceptions;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  * Exception that throws when the same username already exists in the database!
  * @author Colby Tang
  */
+
+@ResponseStatus(value = HttpStatus.CONFLICT, reason="The username you entered already exists")
 public class UsernameAlreadyExistsException extends Exception {
 
     public UsernameAlreadyExistsException () {
