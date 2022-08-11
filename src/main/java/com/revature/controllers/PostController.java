@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.annotations.Authorized;
+import com.revature.dtos.PostDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
@@ -40,14 +41,17 @@ public class PostController {
     
     @Authorized
     @PutMapping
-    public ResponseEntity<Post> upsertPost(@RequestBody Post post) {
-    	return ResponseEntity.ok(this.postService.upsert(post));
+    public ResponseEntity<PostDTO> upsertPost(@RequestBody PostDTO postDto) {
+        Post post = new Post(postDto);
+        PostDTO dto = new PostDTO(this.postService.upsert(post));
+    	return ResponseEntity.ok(dto);
     }
     
     @PutMapping("/like/{userId}")
-    public ResponseEntity<Post> likePost(@RequestBody Post post, @PathVariable("userId") long userId) {
+    public ResponseEntity<Post> likePost(@RequestBody PostDTO postDto, @PathVariable("userId") long userId) {
     	Optional<User> user = userRepo.findById(userId);
     	if(user.isPresent()) {
+            Post post = new Post(postDto);
         	Set<User> users = post.getUsers();
         	users.add(user.get());
         	post.setUsers(users);

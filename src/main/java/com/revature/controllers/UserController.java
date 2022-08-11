@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.annotations.Authorized;
+import com.revature.dtos.UserDTO;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
@@ -30,11 +31,17 @@ public class UserController {
      */
     @Authorized
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser (@PathVariable long id) {
+    public ResponseEntity<UserDTO> getUser (@PathVariable long id) {
+        // Finding a user by id from the repository returns an optional user.
         Optional<User> oUser = userService.findById(id);
+
+        // If user is not null, then send a 200 with the user object.
         if (oUser.isPresent()) {
-            return ResponseEntity.ok(oUser.get());
+            UserDTO user = new UserDTO(oUser.get());
+            return ResponseEntity.ok(user);
         }
+
+        // Otherwise, send 404
         return ResponseEntity.notFound().build();
     }
 }

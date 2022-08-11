@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.revature.dtos.PostDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,4 +42,15 @@ public class Post {
 			joinColumns=@JoinColumn(name="post_id"),
 			inverseJoinColumns=@JoinColumn(name="user_id"))
 	private Set<User> users;
+
+	public Post(PostDTO dto) {
+		this.id = dto.getId();
+		this.text = dto.getText();
+		this.imageUrl = dto.getImageUrl();
+		this.comments = dto.getComments();
+		this.author = dto.getAuthor();
+		this.users = dto.getUsers();
+	}
+
+	
 }
