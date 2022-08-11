@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +35,12 @@ public class PostController {
     
     @Authorized
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-    	return ResponseEntity.ok(this.postService.getAll());
+    public ResponseEntity<List<PostDTO>> getAllPosts() {
+    	List<PostDTO> listDto = new ArrayList<>();
+    	for(Post post : this.postService.getAll()) {
+    		listDto.add(new PostDTO(post));
+    	}
+    	return ResponseEntity.ok(listDto);
     }
     
     @Authorized
@@ -54,7 +59,7 @@ public class PostController {
         Set<User> users = post.getUsers();
         users.add(user);
         post.setUsers(users);
-        PostDTO postDto = new PostDTO(post);
+        PostDTO postDto = new PostDTO(postService.upsert(post));
         return ResponseEntity.ok(postDto);
     }
     
@@ -68,7 +73,7 @@ public class PostController {
         Set<User> users = post.getUsers();
         users.remove(user);
         post.setUsers(users);
-        PostDTO postDto = new PostDTO(post);
+        PostDTO postDto = new PostDTO(postService.upsert(post));
         return ResponseEntity.ok(postDto);
     }
 }
