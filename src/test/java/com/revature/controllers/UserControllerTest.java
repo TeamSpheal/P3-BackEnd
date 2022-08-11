@@ -3,6 +3,7 @@ package com.revature.controllers;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.dtos.UserDTO;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
@@ -35,9 +37,19 @@ public class UserControllerTest {
     @Test
     void getUserById() throws JsonProcessingException, Exception {
         User mockUser = new User();
+        mockUser.setId(1l);
+        mockUser.setUsername("username");
+        mockUser.setEmail("email");
+        mockUser.setFirstName("firstName");
+        mockUser.setLastName("lastName");
+        mockUser.setPassword("password");
+        mockUser.setProfileImg("profileImg");
+        mockUser.setFollowers(new HashSet<User>());
+        mockUser.setFollowing(new HashSet<User>());
+        UserDTO mockUserDTO = new UserDTO (mockUser);
         Mockito.when(userService.findById(1l)).thenReturn(Optional.of(mockUser));
         mockMvc.perform(get("/user/1"))
         .andExpect(status().isOk())
-        .andExpect(content().json(objectMapper.writeValueAsString(mockUser)));
+        .andExpect(content().json(objectMapper.writeValueAsString(mockUserDTO)));
     }
 }
