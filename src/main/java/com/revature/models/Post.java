@@ -42,15 +42,4 @@ public class Post {
 			joinColumns=@JoinColumn(name="post_id"),
 			inverseJoinColumns=@JoinColumn(name="user_id"))
 	private Set<User> users;
-
-	public Post(PostDTO dto) {
-		this.id = dto.getId();
-		this.text = dto.getText();
-		this.imageUrl = dto.getImageUrl();
-		this.comments = dto.getComments();
-		this.author = dto.getAuthor();
-		this.users = dto.getUsers();
-	}
-
-	
 }

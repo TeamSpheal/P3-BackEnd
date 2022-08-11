@@ -20,8 +20,6 @@ import com.revature.models.User;
 @AllArgsConstructor
 public class UserMiniDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String username;
     private String profileImg;
