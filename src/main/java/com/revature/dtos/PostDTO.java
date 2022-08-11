@@ -22,6 +22,10 @@ public class PostDTO {
 	private User author;
 	private Set<User> users;
 	
+	/**
+	 * Convert Post into a DTO
+	 * @param post
+	 */
 	public PostDTO(Post post) {
 		setId(post.getId());
 		setText(post.getText());
