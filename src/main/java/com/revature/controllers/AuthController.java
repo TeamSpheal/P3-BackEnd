@@ -1,6 +1,5 @@
 package com.revature.controllers;
 
-import java.util.LinkedHashSet;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -13,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dtos.UserDTO;
 import com.revature.dtos.LoginRequest;
 import com.revature.dtos.RegisterRequest;
 import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
-import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.AuthService;
 
@@ -33,16 +32,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
         Optional<User> optional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
 
         if(!optional.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-
+        
         session.setAttribute("user", optional.get());
-
-        return ResponseEntity.ok(optional.get());
+        UserDTO user = new UserDTO(optional.get());
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/logout")
