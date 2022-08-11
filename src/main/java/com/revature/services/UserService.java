@@ -1,5 +1,7 @@
 package com.revature.services;
 
+import com.revature.exceptions.EmailAlreadyExistsException;
+import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,13 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User save(User user) {
+    public User save(User user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+    	if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    		throw new EmailAlreadyExistsException();
+    	}
+    	if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+    		throw new UsernameAlreadyExistsException();
+    	}
         return userRepository.save(user);
     }
 }
