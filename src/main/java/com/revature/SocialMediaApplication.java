@@ -21,5 +21,6 @@ public class SocialMediaApplication {
 "   ##    ######## ##     ## ##     ##    ######  ##        ##     ## ######## ##     ## ######## \n" +
 "-------------------------------------------------------------------------------------------------\n"
 		);
+		System.out.println("Social Media Application is now running! Press the Red Stop Button in Eclipse to shutdown or CTRL+C in other IDEs.");
 	}	
 }
