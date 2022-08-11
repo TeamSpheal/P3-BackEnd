@@ -25,15 +25,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String username;
     private String email;
     private String password;
     private String firstName;
     private String lastName;
-	@ManyToMany
-	@JoinTable(name="liked_posts",
-			joinColumns=@JoinColumn(name="user_id"),
-			inverseJoinColumns=@JoinColumn(name="post_id"))
-	private Set<Post> likes;
+    private String profileImg;
 	@ManyToMany
 	@JoinTable(name="follow",
 		joinColumns=@JoinColumn(name="follower_id"),
@@ -45,15 +42,14 @@ public class User {
 		inverseJoinColumns=@JoinColumn(name="follower_id"))
 	private Set<User> following;
 	
-	public User(String email, String password, String firstName, String lastName) {
+	public User(String username, String email, String password, String firstName, String lastName) {
 		this.id = 0;
+        this.username = username;
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.likes = new LinkedHashSet<Post>();
-		this.followers = new LinkedHashSet<User>();
-		this.following = new LinkedHashSet<User>();
-		
+		this.followers = new LinkedHashSet<>();
+		this.following = new LinkedHashSet<>();
 	}
 }
