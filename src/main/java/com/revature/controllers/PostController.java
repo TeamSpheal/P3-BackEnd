@@ -1,7 +1,6 @@
 package com.revature.controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
@@ -14,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.annotations.Authorized;
+import com.revature.dtos.LikeRequest;
 import com.revature.models.Post;
 import com.revature.models.User;
-import com.revature.repositories.PostRepository;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
 
@@ -45,10 +44,10 @@ public class PostController {
     	return ResponseEntity.ok(this.postService.upsert(post));
     }
     
-    @PutMapping("/like/{postId}/{userId}")
-    public ResponseEntity<Post> likePost(@PathVariable long postId, @PathVariable("userId") long userId) {
-    	User user = userService.getUser(userId);
-    	Post post = postService.getPost(postId);
+    @PutMapping("/like")
+    public ResponseEntity<Post> likePost(@RequestBody LikeRequest like) {
+    	User user = userService.getUser(like.getUserId());
+    	Post post = postService.getPost(like.getPostId());
     	if (user == null || post == null) {
     		return ResponseEntity.badRequest().build();
     	}
@@ -58,10 +57,10 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
     
-    @PutMapping("/unlike/{postId}/{userId}")
-    public ResponseEntity<Post> unlikePost(@PathVariable("postId") long postId, @PathVariable("userId") long userId) {
-    	User user = userService.getUser(userId);
-    	Post post = postService.getPost(postId);
+    @PutMapping("/unlike")
+    public ResponseEntity<Post> unlikePost(@RequestBody LikeRequest unlike) {
+    	User user = userService.getUser(unlike.getUserId());
+    	Post post = postService.getPost(unlike.getPostId());
     	if (user == null || post == null) {
     		return ResponseEntity.badRequest().build();
     	}
