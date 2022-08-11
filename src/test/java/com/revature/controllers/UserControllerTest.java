@@ -74,6 +74,11 @@ public class UserControllerTest {
         .andExpect(status().isNotFound());
     }
 
+    /**
+     * Retrieving a list of UserMiniDTO by passing in a list of user ids
+     * @throws JsonProcessingException
+     * @throws Exception
+     */
     @Test
     void getUsersMiniList() throws JsonProcessingException, Exception {
         User mockUser = new User();
@@ -97,18 +102,15 @@ public class UserControllerTest {
         .andExpect(content().json(objectMapper.writeValueAsString(usersMiniList)));
     }
 
+    /**
+     * Passing in an empty list of user ids should return an empty list of UserMiniDTO
+     * @throws JsonProcessingException
+     * @throws Exception
+     */
     @Test
     void getUsersMiniListEmpty() throws JsonProcessingException, Exception {
-        User mockUser = new User();
-        mockUser.setId(1l);
-        mockUser.setUsername("username");
-        mockUser.setProfileImg("profileImg");
-
-        UserMiniDTO mockUserDTO = new UserMiniDTO (mockUser);
         List<Long> userIds = new ArrayList<>();
-        userIds.add(1l);
         List<User> usersList = new ArrayList<>();
-        usersList.add(mockUser);
         List<UserMiniDTO> usersMiniList = new ArrayList<>();
 
         Mockito.when(userService.findAllUsersFromList(userIds)).thenReturn(usersList);

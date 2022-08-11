@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dtos.UserDTO;
 import com.revature.dtos.LoginRequest;
 import com.revature.dtos.RegisterRequest;
 import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
-import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.AuthService;
 
