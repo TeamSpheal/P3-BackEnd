@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
+import com.revature.exceptions.EmailAlreadyExistsException;
+import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
@@ -67,5 +71,13 @@ public class UserController {
 
         // Send a 200 with the users.
         return ResponseEntity.ok(usersDTOList);
+    }
+    
+    @Authorized
+    @PostMapping("/")
+    public ResponseEntity<UserDTO> updateUser (@RequestBody User updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    	User result = userService.save(updatedUser);
+    	UserDTO bodyDTO = new UserDTO(result);
+    	return ResponseEntity.ok(bodyDTO);
     }
 }
