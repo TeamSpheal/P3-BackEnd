@@ -4,6 +4,9 @@
 database.properties
 cov.xml
 
+# To ignore the debug logs that Spring generates
+logs
+
 ### Eclipse ###
 .metadata
 bin/
@@ -16,6 +19,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+images/
 
 ### VS CODE ###
 .vscode
@@ -150,6 +154,7 @@ HELP.md
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+target/
 
 ### STS ###
 .apt_generated
