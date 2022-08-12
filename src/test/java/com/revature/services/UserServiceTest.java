@@ -30,7 +30,7 @@ public class UserServiceTest {
 		User mockUser = new User();
 		Mockito.when(userRepo.findById((long) 1)).thenReturn(Optional.of(mockUser));
 		assertNotNull(userServ.getUser((long) 1));
-		Mockito.verify(userServ, Mockito.times(1)).getUser((long) 1);
+		Mockito.verify(userRepo, Mockito.times(1)).findById((long) 1);
 	}
 	
 	@Test
@@ -40,7 +40,7 @@ public class UserServiceTest {
 		String password = "password";
 		Mockito.when(userRepo.findByEmailAndPassword(email, password)).thenReturn(Optional.of(mockUser));
 		assertNotNull(userServ.findByCredentials(email, password));
-		Mockito.verify(userServ, Mockito.times(1)).findByCredentials(email, password);
+		Mockito.verify(userRepo, Mockito.times(1)).findByEmailAndPassword(email, password);
 	}
 	
 	@Test
@@ -51,6 +51,7 @@ public class UserServiceTest {
 		Mockito.when(userRepo.findByUsername(username)).thenReturn(Optional.of(mockUser));
 		Mockito.when(userRepo.findByEmail(email)).thenReturn(Optional.of(mockUser));
 		assertNotNull(userServ.save(mockUser));
-		Mockito.verify(userServ, Mockito.times(1)).save(mockUser);
+		Mockito.verify(userRepo, Mockito.times(1)).findByUsername(username);
+		Mockito.verify(userRepo, Mockito.times(1)).findByEmail(email);
 	}
 }
