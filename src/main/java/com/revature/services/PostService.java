@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,14 @@ public class PostService {
 	
 	public PostService(PostRepository postRepository) {
 		this.postRepository = postRepository;
+	}
+	
+	public Post getPost(long id) {
+		Optional<Post> postOpt = postRepository.findById(id);
+		if (postOpt.isPresent()) {
+			return postOpt.get();
+		}
+		return null;
 	}
 
 	public List<Post> getAll() {
