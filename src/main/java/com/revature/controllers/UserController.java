@@ -42,6 +42,7 @@ public class UserController {
     }
     
     
+    // Add follower to the logged in user 
     @PostMapping("/{followedId}/follower/{followerId}") 
     	public ResponseEntity<Void> addFollower(@PathVariable("followedId") Long followed_id, 
     											@PathVariable("followerId") Long follower_id) {
@@ -54,6 +55,11 @@ public class UserController {
     	}
     	
     }
+    
+    // unfollow 
+    
+    
+    
     
     
     
