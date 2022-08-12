@@ -1,9 +1,11 @@
 package com.revature.models;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.revature.dtos.PostDTO;
+import com.revature.dtos.UserMiniDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,9 +51,10 @@ public class Post {
 		this.text = dto.getText();
 		this.imageUrl = dto.getImageUrl();
 		this.comments = dto.getComments();
-		this.author = dto.getAuthor();
-		this.users = dto.getUsers();
+		this.author = new User(dto.getAuthor());
+		this.users = new HashSet<>();
+		for (UserMiniDTO miniUser : dto.getUsers()) {
+			this.users.add(new User(miniUser));
+		}
 	}
-
-	
 }

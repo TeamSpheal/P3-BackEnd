@@ -12,6 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.revature.dtos.UserMiniDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,5 +54,11 @@ public class User {
 		this.lastName = lastName;
 		this.followers = new LinkedHashSet<>();
 		this.following = new LinkedHashSet<>();
+	}
+
+	public User(UserMiniDTO author) {
+		this.id = author.getId();
+		this.username = author.getUsername();
+		this.profileImg = author.getProfileImg();
 	}
 }

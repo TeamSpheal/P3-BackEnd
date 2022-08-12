@@ -1,35 +1,30 @@
-# This profile is the default
+# This profile is for connecting to AWS RDS
 server:
   port: 8080
 spring:
-  profiles:
-    active: test
+  config:
+    activate:
+      on-profile: test
   jpa:
     hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
-        #ddl-auto: create-drop
         ddl-auto: update
-    #database-platform: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     defer-datasource-initialization: true
+    open-in-view: true # Turn off OSIV warning
+    properties:
+      hiberate.format_sql: true
+    show-sql: true
   datasource:
-    ##H2
-    ##url: jdbc:h2:mem:memdb
-    ##driver-class-name: org.h2.Driver
-    ##username: sa
-    ##password: password
-    url: ${DB_URL}
     driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PWD}
-  h2:
-    console.enabled: true
-    ddl-auto: create-drop
-    defer-datasource-initialization: true
-    open-in-view: true # Turn off OSIV warning
   devtools.restart.enabled: false # Disable Spring auto restart
+  h2:
+    console.enabled: false
   output:
     ansi.enabled: always # turn on colors in Spring console
 logging:
