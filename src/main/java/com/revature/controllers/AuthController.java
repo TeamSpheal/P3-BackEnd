@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+    public ResponseEntity<UserDTO> register(@RequestBody RegisterRequest registerRequest) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         User created = new User(
                 registerRequest.getUsername(),
                 registerRequest.getEmail(),
@@ -61,7 +61,9 @@ public class AuthController {
                 registerRequest.getLastName(),
                 registerRequest.getProfileImg()
             );
-		return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
+        User user = authService.register(created);
+        UserDTO dto = new UserDTO(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
     
 }
