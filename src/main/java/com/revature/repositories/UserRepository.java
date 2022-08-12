@@ -1,5 +1,7 @@
 package com.revature.repositories;
 
+
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,15 +20,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param password (String)
 	 * @return a user object
 	 */
-	Optional<User> findByEmailAndPassword(String email, String password);
+    Optional<User> findByEmailAndPassword(String email, String password);
 
-	/**
+	
 	 * Returns a user object based on a given email
 	 * 
 	 * @param email (String)
 	 * @return a user object
 	 */
-	Optional<User> findByEmail(String email);
+	  Optional<User> findByEmail(String email);
 
 	/**
 	 * Returns a user object based on a given username
@@ -34,7 +36,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param username (String)
 	 * @return a user object
 	 */
-	Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
-	Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
+
+	  Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
 }
