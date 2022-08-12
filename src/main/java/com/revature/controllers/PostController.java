@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.LikeRequest;
 import com.revature.dtos.PostDTO;
+import com.revature.dtos.UserMiniDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
@@ -45,8 +46,9 @@ public class PostController {
     
     @Authorized
     @PutMapping
-    public ResponseEntity<Post> upsertPost(@RequestBody Post post) {
-    	return ResponseEntity.ok(this.postService.upsert(post));
+    public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
+        Post newPost = new Post(post);
+    	return ResponseEntity.ok(this.postService.upsert(newPost));
     }
     
     @PutMapping("/like")
