@@ -1,12 +1,9 @@
 package com.revature.services;
 
-import com.revature.exceptions.EmailAlreadyExistsException;
-import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
