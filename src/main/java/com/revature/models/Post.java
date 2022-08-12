@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.revature.dtos.PostDTO;
+import com.revature.dtos.UserMiniDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,12 +37,12 @@ public class Post {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Post> comments;
 	@ManyToOne
-	private User author;
+	private UserMiniDTO author;
 	@ManyToMany
 	@JoinTable(name="liked_posts",
 			joinColumns=@JoinColumn(name="post_id"),
 			inverseJoinColumns=@JoinColumn(name="user_id"))
-	private Set<User> users;
+	private Set<UserMiniDTO> users;
 
 	public Post(PostDTO dto) {
 		this.id = dto.getId();
@@ -51,6 +52,4 @@ public class Post {
 		this.author = dto.getAuthor();
 		this.users = dto.getUsers();
 	}
-
-	
 }

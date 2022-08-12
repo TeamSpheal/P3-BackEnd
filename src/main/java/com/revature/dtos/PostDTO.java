@@ -1,5 +1,6 @@
 package com.revature.dtos;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +20,8 @@ public class PostDTO {
 	private String text;
 	private String imageUrl;
 	private List<Post> comments;
-	private User author;
-	private Set<User> users;
+	private UserMiniDTO author;
+	private Set<UserMiniDTO> users;
 	
 	/**
 	 * Convert Post into a DTO
@@ -32,6 +33,6 @@ public class PostDTO {
 		setImageUrl(post.getImageUrl());
 		setComments(post.getComments());
 		setAuthor(post.getAuthor());
-		setUsers(post.getUsers());
+	    setUsers(post.getUsers());
 	}
 }
