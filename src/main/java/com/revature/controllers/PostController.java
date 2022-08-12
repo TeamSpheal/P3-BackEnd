@@ -54,13 +54,12 @@ public class PostController {
     @PutMapping("/like")
     public ResponseEntity<PostDTO> likePost(@RequestBody LikeRequest like) {
     	User user = userService.getUser(like.getUserId());
-        UserMiniDTO userMiniDto = new UserMiniDTO(user);
     	Post post = postService.getPost(like.getPostId());
     	if (user == null || post == null) {
     		return ResponseEntity.badRequest().build();
     	}
-        Set<UserMiniDTO> users = post.getUsers();
-        users.add(userMiniDto);
+        Set<User> users = post.getUsers();
+        users.add(user);
         post.setUsers(users);
         PostDTO postDto = new PostDTO(postService.upsert(post));
         return ResponseEntity.ok(postDto);
@@ -73,7 +72,7 @@ public class PostController {
     	if (user == null || post == null) {
     		return ResponseEntity.badRequest().build();
     	}
-        Set<UserMiniDTO> users = post.getUsers();
+        Set<User> users = post.getUsers();
         users.remove(user);
         post.setUsers(users);
         PostDTO postDto = new PostDTO(postService.upsert(post));

@@ -1,9 +1,11 @@
 package com.revature.models;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,19 +39,22 @@ public class Post {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Post> comments;
 	@ManyToOne
-	private UserMiniDTO author;
+	private User author;
 	@ManyToMany
 	@JoinTable(name="liked_posts",
 			joinColumns=@JoinColumn(name="post_id"),
 			inverseJoinColumns=@JoinColumn(name="user_id"))
-	private Set<UserMiniDTO> users;
+	private Set<User> users;
 
 	public Post(PostDTO dto) {
 		this.id = dto.getId();
 		this.text = dto.getText();
 		this.imageUrl = dto.getImageUrl();
 		this.comments = dto.getComments();
-		this.author = dto.getAuthor();
-		this.users = dto.getUsers();
+		this.author = new User(dto.getAuthor());
+		this.users = new HashSet<>();
+		for (UserMiniDTO miniUser : dto.getUsers()) {
+			this.users.add(new User(miniUser));
+		}
 	}
 }
