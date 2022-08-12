@@ -22,11 +22,15 @@ import com.revature.dtos.PostDTO;
 import com.revature.models.Post;
 import com.revature.repositories.UserRepository;
 import com.revature.services.PostService;
+import com.revature.services.UserService;
 
 @WebMvcTest(controllers = PostController.class)
 public class PostControllerTest {
     @MockBean
     private PostService postServ;
+
+    @MockBean
+    private UserService userServ;
     
     @MockBean
     private UserRepository userRepo;
