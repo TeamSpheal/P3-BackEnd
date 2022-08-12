@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dtos.UserDTO;
 import com.revature.dtos.LoginRequest;
 import com.revature.dtos.RegisterRequest;
-import com.revature.dtos.UserDTO;
+import com.revature.exceptions.EmailAlreadyExistsException;
+import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.services.AuthService;
 
@@ -33,7 +35,7 @@ public class AuthController {
     public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
         Optional<User> optional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
 
-        if(!optional.isPresent()) {
+        if(optional.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         
@@ -50,15 +52,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<UserDTO> register(@RequestBody RegisterRequest registerRequest) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         User created = new User(
                 registerRequest.getUsername(),
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 registerRequest.getFirstName(),
-                registerRequest.getLastName()
+                registerRequest.getLastName(),
+                registerRequest.getProfileImg()
             );
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
+        User user = authService.register(created);
+        UserDTO dto = new UserDTO(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
     
 }

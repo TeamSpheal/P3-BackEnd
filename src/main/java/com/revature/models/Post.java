@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,10 +17,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.revature.dtos.PostDTO;
+import com.revature.dtos.UserMiniDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @Entity
@@ -29,8 +32,8 @@ import lombok.NoArgsConstructor;
 public class Post {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 	private String text;
 	private String imageUrl;
 	@OneToMany(cascade = CascadeType.ALL)
@@ -38,8 +41,18 @@ public class Post {
 	@ManyToOne
 	private User author;
 	@ManyToMany
-	@JoinTable(name="liked_posts",
-			joinColumns=@JoinColumn(name="post_id"),
-			inverseJoinColumns=@JoinColumn(name="user_id"))
+	@JoinTable(name = "liked_posts", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> users;
+
+	public Post(PostDTO dto) {
+		this.id = dto.getId();
+		this.text = dto.getText();
+		this.imageUrl = dto.getImageUrl();
+		this.comments = dto.getComments();
+		this.author = new User(dto.getAuthor());
+		this.users = new HashSet<>();
+		for (UserMiniDTO miniUser : dto.getUsers()) {
+			this.users.add(new User(miniUser));
+		}
+	}
 }
