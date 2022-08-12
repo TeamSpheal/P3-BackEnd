@@ -2,15 +2,12 @@ package com.revature.services;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.revature.exceptions.EmailAlreadyExistsException;
@@ -18,11 +15,12 @@ import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class UserServiceTest {
 	@MockBean
 	private UserRepository userRepo;
-	@MockBean
+	
+	@Autowired
 	private UserService userServ;
 	
 	@Test
@@ -46,12 +44,13 @@ public class UserServiceTest {
 	@Test
 	void testUserSave() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		User mockUser = new User();
-		String username = "testuser";
-		String email = "testuser@gmail.com";
-		Mockito.when(userRepo.findByUsername(username)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findByEmail(email)).thenReturn(Optional.of(mockUser));
-		assertNotNull(userServ.save(mockUser));
-		Mockito.verify(userRepo, Mockito.times(1)).findByUsername(username);
-		Mockito.verify(userRepo, Mockito.times(1)).findByEmail(email);
+		User mockUserWithId = new User();
+		mockUser.setId(1);
+		
+		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUserWithId);
+		
+		User returnedUser = userServ.save(mockUser);
+		
+		assertNotNull(returnedUser);
 	}
 }

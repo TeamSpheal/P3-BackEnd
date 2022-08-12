@@ -26,7 +26,7 @@ spring:
   h2:
     console.enabled: false
   output:
-    ansi.enabled: always # turn on colors in Spring console
+    ansi.enabled: never # turn on colors in Spring console
 logging:
   file.name: logs/application-debug.log
   level:
