@@ -1,8 +1,8 @@
 package com.revature.models;
 
-<<<<<<< HEAD
-import lombok.*;
-=======
+
+
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ import com.revature.dtos.UserMiniDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
->>>>>>> 3a7000e7357c7afd4693fdb48ded2892c8ac6de9
+
 
 @Data
 @Entity
