@@ -31,7 +31,7 @@ import com.revature.services.UserService;
 public class PostControllerTest {
     @MockBean
     private PostService postServ;
-    
+
     @MockBean
     private UserService userServ;
     
