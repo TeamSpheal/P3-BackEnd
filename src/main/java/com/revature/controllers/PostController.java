@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.LikeRequest;
 import com.revature.dtos.PostDTO;
+import com.revature.dtos.UserMiniDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
@@ -45,19 +46,21 @@ public class PostController {
     
     @Authorized
     @PutMapping
-    public ResponseEntity<Post> upsertPost(@RequestBody Post post) {
-    	return ResponseEntity.ok(this.postService.upsert(post));
+    public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
+        Post newPost = new Post(post);
+    	return ResponseEntity.ok(this.postService.upsert(newPost));
     }
     
     @PutMapping("/like")
     public ResponseEntity<PostDTO> likePost(@RequestBody LikeRequest like) {
     	User user = userService.getUser(like.getUserId());
+        UserMiniDTO userMiniDto = new UserMiniDTO(user);
     	Post post = postService.getPost(like.getPostId());
     	if (user == null || post == null) {
     		return ResponseEntity.badRequest().build();
     	}
-        Set<User> users = post.getUsers();
-        users.add(user);
+        Set<UserMiniDTO> users = post.getUsers();
+        users.add(userMiniDto);
         post.setUsers(users);
         PostDTO postDto = new PostDTO(postService.upsert(post));
         return ResponseEntity.ok(postDto);
@@ -70,7 +73,7 @@ public class PostController {
     	if (user == null || post == null) {
     		return ResponseEntity.badRequest().build();
     	}
-        Set<User> users = post.getUsers();
+        Set<UserMiniDTO> users = post.getUsers();
         users.remove(user);
         post.setUsers(users);
         PostDTO postDto = new PostDTO(postService.upsert(post));

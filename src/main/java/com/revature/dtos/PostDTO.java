@@ -32,12 +32,7 @@ public class PostDTO {
 		setText(post.getText());
 		setImageUrl(post.getImageUrl());
 		setComments(post.getComments());
-		UserMiniDTO authorDto = new UserMiniDTO(post.getAuthor());
-		setAuthor(authorDto);
-	    Set<UserMiniDTO> dtoLikes = new LinkedHashSet<>();
-	    for(User like : post.getUsers() ) {
-	    	dtoLikes.add(new UserMiniDTO(like));
-	    }
-	    setUsers(dtoLikes);
+		setAuthor(post.getAuthor());
+	    setUsers(post.getUsers());
 	}
 }
