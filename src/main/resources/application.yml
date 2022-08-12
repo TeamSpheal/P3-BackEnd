@@ -1,15 +1,18 @@
+# This profile is the default
 server:
   port: 8080
 spring:
+  profiles:
+    active: dev
   jpa:
     hibernate:
       ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
-  datasource:
-    url: jdbc:h2:mem:memdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
-  h2:
-    console.enabled: true
+    open-in-view: true # Turn off OSIV warning
+  devtools.restart.enabled: false # Disable Spring auto restart
+  output:
+    ansi.enabled: never # turn on colors in Spring console
+logging:
+  file.name: logs/application-debug.log
+  level:
+    web: debug
