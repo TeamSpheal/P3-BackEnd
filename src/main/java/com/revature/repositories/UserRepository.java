@@ -35,4 +35,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return a user object
 	 */
 	Optional<User> findByUsername(String username);
+
+	Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
 }
