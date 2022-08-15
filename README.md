@@ -1,4 +1,4 @@
-# Project 3 - Social Media Web Application (Backend)
+# Project 3 - RevaSphere Web Application (Backend)
 This social media web application is set up with Java 11 and Spring Boot. The database is being hosted on Amazon Web RDS but it can be hosted locally with Spring's local in-memory H2 database.
 
 ## Dependencies
