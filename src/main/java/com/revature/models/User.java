@@ -1,5 +1,8 @@
 package com.revature.models;
 
+
+
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -18,35 +21,32 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String username;
-    private String email;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String profileImg;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	private String username;
+	private String email;
+	private String password;
+	private String firstName;
+	private String lastName;
+	private String profileImg;
 	@ManyToMany
-	@JoinTable(name="follow",
-		joinColumns=@JoinColumn(name="follower_id"),
-		inverseJoinColumns=@JoinColumn(name="followed_id"))
+	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
 	private Set<User> followers;
 	@ManyToMany
-	@JoinTable(name="follow",
-		joinColumns=@JoinColumn(name="followed_id"),
-		inverseJoinColumns=@JoinColumn(name="follower_id"))
+	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "followed_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
 	private Set<User> following;
-	
+
 	public User(String username, String email, String password, String firstName, String lastName, String profileImg) {
 		this.id = 0;
-        this.username = username;
+		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.profileImg = profileImg;
