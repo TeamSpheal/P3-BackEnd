@@ -61,4 +61,9 @@ public class UserService {
     		return false; 
     	}
     }
+
+	public boolean removeFollower(Long followed_id, Long follower_id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
