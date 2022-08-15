@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.annotations.Authorized;
@@ -22,9 +25,9 @@ import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", allowedHeaders = "*")
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UserController {
     private final UserService userService;
 
@@ -73,11 +76,17 @@ public class UserController {
         return ResponseEntity.ok(usersDTOList);
     }
     
-    @Authorized
-    @PostMapping("/")
-    public ResponseEntity<UserDTO> updateUser (@RequestBody User updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    @PostMapping("/update/profile")
+    public ResponseEntity<UserMiniDTO> updateUser (@RequestBody UserDTO updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    	User result = userService.update(updatedUser);
+    	UserMiniDTO bodyDTO = new UserMiniDTO(result);
+    	return ResponseEntity.ok(bodyDTO);
+    }
+    
+    @PostMapping("/update/password")
+    public ResponseEntity<UserMiniDTO> updatePW (@RequestBody User updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
     	User result = userService.save(updatedUser);
-    	UserDTO bodyDTO = new UserDTO(result);
+    	UserMiniDTO bodyDTO = new UserMiniDTO(result);
     	return ResponseEntity.ok(bodyDTO);
     }
 }
