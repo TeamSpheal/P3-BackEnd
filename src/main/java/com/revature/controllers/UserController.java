@@ -46,17 +46,26 @@ public class UserController {
     @PostMapping("/{followedId}/follower/{followerId}") 
     	public ResponseEntity<Void> addFollower(@PathVariable("followedId") Long followed_id, 
     											@PathVariable("followerId") Long follower_id) {
-    		boolean isAdded = userService.addFollower(followed_id, follower_id); 
-    		if (isAdded) {
-    			return ResponseEntity.status(HttpStatus.OK).build();
-    		} else {
-    			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-    	
-    	}
+    		//TODO: check if id's are the same
+    		if ( followed_id instanceof Long && follower_id instanceof Long) {
+    			if (true) {
+    				boolean isAdded = userService.addFollower(followed_id, follower_id); 
+    	    		if (isAdded) {
+    	    			return ResponseEntity.status(HttpStatus.OK).build();
+    	    		} else {
+    	    			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    	    		}
+    			} else {
+    				return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); 
+    			}
+    		}else {
+    			return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+    		}
+    		
     	
     }
     
-    // unfollow 
+    // TODO: unfollow 
     
     
     
