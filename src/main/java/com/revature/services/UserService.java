@@ -88,8 +88,17 @@ public class UserService {
     	}
     }
 
-	public boolean removeFollower(Long followed_id, Long follower_id) {
+	public boolean removeFollower(Long followedId, Long followerId) {
 		// TODO Auto-generated method stub
-		return false;
+		try {
+			userRepository.removeFollower(followedId, followerId);
+			return true;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false; 
+		}
 	}
+	
+	
+	
 }
