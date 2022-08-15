@@ -1,0 +1,30 @@
+# This profile is the for connecting to your local H2 Database
+server:
+  port: 8080
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    open-in-view: true # Turn off OSIV warning
+    properties:
+      hiberate.format_sql: true
+    show-sql: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:memdb
+    username: sa
+    password: password
+  devtools.restart.enabled: false # Disable Spring auto restart
+  h2:
+    console.enabled: true
+  output:
+    ansi.enabled: never # turn on colors in Spring console
+logging:
+  file.name: logs/application-debug.log
+  level:
+    web: debug
