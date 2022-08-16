@@ -46,8 +46,11 @@ public class UserServiceTest {
 		User mockUser = new User();
 		User mockUserWithId = new User();
 		mockUser.setId(1);
+		
 		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUserWithId);
+		
 		User returnedUser = userServ.save(mockUser);
+		
 		assertNotNull(returnedUser);
 	}
 }
