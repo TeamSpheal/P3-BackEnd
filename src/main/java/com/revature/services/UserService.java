@@ -49,4 +49,22 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
+
+    /**
+     * Checks if email is already in the database.
+     * @param email
+     * @return
+     */
+    public boolean doesEmailAlreadyExist (String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    /**
+     * Checks if username is already in the database.
+     * @param username
+     * @return
+     */
+    public boolean doesUsernameAlreadyExist (String username) {
+        return userRepository.existsByUsername(username);
+    }
 }
