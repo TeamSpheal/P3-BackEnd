@@ -105,16 +105,36 @@ public class UserController {
         return ResponseEntity.ok(usersDTOList);
     }
     
+    /**
+     * Update a user's information based on a given user object
+     * @param updatedUser
+     * @return a UserMiniDTO object
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
     @PostMapping("/update/profile")
     public ResponseEntity<UserMiniDTO> updateUser (@RequestBody UserDTO updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    	//Pass object to service layer
     	User result = userService.update(updatedUser);
+    	
+    	//Assuming an exception is not thrown, remove unnecessary data and return it with a status of 200
     	UserMiniDTO bodyDTO = new UserMiniDTO(result);
     	return ResponseEntity.ok(bodyDTO);
     }
     
+    /**
+     * Update a user's password based on a given user object
+     * @param updatedUser
+     * @return a UserMiniDTO object
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
     @PostMapping("/update/password")
     public ResponseEntity<UserMiniDTO> updatePW (@RequestBody User updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    	//Pass object to service layer
     	User result = userService.save(updatedUser);
+
+    	//Assuming an exception is not thrown, remove unnecessary data and return it with a status of 200
     	UserMiniDTO bodyDTO = new UserMiniDTO(result);
     	return ResponseEntity.ok(bodyDTO);
     }

@@ -15,13 +15,22 @@ import com.revature.repositories.UserRepository;
 
 @Service
 public class UserService {
-
+	/*Class Variables*/
     private final UserRepository userRepository;
 
+    /**
+     * A constructor to be used to inject dependencies
+     * @param userRepository
+     */
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
     
+    /**
+     * Returns a user object with a given id
+     * @param id
+     * @return
+     */
     public User getUser(long id) {
     	Optional<User> userOpt = userRepository.findById(id);
     	if (userOpt.isPresent()) {
@@ -30,14 +39,29 @@ public class UserService {
     	return null;
     }
 
+    /**
+     * Returns a user object with a given email and password
+     * @param email
+     * @param password
+     * @return
+     */
     public Optional<User> findByCredentials(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
+    /**
+     * This is unnecessary, Going to talk to the group about removing it
+     * @param id
+     * @return
+     */
     public Optional<User> findById(long id) {
         return userRepository.findById(id);
     }
 
+    /**
+     * Returns a list of all users in the database
+     * @return
+     */
     public List<User> findAllUsers () {
         return userRepository.findAll();
     }
@@ -52,33 +76,46 @@ public class UserService {
         return userRepository.findAllById(userIds);
     }
 
+    /**
+     * Validate the information within a given user object and saves the object ot the database
+     * @param user
+     * @return
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
     public User save(User user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    	/*Local Variables*/
     	Optional<User> testOpt;
     	User test = new User();
     	
-    	if (!userRepository.findByEmail(user.getEmail()).equals(Optional.empty())) {
+    	/*Validate Data*/
+    	//Test if the email exists and if it does test if it is linked to the current user object
+    	if (!userRepository.findByEmail(user.getEmail()).equals(Optional.empty())) {//Email already exists
     		testOpt = userRepository.findById(user.getId());
-    		if (testOpt.isPresent()) {
+    		if (testOpt.isPresent()) {//Record with the given id exists
         		test = testOpt.get();
-    			if (!user.getEmail().toString().equals(test.getEmail().toString())) {
+    			if (!user.getEmail().toString().equals(test.getEmail().toString())) {//Given email does not match the of current object in database
     	    		throw new EmailAlreadyExistsException();
     			}
-    		} else {
+    		} else {//Record with given id does not exists
 	    		throw new EmailAlreadyExistsException();    			
     		}
     	}
-    	
-    	if (!userRepository.findByUsername(user.getUsername()).equals(Optional.empty())) {
+
+    	//Test if the username exists and if it does test if it is linked to the current user object
+    	if (!userRepository.findByUsername(user.getUsername()).equals(Optional.empty())) {//Username already exists
     		testOpt = userRepository.findById(user.getId());
-    		if (testOpt.isPresent()) {
+    		if (testOpt.isPresent()) {//Record with the given id exists
         		test = testOpt.get();
-    			if (!user.getUsername().toString().equals(test.getUsername().toString())) {
+    			if (!user.getUsername().toString().equals(test.getUsername().toString())) {//Given email does not match the of current object in database
     	    		throw new UsernameAlreadyExistsException();
     			}
-    		} else {
+    		} else {//Record with given id does not exists
 	    		throw new UsernameAlreadyExistsException();			
     		}
     	}
+    	
+    	/*Pass to repository and return the result*/
         return userRepository.save(user);
     }
     
@@ -131,39 +168,53 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
     
+    /**
+     * Validate the information within a given user object and saves the object ot the database
+     * @param user
+     * @return
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
     public User update(UserDTO user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+    /*Local Variables*/
     	Optional<User> testOpt;
     	User test = new User();
     	
-    	if (!userRepository.findByEmail(user.getEmail()).equals(Optional.empty())) {
+    	/*Validate Data*/
+    	//Test if the email exists and if it does test if it is linked to the current user object
+    	if (!userRepository.findByEmail(user.getEmail()).equals(Optional.empty())) {//Email already exists
     		testOpt = userRepository.findById(user.getId());
-    		if (testOpt.isPresent()) {
+    		if (testOpt.isPresent()) {//Record with the given id exists
         		test = testOpt.get();
-    			if (!user.getEmail().toString().equals(test.getEmail().toString())) {
+    			if (!user.getEmail().toString().equals(test.getEmail().toString())) {//Given email does not match the of current object in database
     	    		throw new EmailAlreadyExistsException();
     			}
-    		} else {
+    		} else {//Record with given id does not exists
 	    		throw new EmailAlreadyExistsException();    			
     		}
     	}
-    	
-    	if (!userRepository.findByUsername(user.getUsername()).equals(Optional.empty())) {
+
+    	//Test if the username exists and if it does test if it is linked to the current user object
+    	if (!userRepository.findByUsername(user.getUsername()).equals(Optional.empty())) {//Username already exists
     		testOpt = userRepository.findById(user.getId());
-    		if (testOpt.isPresent()) {
+    		if (testOpt.isPresent()) {//Record with the given id exists
         		test = testOpt.get();
-    			if (!user.getUsername().toString().equals(test.getUsername().toString())) {
+    			if (!user.getUsername().toString().equals(test.getUsername().toString())) {//Given email does not match the of current object in database
     	    		throw new UsernameAlreadyExistsException();
     			}
-    		} else {
+    		} else {//Record with given id does not exists
 	    		throw new UsernameAlreadyExistsException();			
     		}
     	}
     	
+    	/*Construct User Object*/
     	test.setEmail(user.getEmail());
     	test.setUsername(user.getUsername());
     	test.setFirstName(user.getFirstName());
     	test.setLastName(user.getLastName());
-    	test.setProfileImg(user.getProfileImg());
-      return userRepository.save(test);
+    	test.setProfileImg(user.getProfileImg());    	
+
+    	/*Pass to repository and return the result*/
+        return userRepository.save(test);
     }
 }
