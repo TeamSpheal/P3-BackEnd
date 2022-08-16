@@ -1,6 +1,7 @@
 package com.revature.repositories;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -51,6 +52,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return a user object
 	 */
 	Optional<User> findByUsername(String username);
+
 
 	/**
 	 * Returns a ArrayList of UserDTO objects

@@ -7,5 +7,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public interface SearchService {
+
     Optional<ArrayList<User>> queryUserTable(String name);
+
 }

@@ -17,6 +17,7 @@ public class SearchServiceImpl implements SearchService {
     SearchServiceImpl(UserRepository userRepo, PostRepository postRepo) {
         this.userRepo = userRepo;
         this.postRepo = postRepo;
+        
     }
 
     /**
@@ -30,4 +31,5 @@ public class SearchServiceImpl implements SearchService {
     public Optional<ArrayList<User>> queryUserTable(String name) {
         return userRepo.findAllByFirstNameContaining(name);
     }
+
 }

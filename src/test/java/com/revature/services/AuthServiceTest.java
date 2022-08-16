@@ -20,8 +20,15 @@ public class AuthServiceTest {
 	@MockBean
 	private UserService userServ;
 	
-	@Autowired
-	private AuthService authServ;
+
+	@Test
+	void testGetUser() {
+		User mockUser = new User();
+		Mockito.when(userRepo.findById((long) 1)).thenReturn(Optional.of(mockUser));
+		assertNotNull(userServ.getUser((long) 1));
+		
+	}
+
 	
 	@Test
 	void testFindByCredentials() {
