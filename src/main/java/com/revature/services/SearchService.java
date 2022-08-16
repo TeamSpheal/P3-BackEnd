@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SearchService {
-    Optional<ArrayList<User>> queryUserTable(String name);
+    Optional<List<User>> queryUserTable(String name);
 
-    List<Post> queryPostTable(String post);
+    
 }

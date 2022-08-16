@@ -18,18 +18,17 @@ public class SearchServiceImpl implements SearchService {
     SearchServiceImpl(UserRepository userRepo, PostRepository postRepo) {
         this.userRepo = userRepo;
         this.postRepo = postRepo;
+        
     }
 
     @Override
-    public Optional<ArrayList<User>> queryUserTable(String name) {
-        Optional<ArrayList<User>> users = userRepo.findAllByFirstNameContaining(name);
+    public Optional<List<User>> queryUserTable(String name) {
+        Optional<List<User>> users = userRepo.findAllByFirstNameContaining(name);
+        
 
 
         return users;
     }
 
-    @Override
-    public List<Post> queryPostTable(String post) {
-        return null;
-    }
+    
 }

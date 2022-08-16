@@ -37,6 +37,7 @@ class PostServiceTest {
 		
 		Assertions.assertEquals(mockPost, postServ.getPost(id));
 		
+		
 	}
 	
 	@Test
