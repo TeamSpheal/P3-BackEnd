@@ -14,9 +14,7 @@ import java.util.Optional;
 public class SearchController {
     private final SearchServiceImpl searchServ;
 
-    SearchController(SearchServiceImpl searchServ) {
-        this.searchServ = searchServ;
-    }
+    SearchController(SearchServiceImpl searchServ) { this.searchServ = searchServ;}
 
     @GetMapping("/{name}")
     protected ResponseEntity<Optional<ArrayList<User>>> getByName(@PathVariable String name) {

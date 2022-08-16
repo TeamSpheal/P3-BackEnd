@@ -1,6 +1,5 @@
 package com.revature.repositories;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,26 +25,25 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param password (String)
 	 * @return a user object
 	 */
-    Optional<User> findByEmailAndPassword(String email, String password);
+	Optional<User> findByEmailAndPassword(String email, String password);
 
-    
-    // Since we don't have follow entity, we can't create repository for it. 
-    // The alternative way is to use @Query annotation to specify the raw SQL. 
-    // In this method, we are inserting values passed to the addFollower method to the 
-    // follow entity. 
-    @Transactional
+	// Since we don't have follow entity, we can't create repository for it.
+	// The alternative way is to use @Query annotation to specify the raw SQL.
+	// In this method, we are inserting values passed to the addFollower method to
+	// the
+	// follow entity.
+	@Transactional
 	@Modifying
 	@Query(value = "insert into follow(followed_id,follower_id) values (?1,?2)", nativeQuery = true)
-	void addFollower( long id, long follower);
-    
-  
+	void addFollower(long id, long follower);
+
 	/**
 	 * Returns a user object based on a given email
 	 * 
 	 * @param email (String)
 	 * @return a user object
 	 */
-	  Optional<User> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
 	/**
 	 * Returns a user object based on a given username
@@ -53,24 +51,32 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param username (String)
 	 * @return a user object
 	 */
-    Optional<User> findByUsername(String username);
+	Optional<User> findByUsername(String username);
 
 
-
-	Optional<List<User>> findAllByFirstNameContaining(String name);
-
+	/**
+	 * Returns a ArrayList of UserDTO objects
+	 * based on the input string.
+	 *
+	 * @param name (String)
+	 * @return ArrayList of UserDTO objects.
+	 */
+	Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
 
 	/**
 	 * Checks if the email already exists in the database.
+	 * 
 	 * @param email
 	 * @return
 	 */
-	public boolean existsByEmail (String email);
+	public boolean existsByEmail(String email);
 
 	/**
-	 * Checks if the username already exists in the database. 
+	 * Checks if the username already exists in the database.
+	 * 
 	 * @param username
 	 * @return
 	 */
-	public boolean existsByUsername (String username);
+	public boolean existsByUsername(String username);
+
 }
