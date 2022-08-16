@@ -78,8 +78,26 @@ public class UserService {
     	}
         return userRepository.save(user);
     }
+
+    /**
+     * Checks if email is already in the database.
+     * @param email
+     * @return
+     */
+    public boolean doesEmailAlreadyExist (String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    /**
+     * Checks if username is already in the database.
+     * @param username
+     * @return
+     */
+    public boolean doesUsernameAlreadyExist (String username) {
+        return userRepository.existsByUsername(username);
+    }
     
-    public User update(UserDTO user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    public User update(UserDTO user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
     	Optional<User> testOpt;
     	User test = new User();
     	
@@ -112,6 +130,6 @@ public class UserService {
     	test.setFirstName(user.getFirstName());
     	test.setLastName(user.getLastName());
     	test.setProfileImg(user.getProfileImg());
-        return userRepository.save(test);
+      return userRepository.save(test);
     }
 }
