@@ -1,8 +1,5 @@
 package com.revature.models;
 
-
-
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -28,6 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -40,8 +38,9 @@ public class User {
 	@ManyToMany
 	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
 	private Set<User> followers;
-	@ManyToMany
-	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "followed_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
+
+	
+	@ManyToMany(mappedBy = "followers")
 	private Set<User> following;
 
 	public User(String username, String email, String password, String firstName, String lastName, String profileImg) {
@@ -52,6 +51,7 @@ public class User {
 		this.profileImg = profileImg;
 		this.firstName = firstName;
 		this.lastName = lastName;
+
 		this.followers = new LinkedHashSet<>();
 		this.following = new LinkedHashSet<>();
 	}
