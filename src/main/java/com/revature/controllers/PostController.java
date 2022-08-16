@@ -44,9 +44,10 @@ public class PostController {
     	return ResponseEntity.ok(listDto);
     }
     
-    @Authorized
+    // @Authorized
     @PutMapping
     public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
+        post.setAuthor(new UserMiniDTO(1l, "username", "profileURL"));
         Post newPost = new Post(post);
     	return ResponseEntity.ok(this.postService.upsert(newPost));
     }
