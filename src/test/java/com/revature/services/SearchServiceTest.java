@@ -42,8 +42,7 @@ public class SearchServiceTest {
 	@Test
 	public void showAllUser() {
 		
-		User mockUser = new User();
-		String mockUsername = "jamesf";
+		
 		ArrayList<User> mockListUser = new ArrayList<>();
 		
 		

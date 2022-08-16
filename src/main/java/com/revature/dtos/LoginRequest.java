@@ -1,17 +1,14 @@
 package com.revature.dtos;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class LoginRequest {
-    @Getter
-    @Setter
+
     private String email;
-    @Getter
-    @Setter
     private String password;
 }

@@ -18,11 +18,9 @@ import com.revature.repositories.UserRepository;
 @SpringBootTest
 public class AuthServiceTest {
 	@MockBean
-	private UserRepository userRepo;
-	
-	@Autowired
 	private UserService userServ;
 	
+
 	@Test
 	void testGetUser() {
 		User mockUser = new User();
@@ -30,14 +28,15 @@ public class AuthServiceTest {
 		assertNotNull(userServ.getUser((long) 1));
 		
 	}
+
 	
 	@Test
 	void testFindByCredentials() {
 		User mockUser = new User();
 		String email = "testuser@gmail.com";
 		String password = "password";
-		Mockito.when(userRepo.findByEmailAndPassword(email, password)).thenReturn(Optional.of(mockUser));
-		assertNotNull(userServ.findByCredentials(email, password));
+		Mockito.when(userServ.findByCredentials(email, password)).thenReturn(Optional.of(mockUser));
+		assertNotNull(authServ.findByCredentials(email, password));
 	}
 	
 	@Test
@@ -45,11 +44,8 @@ public class AuthServiceTest {
 		User mockUser = new User();
 		User mockUserWithId = new User();
 		mockUser.setId(1);
-		
-		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUserWithId);
-		
-		User returnedUser = userServ.save(mockUser);
-		
+		Mockito.when(userServ.save(mockUser)).thenReturn(mockUserWithId);
+		User returnedUser = authServ.register(mockUser);
 		assertNotNull(returnedUser);
 	}
 }
