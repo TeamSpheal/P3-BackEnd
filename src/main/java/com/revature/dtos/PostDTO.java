@@ -19,7 +19,7 @@ public class PostDTO {
 	private long id;
 	private String text;
 	private String imageUrl;
-	private List<Post> comments;
+	private Set<PostDTO> comments;
 	private UserMiniDTO author;
 	private Set<UserMiniDTO> users;
 	
@@ -31,7 +31,10 @@ public class PostDTO {
 		setId(post.getId());
 		setText(post.getText());
 		setImageUrl(post.getImageUrl());
-		setComments(post.getComments());
+		setComments(new HashSet<>());
+		for (Post comment : post.getComments()) {
+			this.comments.add(new PostDTO(comment));
+		}
 		setAuthor(new UserMiniDTO(post.getAuthor()));
 		setUsers(new HashSet<>());
 		for (User user : post.getUsers()) {
