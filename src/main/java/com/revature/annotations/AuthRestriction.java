@@ -1,5 +1,6 @@
 package com.revature.annotations;
 
 public enum AuthRestriction {
-    LoggedIn
+    LOGGED_IN,
+    MANAGER
 }

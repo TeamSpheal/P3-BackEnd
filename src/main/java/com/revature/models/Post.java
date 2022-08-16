@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +49,12 @@ public class Post {
 		this.id = dto.getId();
 		this.text = dto.getText();
 		this.imageUrl = dto.getImageUrl();
-		this.comments = dto.getComments();
+
+		comments = new ArrayList<>();
+		for (PostDTO comment : dto.getComments()) {
+			this.comments.add(new Post(comment));
+		}
+
 		this.author = new User(dto.getAuthor());
 		this.users = new HashSet<>();
 		for (UserMiniDTO miniUser : dto.getUsers()) {
