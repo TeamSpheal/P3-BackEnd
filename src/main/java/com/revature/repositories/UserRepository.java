@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import com.revature.models.User;
 
 @Repository
@@ -38,6 +37,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
     Optional<User> findByUsername(String username);
 
-
-	  Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
+	/**
+	 * Returns a ArrayList of UserDTO objects
+	 * based on the input string.
+	 *
+	 * @param name (String)
+	 * @return ArrayList of UserDTO objects.
+	 */
+	Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
 }
