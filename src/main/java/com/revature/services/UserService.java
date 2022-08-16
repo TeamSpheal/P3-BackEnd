@@ -149,7 +149,8 @@ public class UserService {
     		e.getStackTrace(); 
     		return false; 
     	}
-
+	}
+	
     /**
      * Checks if email is already in the database.
      * @param email
