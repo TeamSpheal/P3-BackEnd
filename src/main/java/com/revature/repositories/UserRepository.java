@@ -1,12 +1,16 @@
 package com.revature.repositories;
 
-
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.revature.dtos.UserDTO;
 import java.util.ArrayList;
 import com.revature.models.User;
 
@@ -20,7 +24,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param password (String)
 	 * @return a user object
 	 */
-    Optional<User> findByEmailAndPassword(String email, String password);
+	Optional<User> findByEmailAndPassword(String email, String password);
+
+	// Since we don't have follow entity, we can't create repository for it.
+	// The alternative way is to use @Query annotation to specify the raw SQL.
+	// In this method, we are inserting values passed to the addFollower method to
+	// the
+	// follow entity.
+	@Transactional
+	@Modifying
+	@Query(value = "insert into follow(followed_id,follower_id) values (?1,?2)", nativeQuery = true)
+	void addFollower(long id, long follower);
 
 	/**
 	 * Returns a user object based on a given email
@@ -28,7 +42,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param email (String)
 	 * @return a user object
 	 */
-	  Optional<User> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
 	/**
 	 * Returns a user object based on a given username
@@ -36,8 +50,31 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param username (String)
 	 * @return a user object
 	 */
-    Optional<User> findByUsername(String username);
+	Optional<User> findByUsername(String username);
 
+	/**
+	 * Returns a ArrayList of UserDTO objects
+	 * based on the input string.
+	 *
+	 * @param name (String)
+	 * @return ArrayList of UserDTO objects.
+	 */
+	Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
 
-	  Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
+	/**
+	 * Checks if the email already exists in the database.
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public boolean existsByEmail(String email);
+
+	/**
+	 * Checks if the username already exists in the database.
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public boolean existsByUsername(String username);
+
 }

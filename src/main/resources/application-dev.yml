@@ -28,3 +28,4 @@ logging:
   file.name: logs/application-debug.log
   level:
     web: debug
+jwt.secret: ${JWT_SECRET}
