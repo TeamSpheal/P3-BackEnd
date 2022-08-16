@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpHeaders;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
@@ -56,6 +59,32 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    
+
+    // Add follower to the logged in user 
+    @PostMapping("/{followedId}/follower/{followerId}") 
+    	public ResponseEntity<Void> addFollower(@PathVariable("followedId") Long followed_id, 
+    											@PathVariable("followerId") Long follower_id) {
+    		//TODO: check if id's are the same
+    		if ( followed_id instanceof Long && follower_id instanceof Long) {
+    			if (true) {
+    				boolean isAdded = userService.addFollower(followed_id, follower_id); 
+    	    		if (isAdded) {
+    	    			return ResponseEntity.status(HttpStatus.OK).build();
+    	    		} else {
+    	    			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    	    		}
+    			} else {
+    				return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); 
+    			}
+    		}else {
+    			return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+    		}
+    		
+    	
+    }
+    
+    
     /**
      * Gets a list of users from the list of user ids. Returns an empty list if none of the
      * users can be found.
