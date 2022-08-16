@@ -1,16 +1,10 @@
 package com.revature.models;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.revature.dtos.UserMiniDTO;
 
@@ -35,13 +29,13 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String profileImg;
-	@ManyToMany
-	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
-	private Set<User> followers;
-
-	
-	@ManyToMany(mappedBy = "followers")
-	private Set<User> following;
+	//@ManyToMany
+	//@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
+	@Transient
+	private Set<User> followers = new HashSet<>();
+	//@ManyToMany(mappedBy = "followers")
+	@Transient
+	private Set<User> following = new HashSet<>();
 
 	public User(String username, String email, String password, String firstName, String lastName, String profileImg) {
 		this.id = 0;

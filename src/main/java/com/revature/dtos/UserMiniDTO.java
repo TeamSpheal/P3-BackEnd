@@ -16,6 +16,7 @@ import com.revature.models.User;
  * @author Colby Tang
  */
 @Data
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserMiniDTO {
