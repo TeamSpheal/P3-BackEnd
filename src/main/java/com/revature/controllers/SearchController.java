@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/search")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class SearchController {
     private final SearchServiceImpl searchServ;
 
