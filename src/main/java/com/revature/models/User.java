@@ -35,11 +35,11 @@ public class User {
 	@ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
 	private Set<User> followers;
 
-    @JoinTable(name = "followers",
+    @JoinTable(name = "follow",
             joinColumns = {
-				@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)},
+				@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false)},
             inverseJoinColumns = {
-				@JoinColumn(name = "follower_id", referencedColumnName = "id", nullable = false)})
+				@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)})
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<User> following;
 

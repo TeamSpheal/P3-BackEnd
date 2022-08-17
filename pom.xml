@@ -17,6 +17,17 @@
 		<sonar.organization>teamspheal</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-bom</artifactId>
+			<version>1.11.1000</version>
+			<type>pom</type>
+			<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -82,6 +93,12 @@
 			<artifactId>annotations</artifactId>
 			<version>13.0</version>
 			<scope>compile</scope>
+		</dependency>
+
+		<!-- AWS S3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
 		</dependency>
 	</dependencies>
 
