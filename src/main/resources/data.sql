@@ -8,6 +8,16 @@ INSERT INTO users (id, email, password, first_name, last_name, profile_img, user
     'TestUserName'
 );
 
+INSERT INTO users (id, email, password, first_name, last_name, profile_img, username) VALUES (
+    2,
+    'ctang@gmail.com',
+    'password',
+    'Colby',
+    'Tang',
+    'https://th.bing.com/th/id/OIP.61ajO7xnq1UZK2GVzHymEQAAAA?w=145&h=150&c=7&r=0&o=5&pid=1.7',
+    'ctang'
+);
+
 INSERT INTO posts (id, text, image_url, author_id) VALUES (
     10000,
     'The classic',
