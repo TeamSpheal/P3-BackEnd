@@ -2,6 +2,16 @@
 server:
   port: 8080
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${REV_EMAIL}
+    password: ${REV_PASS}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
   config:
     activate:
       on-profile: dev
