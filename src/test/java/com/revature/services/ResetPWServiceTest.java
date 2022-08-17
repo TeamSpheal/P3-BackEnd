@@ -2,6 +2,7 @@ package com.revature.services;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,8 +24,11 @@ public class ResetPWServiceTest {
 		/*Local Variables*/
 		String result = null;
 		
+		/*Mocks*/
+		//Mockito.when(emailService.sendEmailWithToken("")).thenReturn(true);
+		
 		/*Function*/
-		result = resetPWServ.generateResetToken();
+		result = resetPWServ.generateResetToken("");
 		System.out.println(result);
 		
 		/*Test*/

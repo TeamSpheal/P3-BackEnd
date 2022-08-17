@@ -120,5 +120,39 @@ public class UserControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().json(objectMapper.writeValueAsString(usersMiniList)));
     }
-
+    
+    /**
+     * Passing an email that does not exist, should return a 400 status
+     * As of the writing of this test, the email does not exist
+     * @throws Exception  
+     */
+    @Test
+    void getResetPWTokenBadRequest() throws Exception {
+    	/*Local Variables*/
+    	String email = "nonexistent@void.net";
+    	
+    	/*Test*/
+    	mockMvc.perform(post("/resetPW")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(email))
+    			.andExpect(status().isBadRequest());
+    }
+    
+    /**
+     * Passing an email that exists, should return a 200 status and a "ResetToken" header
+     * As of the writing of this test, the email does not exist
+     * @throws Exception  
+     */
+    @Test
+    void getResetPWTokenOk() throws Exception {
+    	/*Local Variables*/
+    	String email = "nonexistent@void.net";
+    	
+    	/*Test*/
+    	mockMvc.perform(post("/resetPW")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(email))
+    			.andExpect(status().isOk())
+    			.andExpect(header().exists("ResetToken"));
+    }
 }

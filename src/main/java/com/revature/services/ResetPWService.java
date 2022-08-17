@@ -23,7 +23,7 @@ public class ResetPWService {
 	 * Provides a random string to act as a reset token
 	 * @return
 	 */
-	public String generateResetToken() {
+	public String generateResetToken(String email) {
 		/*Local Variables*/
 		int leftLimit = 48; // '0'
 	    int rightLimit = 122; // 'z'
@@ -47,6 +47,9 @@ public class ResetPWService {
 	      .limit(targetStringLength)
 	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 	      .toString();
+	    
+	    /*Sending Email*/
+	    //emailService.sendEmailWithToken(email, generatedString);
 
 	    /*Returning String*/
 		return generatedString;
