@@ -30,6 +30,7 @@ import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.RecordNotFoundException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
+import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", allowedHeaders = "*")
@@ -37,9 +38,11 @@ import com.revature.services.UserService;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final ResetPWService resetPWService;
 
-    public UserController (UserService userService) {
+    public UserController (UserService userService, ResetPWService resetPWService) {
         this.userService = userService;
+		this.resetPWService = resetPWService;
     }
 
     /**
@@ -101,18 +104,55 @@ public class UserController {
         return ResponseEntity.ok(usersDTOList);
     }
     
+    /**
+     * Update a user's information based on a given user object
+     * @param updatedUser
+     * @return a UserMiniDTO object
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
+    @Authorized
     @PostMapping("/update/profile")
     public ResponseEntity<UserMiniDTO> updateUser (@RequestBody UserDTO updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    	//Pass object to service layer
     	User result = userService.update(updatedUser);
+    	
+    	//Assuming an exception is not thrown, remove unnecessary data and return it with a status of 200
     	UserMiniDTO bodyDTO = new UserMiniDTO(result);
     	return ResponseEntity.ok(bodyDTO);
     }
     
+    /**
+     * Update a user's password based on a given user object
+     * @param updatedUser
+     * @return a UserMiniDTO object
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
     @PostMapping("/update/password")
     public ResponseEntity<UserMiniDTO> updatePW (@RequestBody User updatedUser) throws EmailAlreadyExistsException, UsernameAlreadyExistsException{
+    	//Pass object to service layer
     	User result = userService.save(updatedUser);
+
+    	//Assuming an exception is not thrown, remove unnecessary data and return it with a status of 200
     	UserMiniDTO bodyDTO = new UserMiniDTO(result);
     	return ResponseEntity.ok(bodyDTO);
+    }
+    
+    /**
+     * Provide the user with a token to reset their password if the email provided exists
+     * @param email
+     * @return
+     */
+    @PostMapping("resetPW")
+    public ResponseEntity<String> getResetPWToken(@RequestBody String email){
+    	String resetToken = null;
+    	if (userService.doesEmailAlreadyExist(email)) {
+    		resetToken = resetPWService.generateResetToken(email);
+            return ResponseEntity.status(200).header("ResetToken", resetToken).build();
+    	} else {
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The email provided does not have an account");
+    	}
     }
 
     @PostMapping("/image-upload")
