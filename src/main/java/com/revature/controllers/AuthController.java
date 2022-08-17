@@ -26,7 +26,6 @@ import com.revature.services.TokenService;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class AuthController {
 
     private final AuthService authService;
@@ -38,7 +37,7 @@ public class AuthController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping("/login")
+    @PostMapping(path="/login", produces="application/json")
     public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest, HttpSession session) throws FailedAuthenticationException {
         Optional<User> optional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
 
