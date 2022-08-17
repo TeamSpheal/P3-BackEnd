@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
 import com.revature.models.User;
+import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
 /**
@@ -30,6 +31,9 @@ import com.revature.services.UserService;
 public class UserControllerTest {
     @MockBean
     private UserService userService;
+    
+    @MockBean
+    private ResetPWService resetPWService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -132,7 +136,8 @@ public class UserControllerTest {
     	String email = "nonexistent@void.net";
     	
     	/*Test*/
-    	mockMvc.perform(post("/resetPW")
+    	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(false);
+    	mockMvc.perform(post("/user/resetPW")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(email))
     			.andExpect(status().isBadRequest());
@@ -140,16 +145,17 @@ public class UserControllerTest {
     
     /**
      * Passing an email that exists, should return a 200 status and a "ResetToken" header
-     * As of the writing of this test, the email does not exist
+     * As of the writing of this test, the email does exist
      * @throws Exception  
      */
     @Test
     void getResetPWTokenOk() throws Exception {
     	/*Local Variables*/
-    	String email = "nonexistent@void.net";
+    	String email = "testuser@gmail.com";
     	
     	/*Test*/
-    	mockMvc.perform(post("/resetPW")
+    	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(true);
+    	mockMvc.perform(post("/user/resetPW")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(email))
     			.andExpect(status().isOk())

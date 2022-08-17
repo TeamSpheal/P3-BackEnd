@@ -1,6 +1,5 @@
 package com.revature.services;
 
-import java.nio.charset.Charset;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
