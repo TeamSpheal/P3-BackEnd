@@ -1,5 +1,6 @@
 package com.revature;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -11,6 +12,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EntityScan("com.revature.models")
 public class SocialMediaApplication {
 
+	@Value("${teamspeal.frontend.url}")
+	private String frontendURL;
+	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(SocialMediaApplication.class, args);
 		System.out.println(
@@ -27,13 +32,16 @@ public class SocialMediaApplication {
 		System.out.println("Social Media Application is now running! Press the Red Stop Button in Eclipse to shutdown or CTRL+C in other IDEs.");
 	}
 
+	
+	
 	@Bean
 	public WebMvcConfigurer corsConfig() {
+		
 		return new WebMvcConfigurer() {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-					.allowedOrigins()
+					.allowedOrigins(frontendURL)
 					.allowedHeaders("*")
 					.exposedHeaders("Auth")
 					.allowCredentials(true);

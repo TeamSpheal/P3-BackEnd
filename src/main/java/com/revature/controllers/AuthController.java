@@ -26,7 +26,6 @@ import com.revature.services.TokenService;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", exposedHeaders = "Auth", allowedHeaders = "*")
 public class AuthController {
 
     private final AuthService authService;
