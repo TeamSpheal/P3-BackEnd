@@ -36,7 +36,7 @@ public class User {
 	private String lastName;
 	private String profileImg;
 	@ManyToMany
-	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
+	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "target_id"))
 	private Set<User> followers;
 
 	

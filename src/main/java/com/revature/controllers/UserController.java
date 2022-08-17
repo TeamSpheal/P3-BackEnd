@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -76,7 +77,7 @@ public class UserController {
     }
     
     // TODO: unfollow 
-    @PutMapping("/{followedId}/unfollower/{followerId}") 
+    @DeleteMapping("/{followedId}/unfollower/{followerId}") 
     public ResponseEntity<Void> removeFollower(@PathVariable("followedId") Long followed_id, 
 			@PathVariable("followerId") Long follower_id) {
     	

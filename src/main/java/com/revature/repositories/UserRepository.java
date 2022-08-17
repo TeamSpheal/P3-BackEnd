@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -39,8 +40,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     @Transactional
   	@Modifying
-  	@Query(value = "delete from follow where followed_id = ?1 AND follwer_id = ?2", nativeQuery = true)
-  	void removeFollower( long id, long follower);
+  	@Query(value = "delete  from follow where followed_id = ?1 AND follower_id = ?2", nativeQuery = true)
+  	void removeFollower( long followed, long follower);
+    
+   
   
 	/**
 	 * Returns a user object based on a given email
