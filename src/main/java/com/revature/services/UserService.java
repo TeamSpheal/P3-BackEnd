@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.revature.dtos.UserDTO;
 import com.revature.exceptions.EmailAlreadyExistsException;
+import com.revature.exceptions.RecordNotFoundException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
@@ -119,32 +120,37 @@ public class UserService {
         return userRepository.save(user);
     }
     
-    // Returns user's followers
-    public Set<User> getFollowers(User user) {
-    	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
-    	if (userOpt.isPresent()) {
-    		return userOpt.get().getFollowers(); 
-    	}
-    	else {
-    		return new HashSet<User>(); 
-    	}
-    }
-    
+   
     // Returns set of individuals the user is following
     public Set<User> getFollowing(User user) {
-    	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
+    	Optional<User> userOpt = userRepository.findById(user.getId());
     	if (userOpt.isPresent()) {
     		return userOpt.get().getFollowing(); 
-    	}else {
-    		return new HashSet<User>();
     	}
+		return new HashSet<>();
     }
     
     // 
-    public boolean addFollower(long followedId, long follwerId) {
+    public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
+		Optional<User> oUser = userRepository.findById(userId);
+		Optional<User> oTargetUser = userRepository.findById(targetId);
+		if (!oUser.isPresent()) {
+			throw new RecordNotFoundException("Current user not found!");
+		}
+		if (!oTargetUser.isPresent()) {
+			throw new RecordNotFoundException("Target user not found!");
+		}
     	try {
-        	userRepository.addFollower(followedId, follwerId);
-        	return true; 
+			User user = oUser.get();
+			User targetUser = oTargetUser.get();
+
+			// Update user follower/following lists
+			user.followUser(targetUser);
+
+			// Save both users
+        	userRepository.save(user);
+        	userRepository.save(targetUser);
+        	return true;
     	}catch (Exception e) {
     		e.getStackTrace(); 
     		return false; 
