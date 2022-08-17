@@ -29,4 +29,3 @@ logging:
   level:
     web: debug
 jwt.secret: ${JWT_SECRET}
-aws.bucket.name: ${AWS_BUCKET_NAME}
