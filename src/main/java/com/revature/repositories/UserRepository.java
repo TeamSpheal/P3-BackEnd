@@ -1,17 +1,16 @@
 package com.revature.repositories;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.revature.dtos.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.revature.dtos.UserDTO;
-import java.util.ArrayList;
 import com.revature.models.User;
 
 @Repository
@@ -53,13 +52,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByUsername(String username);
 
 	/**
-	 * Returns a ArrayList of UserDTO objects
-	 * based on the input string.
+	 * Returns a List of UserDTO objects
+	 * based on the input string. (FirstName
 	 *
-	 * @param name (String)
-	 * @return ArrayList of UserDTO objects.
+	 * @param firstName (String), lastName (String)
+	 * @return List of UserDTO objects.
 	 */
-	Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
+	Optional<List<UserDTO>> findAllByFirstNameStartingWithIgnoreCaseOrLastNameStartingWithOrderByFirstName(String firstName, String lastName);
 
 	/**
 	 * Checks if the email already exists in the database.

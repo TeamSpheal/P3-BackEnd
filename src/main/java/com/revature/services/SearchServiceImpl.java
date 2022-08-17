@@ -6,7 +6,7 @@ import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,7 +27,14 @@ public class SearchServiceImpl implements SearchService {
      * @return
      */
     @Override
-    public Optional<ArrayList<User>> queryUserTable(String name) {
-        return userRepo.findAllByFirstNameContaining(name);
+    public Optional<List<UserDTO>> queryUserTable(String name) {
+        if (name.contains("_")) {
+            String firstName = name.substring(0, name.indexOf("_"));
+            String lastName = name.substring(name.indexOf("_") + 1, name.length() - 1);
+            return userRepo.findAllByFirstNameStartingWithIgnoreCaseOrLastNameStartingWithOrderByFirstName(
+                    firstName, lastName);
+        } else {
+            return userRepo.findAllByFirstNameStartingWithIgnoreCaseOrLastNameStartingWithOrderByFirstName(name, name);
+        }
     }
 }

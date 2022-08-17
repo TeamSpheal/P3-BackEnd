@@ -29,12 +29,12 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String profileImg;
-	//@ManyToMany
-	//@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
-	@Transient
+	@ManyToMany
+	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
+	//@Transient
 	private Set<User> followers = new HashSet<>();
-	//@ManyToMany(mappedBy = "followers")
-	@Transient
+	@ManyToMany(mappedBy = "followers")
+	//@Transient
 	private Set<User> following = new HashSet<>();
 
 	public User(String username, String email, String password, String firstName, String lastName, String profileImg) {
