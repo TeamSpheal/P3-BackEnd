@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,7 @@ public class AWSServiceImpl implements AWSService {
     String bucketName;
 
     public String uploadImageToAWS (MultipartFile multipartFile) {
-
-        String fileObjKeyName = multipartFile.getOriginalFilename();
+        String fileObjKeyName = UUID.randomUUID().toString();
 
         try {
             //This code expects that you have AWS credentials set up per:
@@ -38,6 +38,8 @@ public class AWSServiceImpl implements AWSService {
             metadata.addUserMetadata("title", multipartFile.getOriginalFilename());
             PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, multipartFile.getInputStream(), metadata);
             s3Client.putObject(request);
+
+            // Return the URL of the image
             return s3Client.getUrl(bucketName, fileObjKeyName).toString();
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process 
