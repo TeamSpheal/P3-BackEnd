@@ -4,6 +4,9 @@
 database.properties
 cov.xml
 
+# Locally uploaded pictures for testing
+uploads/
+
 # To ignore the debug logs that Spring generates
 logs
 
