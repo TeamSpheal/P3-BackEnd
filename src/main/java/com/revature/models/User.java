@@ -35,13 +35,13 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String profileImg;
-	@ManyToMany
-	@JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
-	private Set<User> followers;
+	// @ManyToMany
+	// @JoinTable(name = "follow", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "followed_id"))
+	// private Set<User> followers;
 
 	
-	@ManyToMany(mappedBy = "followers")
-	private Set<User> following;
+	// //@ManyToMany(mappedBy = "followers")/// 
+	// private Set<User> following;
 
 	public User(String username, String email, String password, String firstName, String lastName, String profileImg) {
 		this.id = 0;
@@ -52,8 +52,8 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 
-		this.followers = new LinkedHashSet<>();
-		this.following = new LinkedHashSet<>();
+		// this.followers = new LinkedHashSet<>();
+		// this.following = new LinkedHashSet<>();
 	}
 
 	public User(UserMiniDTO author) {

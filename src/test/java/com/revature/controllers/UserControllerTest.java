@@ -52,8 +52,8 @@ public class UserControllerTest {
         mockUser.setLastName("lastName");
         mockUser.setPassword("password");
         mockUser.setProfileImg("profileImg");
-        mockUser.setFollowers(new HashSet<User>());
-        mockUser.setFollowing(new HashSet<User>());
+        // mockUser.setFollowers(new HashSet<User>());
+        // mockUser.setFollowing(new HashSet<User>());
         UserDTO mockUserDTO = new UserDTO (mockUser);
         Mockito.when(userService.findById(1l)).thenReturn(Optional.of(mockUser));
         mockMvc.perform(get("/user/1"))

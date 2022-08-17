@@ -41,16 +41,16 @@ public class UserDTO {
         this.lastName = user.getLastName();
         this.profileImg = user.getProfileImg();
         
-        Set<UserMiniDTO> dtoFollowers = new LinkedHashSet<>();
-        for (User follower : user.getFollowers()) {
-            dtoFollowers.add(new UserMiniDTO(follower));
-        }
-        this.followers = dtoFollowers;
+    //     Set<UserMiniDTO> dtoFollowers = new LinkedHashSet<>();
+    //     //for (User follower : user.getFollowers()) {
+    //         dtoFollowers.add(new UserMiniDTO(follower));
+    //     }
+    //     this.followers = dtoFollowers;
 
-        Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();
-        for (User followering : user.getFollowing()) {
-            dtoFollowers.add(new UserMiniDTO(followering));
-        }
-        this.following = dtoFollowing;
-    }
+    //     Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();
+    //     for (User followering : user.getFollowing()) {
+    //         dtoFollowers.add(new UserMiniDTO(followering));
+    //     }
+    //     this.following = dtoFollowing;
+     }
 }

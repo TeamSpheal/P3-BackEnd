@@ -18,17 +18,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
+import com.revature.models.Follower;
 import com.revature.models.User;
+import com.revature.services.FollowerService;
 import com.revature.services.UserService;
+ 
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UserController {
     private final UserService userService;
+    private final FollowerService followerService;
 
-    public UserController (UserService userService) {
+    public UserController (UserService userService ,FollowerService followerService) {
         this.userService = userService;
+        this.followerService =followerService;
     }
 
     /**
@@ -58,37 +63,34 @@ public class UserController {
     @PostMapping("/{followedId}/follower/{followerId}") 
 	public ResponseEntity<Void> addFollower(@PathVariable("followedId") Long followed_id, 
 											@PathVariable("followerId") Long follower_id) {
-		//TODO: check if id's are the same
+		 
+             Follower objFollower = new Follower(followed_id, follower_id);                                   
 		if ( followed_id instanceof Long && follower_id instanceof Long) {
-			if (true) { // check the ids if they are the same.
-				boolean isAdded = userService.addFollower(followed_id, follower_id); 
-	    		if (isAdded) {
-	    			return ResponseEntity.status(HttpStatus.OK).build();
-	    		} else {
-	    			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-	    		}
-			} else {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); 
-			}
+			boolean isAdded = followerService.addFollower(objFollower); 
+            if (isAdded) {
+            	return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+            	return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
 		}else {
 			return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
 		}
     }
     
     // TODO: unfollow 
-    @PutMapping("/{followedId}/unfollower/{followerId}") 
-    public ResponseEntity<Void> removeFollower(@PathVariable("followedId") Long followed_id, 
-			@PathVariable("followerId") Long follower_id) {
+    // @PutMapping("/{followedId}/unfollower/{followerId}") 
+    // public ResponseEntity<Void> removeFollower(@PathVariable("followedId") Long followed_id, 
+	// 		@PathVariable("followerId") Long follower_id) {
     	
-    		boolean isRemoved = userService.removeFollower(followed_id, follower_id); 
-    		if (isRemoved) {
-    			return ResponseEntity.status(HttpStatus.OK).build();
+    // 		boolean isRemoved = userService.removeFollower(followed_id, follower_id); 
+    // 		if (isRemoved) {
+    // 			return ResponseEntity.status(HttpStatus.OK).build();
     			
-    		}else {
-    			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    		}
+    // 		}else {
+    // 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+     	//	}
  
-    }
+    //}
     
 
     

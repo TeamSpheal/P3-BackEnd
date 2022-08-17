@@ -57,47 +57,51 @@ public class UserService {
     }
     
     // Returns user's followers
-    public Set<User> getFollowers(User user) {
-    	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
-    	if (userOpt.isPresent()) {
-    		return userOpt.get().getFollowers(); 
-    	}
-    	else {
-    		return new HashSet<User>(); 
-    	}
-    }
+    // public Set<User> getFollowers(User user) {
+    // 	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
+    // 	if (userOpt.isPresent()) {
+    // 		return userOpt.get().getFollowers(); 
+    // 	}
+    // 	else {
+    // 		return new HashSet<User>(); 
+    // 	}
+    // }
     
     // Returns set of individuals the user is following
-    public Set<User> getFollowing(User user) {
-    	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
-    	if (userOpt.isPresent()) {
-    		return userOpt.get().getFollowing(); 
-    	}else {
-    		return new HashSet<User>();
-    	}
-    }
-    
-    // 
-    public boolean addFollower(long followedId, long follwerId) {
-    	try {
-        	userRepository.addFollower(followedId, follwerId);
-        	return true; 
-    	}catch (Exception e) {
-    		e.getStackTrace(); 
-    		return false; 
-    	}
-    }
+    // public Set<User> getFollowing(User user) {
+    // 	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
+    // 	if (userOpt.isPresent()) {
+    // 		return userOpt.get().getFollowing(); 
+    // 	}else {
+    // 		return new HashSet<User>();
+    // 	}
+    // }
 
-	public boolean removeFollower(Long followedId, Long followerId) {
-		// TODO Auto-generated method stub
-		try {
-			userRepository.removeFollower(followedId, followerId);
-			return true;
-		}catch(Exception e) {
-			e.printStackTrace();
-			return false; 
-		}
-	}
+    // public boolean removeFollower(Long followed_id, Long follower_id) {
+    //     return false;
+    // }
+    
+    // // 
+    // public boolean addFollower(long followedId, long follwerId) {
+    // 	try {
+    //     	userRepository.addFollower(followedId, follwerId);
+    //     	return true; 
+    // 	}catch (Exception e) {
+    // 		e.getStackTrace(); 
+    // 		return false; 
+    // 	}
+    // }
+
+	// public boolean removeFollower(Long followedId, Long followerId) {
+	// 	// TODO Auto-generated method stub
+	// 	try {
+	// 		userRepository.removeFollower(followedId, followerId);
+	// 		return true;
+	// 	}catch(Exception e) {
+	// 		e.printStackTrace();
+	// 		return false; 
+	// 	}
+	// }
 	
 	
 	
