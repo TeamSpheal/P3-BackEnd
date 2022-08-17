@@ -37,9 +37,6 @@ public class SocialMediaApplication {
 	@Bean
 	public WebMvcConfigurer corsConfig() {
 		
-
-		System.out.println("====front end url:" + frontendURL);
-		
 		return new WebMvcConfigurer() {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
