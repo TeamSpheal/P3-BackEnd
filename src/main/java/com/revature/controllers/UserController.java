@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.HeadersBuilder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -24,8 +27,10 @@ import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
 import com.revature.exceptions.EmailAlreadyExistsException;
+import com.revature.exceptions.RecordNotFoundException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
+import com.revature.services.AWSService;
 import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
@@ -34,11 +39,13 @@ import com.revature.services.UserService;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final AWSService awsService;
     private final ResetPWService resetPWService;
 
-    public UserController (UserService userService, ResetPWService resetPWService) {
+    public UserController (UserService userService, ResetPWService resetPWService, AWSService awsService) {
         this.userService = userService;
 		this.resetPWService = resetPWService;
+        this.awsService = awsService;
     }
 
     /**
@@ -62,29 +69,21 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    
-
     // Add follower to the logged in user 
-    @PostMapping("/{followedId}/follower/{followerId}") 
-    	public ResponseEntity<Void> addFollower(@PathVariable("followedId") Long followed_id, 
-    											@PathVariable("followerId") Long follower_id) {
-    		//TODO: check if id's are the same
-    		if ( followed_id instanceof Long && follower_id instanceof Long) {
-    			if (true) {
-    				boolean isAdded = userService.addFollower(followed_id, follower_id); 
-    	    		if (isAdded) {
-    	    			return ResponseEntity.status(HttpStatus.OK).build();
-    	    		} else {
-    	    			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-    	    		}
-    			} else {
-    				return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); 
-    			}
-    		}else {
-    			return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+    @PostMapping("/{userId}/follower/{targetId}") 
+    	public ResponseEntity<Void> addFollower(@PathVariable("userId") Long userId, 
+    											@PathVariable("targetId") Long targetId) {
+    		// check if id's are the same
+    		if (!userId.equals(targetId)) {
+                try {
+                    userService.addFollower(userId, targetId);
+                	return ResponseEntity.status(HttpStatus.OK).build();
+                } catch (RecordNotFoundException e) {
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                } 
     		}
-    		
-    	
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
     }
     
     
@@ -157,5 +156,13 @@ public class UserController {
     	} else {
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The email provided does not have an account");
     	}
+    }
+
+    @PostMapping("/image-upload")
+    public ResponseEntity<String> uploadImage (@RequestParam("image") MultipartFile multipartFile) {
+        System.out.println(multipartFile.getContentType());
+        String url = awsService.uploadImageToAWS (multipartFile);
+
+        return ResponseEntity.ok(url);
     }
 }
