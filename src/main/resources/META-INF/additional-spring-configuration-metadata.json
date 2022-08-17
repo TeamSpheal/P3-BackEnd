@@ -10,8 +10,8 @@
     "description": "'aws.region' is the region of the S3 Bucket."
   },
   {
-    "name": "aws.bucket.name",
+    "name": "teamspeal.frontend.url",
     "type": "java.lang.String",
-    "description": "'aws.bucket.name' is the name of the S3 Bucket."
+    "description": "Location at which the front end is running."
   }
 ]}

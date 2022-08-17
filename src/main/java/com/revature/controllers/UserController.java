@@ -42,7 +42,6 @@ import com.revature.services.AWSService;
 import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", allowedHeaders = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
