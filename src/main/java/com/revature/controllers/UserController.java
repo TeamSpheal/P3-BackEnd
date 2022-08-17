@@ -30,6 +30,7 @@ import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.RecordNotFoundException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
+import com.revature.services.AWSService;
 import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
@@ -38,11 +39,13 @@ import com.revature.services.UserService;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final AWSService awsService;
     private final ResetPWService resetPWService;
 
-    public UserController (UserService userService, ResetPWService resetPWService) {
+    public UserController (UserService userService, ResetPWService resetPWService, AWSService awsService) {
         this.userService = userService;
 		this.resetPWService = resetPWService;
+        this.awsService = awsService;
     }
 
     /**
@@ -158,8 +161,8 @@ public class UserController {
     @PostMapping("/image-upload")
     public ResponseEntity<String> uploadImage (@RequestParam("image") MultipartFile multipartFile) {
         System.out.println(multipartFile.getContentType());
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String url = awsService.uploadImageToAWS (multipartFile);
 
-        return ResponseEntity.ok(fileName);
+        return ResponseEntity.ok(url);
     }
 }
