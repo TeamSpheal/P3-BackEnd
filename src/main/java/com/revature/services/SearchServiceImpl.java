@@ -1,7 +1,6 @@
 package com.revature.services;
 
 import com.revature.dtos.UserDTO;
-import com.revature.models.User;
 import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -12,11 +11,9 @@ import java.util.Optional;
 @Service
 public class SearchServiceImpl implements SearchService {
     UserRepository userRepo;
-    PostRepository postRepo;
 
-    SearchServiceImpl(UserRepository userRepo, PostRepository postRepo) {
+    SearchServiceImpl(UserRepository userRepo) {
         this.userRepo = userRepo;
-        this.postRepo = postRepo;
     }
 
     /**
