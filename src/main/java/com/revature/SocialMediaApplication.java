@@ -43,7 +43,7 @@ public class SocialMediaApplication {
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
 					.allowedOrigins(frontendURL)
 					.allowedHeaders("*")
-					.exposedHeaders("Auth")
+					.exposedHeaders("Auth", "ResetToken")
 					.allowCredentials(true);
 			}
 		};
