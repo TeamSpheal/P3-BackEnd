@@ -77,7 +77,7 @@ public class UserController {
     }
     
     // TODO: unfollow 
-    @DeleteMapping("/{followedId}/unfollower/{followerId}") 
+    @DeleteMapping("/{followedId}/unfollow/{followerId}") 
     public ResponseEntity<Void> removeFollower(@PathVariable("followedId") Long followed_id, 
 			@PathVariable("followerId") Long follower_id) {
     	
