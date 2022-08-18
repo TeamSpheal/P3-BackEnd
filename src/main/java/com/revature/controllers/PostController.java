@@ -23,7 +23,6 @@ import com.revature.services.UserService;
 
 @RestController
 @RequestMapping("/post")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class PostController {
 
 	private final PostService postService;
@@ -47,6 +46,7 @@ public class PostController {
     @Authorized
     @PutMapping
     public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
+        post.setAuthor(new UserMiniDTO(1l, "username", "profileURL"));
         Post newPost = new Post(post);
     	return ResponseEntity.ok(this.postService.upsert(newPost));
     }

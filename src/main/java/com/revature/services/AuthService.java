@@ -21,6 +21,12 @@ public class AuthService {
     }
 
     public User register(User user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+        if (userService.doesEmailAlreadyExist(user.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
+        if (userService.doesUsernameAlreadyExist(user.getUsername())) {
+            throw new UsernameAlreadyExistsException();
+        }
         return userService.save(user);
     }
 }
