@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
 import com.revature.models.User;
-import com.revature.services.AWSService;
+import com.revature.services.ImageService;
 import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
@@ -39,7 +39,7 @@ public class UserControllerTest {
     private ResetPWService resetPWService;
     
     @MockBean
-    private AWSService awsService;
+    private ImageService awsService;
 
     @Autowired
     private MockMvc mockMvc;
