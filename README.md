@@ -31,6 +31,19 @@ Run the jar file:
 java -jar social-media-0.0.1-SNAPSHOT.jar
 ```
 
+Add the following fields to your environment variables and set the fields according to your environment:
+```
+JWT_SECRET: # a secret key for JWT
+REVASPHERE_FRONTEND_URL: http://localhost:4200/
+
+# The following fields are only for application-test.yml, these are not required for local testing:
+DB_URL: jdbc:postgresql://#DATABASE_URL#:5432/postgres?currentSchema=#SCHEMA_NAME
+DB_USER: postgres
+DB_PWD: #DATABASE_PASS
+SPRING_PROFILES_ACTIVE: # dev or test to switch between application.yml files
+AWS_BUCKET_NAME: # name of the bucket on S3
+```
+
 
 ## Contributing
 Create a personal branch named [feature]-[your_name] e.g. user-colby would be a branch for user from colby. 
