@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.LikeRequest;
 import com.revature.dtos.PostDTO;
+import com.revature.dtos.UserMiniDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
@@ -54,41 +57,45 @@ public class PostControllerTest {
                        .andExpect(content().json(objectMapper.writeValueAsString(mockPosts)));
     }
 
-//    @Test
-//    void testUpsertPost() throws JsonProcessingException, Exception {
-//        Post mockPost = new Post();
-//        Post mockPostWithId = new Post();
-//        mockPostWithId.setId(1);
-//
-//        Mockito.when(postServ.upsert(mockPost)).thenReturn(mockPostWithId);
-//        
-//        mockMvc.perform(put("/post").contentType(MediaType.APPLICATION_JSON)
-//				.content(objectMapper.writeValueAsString(mockPost)))
-//				.andExpect(status().isOk())
-//				.andExpect(content().json(objectMapper.writeValueAsString(new PostDTO(mockPostWithId))));
-//        
-//    }
+   @Test
+    void testUpsertPost() throws JsonProcessingException, Exception {
+        Post mockPost = new Post();   
+        PostDTO dto = new PostDTO(1L, "","", new ArrayList<PostDTO>(), new UserMiniDTO(), new HashSet<UserMiniDTO>());
+        Post mockPostWithId = new Post(dto);
+       // post.setAuthor(new UserMiniDTO(1l, "username", "profileURL"));
+
+        Mockito.when(postServ.upsert(Mockito.any())).thenReturn(mockPostWithId);
+        
+        mockMvc.perform(put("/post").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isOk())
+				.andExpect(content().json(objectMapper.writeValueAsString(mockPostWithId)));
+        
+   }
     
-//    @Test
-//    void testLikePostSuccess() throws JsonProcessingException, Exception {
-//    	Post mockPost = new Post();
-//    	User mockUser = new User();
-//    	LikeRequest like = new LikeRequest();
-//    	mockPost.setId(1L);
-//    	mockUser.setId(1L);
-//    	
-//    	like.setPostId(mockPost.getId());
-//    	like.setUserId(mockUser.getId());
-//    	
-//    	Mockito.when(postServ.getPost(like.getPostId())).thenReturn(mockPost);
-//    	Mockito.when(postServ.upsert(mockPost)).thenReturn(mockPost);
-//    	
-//    	mockMvc.perform(put("/post/like").contentType(MediaType.APPLICATION_JSON)
-//				.content(objectMapper.writeValueAsString(like)))
-//    	
-//				.andExpect(status().isOk())
-//				.andExpect(content().json(objectMapper.writeValueAsString(new PostDTO(mockPost))));
-//    }
+    @Test
+    void testLikePostSuccess() throws JsonProcessingException, Exception {
+    	User mockUser = new User("","","","","","");
+    	Post mockPost = new Post(1L,"","", new ArrayList<Post>(), mockUser, new HashSet<User>());
+    	LikeRequest like = new LikeRequest();
+    	Set<User> likers = new HashSet<User>();
+    	likers.add(mockUser);
+    	mockPost.setUsers(likers);
+    	PostDTO dto = new PostDTO(mockPost);
+
+    	like.setPostId(mockPost.getId());
+    	like.setUserId(mockUser.getId());
+    	
+    	Mockito.when(userServ.getUser(Mockito.anyLong())).thenReturn(mockUser);
+    	Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(mockPost);
+    	Mockito.when(postServ.upsert(Mockito.any())).thenReturn(mockPost);
+    	
+    	mockMvc.perform(put("/post/like").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(like)))
+    	
+				.andExpect(status().isOk())
+				.andExpect(content().json(objectMapper.writeValueAsString(dto)));
+    }
     
     @Test
     void testLikePostBadRequest() throws JsonProcessingException, Exception {
@@ -105,6 +112,45 @@ public class PostControllerTest {
     	
     	mockMvc.perform(put("/post/like").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(mockPost)))
+				.andExpect(status().isBadRequest());
+    }
+    
+   
+    @Test
+    void unlikePost() throws JsonProcessingException, Exception {
+    	
+    	User mockUser = new User("","","","","","");
+    	Post mockPost = new Post(1L,"","", new ArrayList<Post>(), mockUser, new HashSet<User>());
+    	LikeRequest like = new LikeRequest();
+    	Set<User> likers = new HashSet<User>();
+    	likers.remove(mockUser);
+    	mockPost.setUsers(likers);
+    	PostDTO dto = new PostDTO(mockPost);
+
+    	like.setPostId(mockPost.getId());
+    	like.setUserId(mockUser.getId());
+    	
+    	Mockito.when(userServ.getUser(Mockito.anyLong())).thenReturn(mockUser);
+    	Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(mockPost);
+    	Mockito.when(postServ.upsert(Mockito.any())).thenReturn(mockPost);
+    	
+    	mockMvc.perform(put("/post/unlike").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(like)))
+    	
+				.andExpect(status().isOk())
+				.andExpect(content().json(objectMapper.writeValueAsString(dto)));
+    	
+    	
+    }
+    
+    @Test
+    void cannotUnlikePost() throws JsonProcessingException, Exception {
+    	LikeRequest like = new LikeRequest();
+    	like.setPostId(1L);
+    	like.setUserId(1L);
+    	
+    	mockMvc.perform(put("/post/unlike").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(like)))
 				.andExpect(status().isBadRequest());
     }
     

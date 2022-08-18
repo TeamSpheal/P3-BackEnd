@@ -17,7 +17,7 @@ import com.revature.repositories.UserRepository;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	/**
 	 * A constructor to be used to inject dependencies
@@ -131,29 +131,28 @@ public class UserService {
 		/* Pass to repository and return the result */
 		return userRepository.save(user);
 	}
-    
-    // Returns user's followers
-    public Set<User> getFollowers(User user) {
-    	Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId())); 
-    	if (userOpt.isPresent()) {
-    		return userOpt.get().getFollowers(); 
-    	}
-    	else {
-    		return new HashSet<User>(); 
-    	}
-    }
-    
-    // Returns set of individuals the user is following
-    public Set<User> getFollowing(User user) {
-    	Optional<User> userOpt = userRepository.findById(user.getId());
-    	if (userOpt.isPresent()) {
-    		return userOpt.get().getFollowing(); 
-    	}
+
+	// Returns user's followers
+	public Set<User> getFollowers(User user) {
+		Optional<User> userOpt = userRepository.findById(Long.valueOf(user.getId()));
+		if (userOpt.isPresent()) {
+			return userOpt.get().getFollowers();
+		} else {
+			return new HashSet<User>();
+		}
+	}
+
+	// Returns set of individuals the user is following
+	public Set<User> getFollowing(User user) {
+		Optional<User> userOpt = userRepository.findById(user.getId());
+		if (userOpt.isPresent()) {
+			return userOpt.get().getFollowing();
+		}
 		return new HashSet<>();
-    }
-    
-    // 
-    public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
+	}
+
+	//
+	public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
 		Optional<User> oUser = userRepository.findById(userId);
 		Optional<User> oTargetUser = userRepository.findById(targetId);
 		if (!oUser.isPresent()) {
@@ -162,7 +161,7 @@ public class UserService {
 		if (!oTargetUser.isPresent()) {
 			throw new RecordNotFoundException("Target user not found!");
 		}
-    	try {
+		try {
 			User user = oUser.get();
 			User targetUser = oTargetUser.get();
 
@@ -170,13 +169,13 @@ public class UserService {
 			user.followUser(targetUser);
 
 			// Save both users
-        	userRepository.save(user);
-        	userRepository.save(targetUser);
-        	return true;
-    	}catch (Exception e) {
-    		e.getStackTrace(); 
-    		return false; 
-    	}
+			userRepository.save(user);
+			userRepository.save(targetUser);
+			return true;
+		} catch (Exception e) {
+			e.getStackTrace();
+			return false;
+		}
 	}
 
 	/**

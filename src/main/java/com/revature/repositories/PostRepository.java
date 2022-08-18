@@ -10,7 +10,7 @@ import com.revature.models.Post;
 import com.revature.models.User;
 
 public interface PostRepository extends JpaRepository<Post, Long>{
-	public Set<Post> findByUsers(User user);
+	public Set<Post> findByAuthor(User user);
 	
 	@Query(value = "SELECT * FROM POSTS WHERE ID NOT IN (SELECT COMMENTS_ID FROM POSTS_COMMENTS) order by id", nativeQuery = true)
 	public List<Post> findNonCommentPosts();

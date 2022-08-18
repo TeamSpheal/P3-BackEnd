@@ -2,8 +2,10 @@ package com.revature.services;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,4 +52,25 @@ public class UserServiceTest {
 		User returnedUser = userServ.save(mockUser);
 		assertNotNull(returnedUser);
 	}
+	
+	@Test
+	void findById(){
+		Mockito.when(userRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new User()));
+		Assertions.assertNotNull(userServ.findById(Mockito.anyLong()));
+	}
+	
+	@Test
+	void findAllUsers() {
+		Mockito.when(userRepo.findAll()).thenReturn(new ArrayList<User>());
+		Assertions.assertNotNull(userServ.findAllUsers());
+	}
+	
+	@Test
+	void findAllUsersFromList() {
+		Mockito.when(userRepo.findAllById(Mockito.anyIterable())).thenReturn(new ArrayList<User>());
+		Assertions.assertNotNull(userServ.findAllUsersFromList(Mockito.anyList()));
+	}
+	
+	
+	
 }
