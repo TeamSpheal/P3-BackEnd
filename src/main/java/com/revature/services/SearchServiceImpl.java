@@ -1,7 +1,6 @@
 package com.revature.services;
 
 import com.revature.dtos.UserDTO;
-import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +27,10 @@ public class SearchServiceImpl implements SearchService {
         if (name.contains("_")) {
             String firstName = name.substring(0, name.indexOf("_"));
             String lastName = name.substring(name.indexOf("_") + 1, name.length() - 1);
-            return userRepo.findAllByFirstNameStartingWithIgnoreCaseOrLastNameStartingWithOrderByFirstName(
+            return userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(
                     firstName, lastName);
         } else {
-            return userRepo.findAllByFirstNameStartingWithIgnoreCaseOrLastNameStartingWithOrderByFirstName(name, name);
+            return userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(name, name);
         }
     }
 }
