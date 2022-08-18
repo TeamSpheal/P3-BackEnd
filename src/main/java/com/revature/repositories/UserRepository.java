@@ -1,13 +1,12 @@
 package com.revature.repositories;
 
-
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import com.revature.dtos.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import com.revature.models.User;
 
 @Repository
@@ -20,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param password (String)
 	 * @return a user object
 	 */
-    Optional<User> findByEmailAndPassword(String email, String password);
+	Optional<User> findByEmailAndPassword(String email, String password);
 
 	/**
 	 * Returns a user object based on a given email
@@ -28,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param email (String)
 	 * @return a user object
 	 */
-	  Optional<User> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
 	/**
 	 * Returns a user object based on a given username
@@ -36,8 +35,32 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param username (String)
 	 * @return a user object
 	 */
-    Optional<User> findByUsername(String username);
+	Optional<User> findByUsername(String username);
 
+	/**
+	 * Returns a List of UserDTO objects
+	 * based on the input string. (FirstName
+	 *
+	 * @param firstName (String), lastName (String)
+	 * @return List of UserDTO objects.
+	 */
+	Optional<List<UserDTO>> findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(
+			String firstName, String lastName);
 
-	  Optional<ArrayList<User>> findAllByFirstNameContaining(String name);
+	/**
+	 * Checks if the email already exists in the database.
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public boolean existsByEmail(String email);
+
+	/**
+	 * Checks if the username already exists in the database.
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public boolean existsByUsername(String username);
+
 }
