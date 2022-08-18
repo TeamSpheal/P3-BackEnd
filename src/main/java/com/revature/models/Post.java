@@ -37,7 +37,7 @@ public class Post {
 	private String text;
 	private String imageUrl;
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<Post> comments;
+	private Set<Post> comments;
 	@ManyToOne
 	private User author;
 	@ManyToMany
@@ -48,7 +48,10 @@ public class Post {
 		this.id = dto.getId();
 		this.text = dto.getText();
 		this.imageUrl = dto.getImageUrl();
-		this.comments = dto.getComments();
+		this.comments = new HashSet<>();
+		for(PostDTO postDto: dto.getComments()) {
+			this.comments.add(new Post(postDto));	
+		}
 		this.author = new User(dto.getAuthor());
 		this.users = new HashSet<>();
 		for (UserMiniDTO miniUser : dto.getUsers()) {
