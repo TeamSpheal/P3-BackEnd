@@ -62,6 +62,19 @@ public class UserService {
 	public Optional<User> findById(long id) {
 		return userRepository.findById(id);
 	}
+	
+	/**
+	 * Returns a user object with a given email
+	 * @param email
+	 * @return
+	 */
+	public User findByEmail(String email) {
+		Optional<User> userOpt = userRepository.findByEmail(email);
+		if (userOpt.isPresent()) {
+			return userOpt.get();
+		}
+		return null;
+	}
 
 	/**
 	 * Returns a list of all users in the database
