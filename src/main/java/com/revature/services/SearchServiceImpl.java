@@ -27,10 +27,10 @@ public class SearchServiceImpl implements SearchService {
         if (name.contains("_")) {
             String firstName = name.substring(0, name.indexOf("_"));
             String lastName = name.substring(name.indexOf("_") + 1, name.length() - 1);
-            return userRepo.findAllByFirstNameStartingOrLastNameStartingWithOrderByFirstName(
+            return userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(
                     firstName, lastName);
         } else {
-            return userRepo.findAllByFirstNameStartingOrLastNameStartingWithOrderByFirstName(name, name);
+            return userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(name, name);
         }
     }
 }
