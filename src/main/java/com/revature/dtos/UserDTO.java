@@ -33,6 +33,19 @@ public class UserDTO {
     private Set<UserMiniDTO> followers;
     private Set<UserMiniDTO> following;
 
+    /**
+     * This is for validating a JWT in TokenServiceImpl
+     * @author Colby Tang
+     */
+    public UserDTO (long id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
+    /**
+     * This is to convert a user object into a dto
+     * @param user
+     */
     public UserDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
@@ -42,14 +55,14 @@ public class UserDTO {
         this.profileImg = user.getProfileImg();
         
         Set<UserMiniDTO> dtoFollowers = new LinkedHashSet<>();
-        for (User follower : user.getFollowers()) {
-            dtoFollowers.add(new UserMiniDTO(follower));
-        }
+        //for (User follower : user.getFollowers()) {
+        //    dtoFollowers.add(new UserMiniDTO(follower));
+       // }
         this.followers = dtoFollowers;
 
         Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();
         for (User followering : user.getFollowing()) {
-            dtoFollowers.add(new UserMiniDTO(followering));
+            dtoFollowing.add(new UserMiniDTO(followering));
         }
         this.following = dtoFollowing;
     }

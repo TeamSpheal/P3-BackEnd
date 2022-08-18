@@ -2,6 +2,16 @@
 server:
   port: 8080
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${REV_EMAIL}
+    password: ${REV_PASS}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
   config:
     activate:
       on-profile: dev
@@ -28,3 +38,5 @@ logging:
   file.name: logs/application-debug.log
   level:
     web: debug
+jwt.secret: ${JWT_SECRET}
+teamspeal.frontend.url: http://localhost:4200

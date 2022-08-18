@@ -1,7 +1,7 @@
 package com.revature.models;
 
+import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,6 +43,8 @@ public class Post {
 	@ManyToMany
 	@JoinTable(name = "liked_posts", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> users;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Timestamp createdDate = new Timestamp(System.currentTimeMillis());
 
 	public Post(PostDTO dto) {
 		this.id = dto.getId();
@@ -57,5 +59,6 @@ public class Post {
 		for (UserMiniDTO miniUser : dto.getUsers()) {
 			this.users.add(new User(miniUser));
 		}
+		this.createdDate = dto.getCreatedDate();
 	}
 }
