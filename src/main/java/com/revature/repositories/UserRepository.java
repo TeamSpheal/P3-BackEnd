@@ -44,7 +44,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param firstName (String), lastName (String)
 	 * @return List of UserDTO objects.
 	 */
-	Optional<List<UserDTO>> findAllByFirstNameStartingOrLastNameStartingWithOrderByFirstName(
+	Optional<List<UserDTO>> findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(
 			String firstName, String lastName);
 
 	/**
