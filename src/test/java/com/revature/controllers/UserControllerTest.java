@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,6 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
 import com.revature.models.User;
+import com.revature.services.ImageService;
+import com.revature.services.LocalImageService;
+import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
 /**
@@ -30,6 +35,12 @@ import com.revature.services.UserService;
 public class UserControllerTest {
     @MockBean
     private UserService userService;
+    
+    @MockBean
+    private ResetPWService resetPWService;
+    
+    @MockBean
+    private LocalImageService imageService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -132,7 +143,8 @@ public class UserControllerTest {
     	String email = "nonexistent@void.net";
     	
     	/*Test*/
-    	mockMvc.perform(post("/resetPW")
+    	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(false);
+    	mockMvc.perform(post("/user/resetPW")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(email))
     			.andExpect(status().isBadRequest());
@@ -140,19 +152,19 @@ public class UserControllerTest {
     
     /**
      * Passing an email that exists, should return a 200 status and a "ResetToken" header
-     * As of the writing of this test, the email does not exist
+     * As of the writing of this test, the email does exist
      * @throws Exception  
      */
     @Test
     void getResetPWTokenOk() throws Exception {
     	/*Local Variables*/
-    	String email = "nonexistent@void.net";
+    	String email = "testuser@gmail.com";
     	
     	/*Test*/
-    	mockMvc.perform(post("/resetPW")
+    	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(true);
+    	mockMvc.perform(post("/user/resetPW")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(email))
-    			.andExpect(status().isOk())
-    			.andExpect(header().exists("ResetToken"));
+    			.andExpect(status().isOk());
     }
 }
