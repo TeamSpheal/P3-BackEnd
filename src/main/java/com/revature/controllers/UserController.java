@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
@@ -49,6 +51,7 @@ public class UserController {
     private final AWSService awsService;
     private final ResetPWService resetPWService;
     private final Path root = Paths.get("src/main/resources/uploads");
+    private ObjectMapper objMapper;
 
     @Autowired
     Environment env;
@@ -175,13 +178,17 @@ public class UserController {
      * 
      * @param email
      * @return
+     * @throws JsonProcessingException 
      */
-    @PostMapping("resetPW")
-    public ResponseEntity<String> getResetPWToken(@RequestBody String email) {
+    @PostMapping("/resetPW")
+    public ResponseEntity<String> getResetPWToken(@RequestBody String email) throws JsonProcessingException {
         String resetToken = null;
+        UserDTO resetUser = null;
+        objMapper = new ObjectMapper();
         if (userService.doesEmailAlreadyExist(email)) {
             resetToken = resetPWService.generateResetToken(email);
-            return ResponseEntity.status(200).header("ResetToken", resetToken).build();
+            resetUser = new UserDTO(userService.findByEmail(email));
+            return ResponseEntity.status(200).header("ResetToken", resetToken).body(objMapper.writeValueAsString(resetUser));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The email provided does not have an account");
         }
