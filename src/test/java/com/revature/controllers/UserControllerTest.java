@@ -159,9 +159,12 @@ public class UserControllerTest {
     void getResetPWTokenOk() throws Exception {
     	/*Local Variables*/
     	String email = "testuser@gmail.com";
+        User mockUser = new User();
     	
     	/*Test*/
     	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(true);
+        Mockito.when(resetPWService.generateResetToken(email)).thenReturn("123");
+        Mockito.when(userService.findByEmail(email)).thenReturn(mockUser);
     	mockMvc.perform(post("/user/resetPW")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(email))
