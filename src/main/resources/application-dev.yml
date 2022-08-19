@@ -1,4 +1,4 @@
-# This profile is the for connecting to your local H2 Database
+# This profile is for connecting to AWS RDS
 server:
   port: 8080
 spring:
@@ -14,24 +14,27 @@ spring:
           starttls.enable: true
   config:
     activate:
-      on-profile: dev
+      on-profile: test
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.H2Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     defer-datasource-initialization: true
     open-in-view: true # Turn off OSIV warning
     properties:
-      hiberate.format_sql: true
+      hibernate.format_sql: true
     show-sql: true
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:memdb
-    username: sa
-    password: password
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PWD}
   devtools.restart.enabled: false # Disable Spring auto restart
   h2:
-    console.enabled: true
+    console.enabled: false
   output:
     ansi.enabled: never # turn on colors in Spring console
 logging:
@@ -39,4 +42,7 @@ logging:
   level:
     web: debug
 jwt.secret: ${JWT_SECRET}
+aws.bucket.name: ${AWS_BUCKET_NAME}
 teamspeal.frontend.url: http://localhost:4200
+
+
