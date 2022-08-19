@@ -37,7 +37,7 @@ public class PostService {
 	}
 	public List<Post> getFollowingPosts(User user) {
 		Set<User> following = user.getFollowing();
-		List<Post> posts = new ArrayList<Post>();
+		List<Post> posts = new ArrayList<>();
 		for (User u : following) {
 			posts.addAll(this.postRepository.findAllByAuthorId(u.getId()));
 		}
