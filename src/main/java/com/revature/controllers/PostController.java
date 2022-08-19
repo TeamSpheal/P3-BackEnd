@@ -1,7 +1,6 @@
 package com.revature.controllers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.LikeRequest;
 import com.revature.dtos.PostDTO;
-import com.revature.exceptions.UserDoesNotExistException;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
@@ -117,7 +115,7 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getFollowingPostsByUser(@PathVariable("userId") long userId) {
     	User user = userService.getUser(userId);
     	List<Post> posts = postService.getFollowingPosts(user);
-    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
+    	List<PostDTO> postsDto = new ArrayList<>();
     	for(Post post : posts) {
     		postsDto.add(new PostDTO(post));
     	}

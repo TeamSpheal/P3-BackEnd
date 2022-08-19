@@ -1,6 +1,5 @@
 package com.revature.advice;
 
-import com.revature.annotations.AuthRestriction;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.exceptions.FailedAuthenticationException;
@@ -45,7 +44,6 @@ public class AuthAspect {
 		Authorized authAnnotation = ((MethodSignature) joinpoint.getSignature())
 				.getMethod()
 				.getAnnotation(Authorized.class);
-		final AuthRestriction authRestriction = authAnnotation.value();
 		final boolean requireSelfAction = authAnnotation.requireSelfAction();
 		
 		final String jws = currentReq.getHeader("Auth");

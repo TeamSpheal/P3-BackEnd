@@ -1,14 +1,12 @@
 package com.revature.controllers;
 
 import com.revature.dtos.UserDTO;
-import com.revature.models.User;
 import com.revature.services.SearchServiceImpl;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
