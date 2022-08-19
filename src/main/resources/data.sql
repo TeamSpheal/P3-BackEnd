@@ -22,11 +22,14 @@ INSERT INTO posts (id, text, image_url, author_id) VALUES (
     default,
     'The classic',
     'https://i.imgur.com/fhgzVEt.jpeg',
-    1
+    1,
+    now()
 ),
 (
     default,
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     '',
-    1
+    1, now()
 );
+
+ALTER TABLE users ALTER COLUMN id RESTART WITH (select max(id)+1 from users);

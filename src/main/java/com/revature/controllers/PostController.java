@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.LikeRequest;
 import com.revature.dtos.PostDTO;
-import com.revature.dtos.UserMiniDTO;
+import com.revature.exceptions.UserDoesNotExistException;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
@@ -56,8 +56,12 @@ public class PostController {
     @Authorized
     @PutMapping
     public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
-        post.setAuthor(new UserMiniDTO(1l, "username", "profileURL"));
+    	User author = userService.getUser(post.getAuthor().getId());
         Post newPost = new Post(post);
+        newPost.setAuthor(author);
+        if (author == null) {
+        	return ResponseEntity.badRequest().build();
+        }
     	return ResponseEntity.ok(this.postService.upsert(newPost));
     }
     
@@ -99,15 +103,24 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
-    @Authorized
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Set<PostDTO>> getAllPostsById(@PathVariable long id){
-    	User user  =  userService.getUser(id);
-    	Set<Post> list = postService.getPostByAuthor(user);
-    	Set<PostDTO> hashset = new HashSet<>();
-    	for(Post p : list) {
-    		hashset.add(new PostDTO(p));
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDTO> getPost(@PathVariable long postId){
+    	Post initPost = postService.getPost(postId);
+    	if(initPost == null) {
+    		return ResponseEntity.badRequest().build();
     	}
-    	return ResponseEntity.ok(hashset);
+    	return ResponseEntity.ok(new PostDTO(initPost));
+
+    }
+    
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<List<PostDTO>> getFollowingPostsByUser(@PathVariable("userId") long userId) {
+    	User user = userService.getUser(userId);
+    	List<Post> posts = postService.getFollowingPosts(user);
+    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
+    	for(Post post : posts) {
+    		postsDto.add(new PostDTO(post));
+    	}
+    	return ResponseEntity.ok(postsDto);
     }
 }
