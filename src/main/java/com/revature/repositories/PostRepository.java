@@ -14,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	
 	@Query(value = "SELECT * FROM POSTS WHERE ID NOT IN (SELECT COMMENTS_ID FROM POSTS_COMMENTS) order by id", nativeQuery = true)
 	public List<Post> findNonCommentPosts();
+	
+	List<Post> findAllByAuthorId(long user);
 }

@@ -1,5 +1,5 @@
 INSERT INTO users (id, email, password, first_name, last_name, profile_img, username) VALUES (
-    1,
+    default,
     'testuser@gmail.com',
     'password',
     'Test',
@@ -9,7 +9,7 @@ INSERT INTO users (id, email, password, first_name, last_name, profile_img, user
 );
 
 INSERT INTO users (id, email, password, first_name, last_name, profile_img, username) VALUES (
-    2,
+    default,
     'ctang@gmail.com',
     'password',
     'Colby',
@@ -31,3 +31,5 @@ INSERT INTO posts (id, text, image_url, author_id, created_date) VALUES (
     '',
     1, now()
 );
+
+ALTER TABLE users ALTER COLUMN id RESTART WITH (select max(id)+1 from users);

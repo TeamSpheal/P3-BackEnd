@@ -92,4 +92,15 @@ public class PostController {
     	return ResponseEntity.ok(new PostDTO(initPost));
 
     }
+    
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<List<PostDTO>> getFollowingPostsByUser(@PathVariable("userId") long userId) {
+    	User user = userService.getUser(userId);
+    	List<Post> posts = postService.getFollowingPosts(user);
+    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
+    	for(Post post : posts) {
+    		postsDto.add(new PostDTO(post));
+    	}
+    	return ResponseEntity.ok(postsDto);
+    }
 }
