@@ -55,9 +55,9 @@ public class UserDTO {
         this.profileImg = user.getProfileImg();
         
         Set<UserMiniDTO> dtoFollowers = new LinkedHashSet<>();
-        for (User follower : user.getFollowers()) {
-            dtoFollowers.add(new UserMiniDTO(follower));
-        }
+        //for (User follower : user.getFollowers()) {
+        //    dtoFollowers.add(new UserMiniDTO(follower));
+       // }
         this.followers = dtoFollowers;
 
         Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();

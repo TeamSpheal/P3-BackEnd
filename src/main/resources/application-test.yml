@@ -7,15 +7,15 @@ spring:
       on-profile: test
   jpa:
     hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
-        ddl-auto: update
+      jdbc:
+        lob:
+          non_contextual_creation: true
+      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     defer-datasource-initialization: true
     open-in-view: true # Turn off OSIV warning
     properties:
-      hiberate.format_sql: true
+      hibernate.format_sql: true
     show-sql: true
   datasource:
     driver-class-name: org.postgresql.Driver
