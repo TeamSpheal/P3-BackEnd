@@ -8,10 +8,6 @@ import java.nio.file.Paths;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.ResponseEntity.HeadersBuilder;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;

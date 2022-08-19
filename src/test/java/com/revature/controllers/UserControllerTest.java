@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +22,6 @@ import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
 import com.revature.models.User;
 import com.revature.services.ImageService;
-import com.revature.services.LocalImageService;
 import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
@@ -40,7 +37,7 @@ public class UserControllerTest {
     private ResetPWService resetPWService;
     
     @MockBean
-    private LocalImageService imageService;
+    private ImageService imageService;
 
     @Autowired
     private MockMvc mockMvc;
