@@ -1,9 +1,11 @@
 package com.revature.services;
 
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
+import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
 @Service
@@ -11,6 +13,8 @@ public class ResetPWService {
 	private EmailService emailService;
 	
 	private UserRepository userRepo;
+
+	Random random = new Random();
 
 	/**
 	 * A constructor to be used to inject dependencies
@@ -33,10 +37,13 @@ public class ResetPWService {
 		int leftLimit = 48; // '0'
 	    int rightLimit = 122; // 'z'
 	    int targetStringLength = 7;
-	    Random random = new Random();
 	    String subject = "RevaSphere Reset Password Token";
-	    
-	    String username = userRepo.findByEmail(email).get().getUsername();
+		String username = "";
+
+		Optional<User> oUser = userRepo.findByEmail(email);
+		if (oUser.isPresent()) {
+			username = oUser.get().getUsername();
+		}
 
 	    /*Generating token*/
 	    /*How this works:

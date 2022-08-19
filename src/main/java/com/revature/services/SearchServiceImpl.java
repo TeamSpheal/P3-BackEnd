@@ -22,10 +22,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Optional<ArrayList<User>> queryUserTable(String name) {
-        Optional<ArrayList<User>> users = userRepo.findAllByFirstNameContaining(name);
-
-
-        return users;
+        return userRepo.findAllByFirstNameContaining(name);
     }
 
     @Override
