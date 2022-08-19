@@ -1,12 +1,13 @@
 package com.revature.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,10 @@ public class PostController {
         this.userService = userService;
     }
     
+    
+    /** 
+     * @return ResponseEntity<List<PostDTO>>
+     */
     @Authorized
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
@@ -43,6 +48,11 @@ public class PostController {
     	return ResponseEntity.ok(listDto);
     }
     
+    
+    /** 
+     * @param post
+     * @return ResponseEntity<Post>
+     */
     @Authorized
     @PutMapping
     public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
@@ -51,6 +61,11 @@ public class PostController {
     	return ResponseEntity.ok(this.postService.upsert(newPost));
     }
     
+    
+    /** 
+     * @param like
+     * @return ResponseEntity<PostDTO>
+     */
     @PutMapping("/like")
     public ResponseEntity<PostDTO> likePost(@RequestBody LikeRequest like) {
     	User user = userService.getUser(like.getUserId());
@@ -65,6 +80,11 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
+    
+    /** 
+     * @param unlike
+     * @return ResponseEntity<PostDTO>
+     */
     @PutMapping("/unlike")
     public ResponseEntity<PostDTO> unlikePost(@RequestBody LikeRequest unlike) {
     	User user = userService.getUser(unlike.getUserId());
@@ -77,5 +97,17 @@ public class PostController {
         post.setUsers(users);
         PostDTO postDto = new PostDTO(postService.upsert(post));
         return ResponseEntity.ok(postDto);
+    }
+    
+    @Authorized
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Set<PostDTO>> getAllPostsById(@PathVariable long id){
+    	User user  =  userService.getUser(id);
+    	Set<Post> list = postService.getPostByAuthor(user);
+    	Set<PostDTO> hashset = new HashSet<>();
+    	for(Post p : list) {
+    		hashset.add(new PostDTO(p));
+    	}
+    	return ResponseEntity.ok(hashset);
     }
 }

@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,7 +37,7 @@ public class UserControllerTest {
     private ResetPWService resetPWService;
     
     @MockBean
-    private ImageService awsService;
+    private ImageService imageService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -158,9 +156,12 @@ public class UserControllerTest {
     void getResetPWTokenOk() throws Exception {
     	/*Local Variables*/
     	String email = "testuser@gmail.com";
+        User mockUser = new User();
     	
     	/*Test*/
     	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(true);
+        Mockito.when(resetPWService.generateResetToken(email)).thenReturn("123");
+        Mockito.when(userService.findByEmail(email)).thenReturn(mockUser);
     	mockMvc.perform(post("/user/resetPW")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(email))

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
+import com.revature.dtos.UserPassDTO;
 import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.RecordNotFoundException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
@@ -41,8 +42,7 @@ public class UserController {
     private final UserService userService;
     private final ImageService imageService;
     private final ResetPWService resetPWService;
-    private final Path root = Paths.get("src/main/resources/uploads");
-    private ObjectMapper objMapper;
+    private ObjectMapper objMapper = new ObjectMapper();
 
     @Autowired
     Environment env;
@@ -144,10 +144,13 @@ public class UserController {
      * @throws UsernameAlreadyExistsException
      */
     @PostMapping("/update/password")
-    public ResponseEntity<UserMiniDTO> updatePW(@RequestBody User updatedUser)
+    public ResponseEntity<UserMiniDTO> updatePW(@RequestBody UserPassDTO updatedUser)
             throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+                
+        // Convert UserPassDTO into a real User
+        User inputUser = new User(updatedUser);
         // Pass object to service layer
-        User result = userService.save(updatedUser);
+        User result = userService.save(inputUser);
 
         // Assuming an exception is not thrown, remove unnecessary data and return it
         // with a status of 200
@@ -167,7 +170,6 @@ public class UserController {
     public ResponseEntity<String> getResetPWToken(@RequestBody String email) throws JsonProcessingException {
         String resetToken = null;
         UserDTO resetUser = null;
-        objMapper = new ObjectMapper();
         if (userService.doesEmailAlreadyExist(email)) {
             resetToken = resetPWService.generateResetToken(email);
             resetUser = new UserDTO(userService.findByEmail(email));
