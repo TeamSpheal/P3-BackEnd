@@ -1,7 +1,6 @@
 package com.revature.services;
 
 import com.revature.dtos.UserDTO;
-import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
