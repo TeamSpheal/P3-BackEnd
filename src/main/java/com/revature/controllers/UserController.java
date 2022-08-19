@@ -176,7 +176,7 @@ public class UserController {
      * @param email
      * @return
      */
-    @PostMapping("resetPW")
+    @PostMapping("/resetPW")
     public ResponseEntity<String> getResetPWToken(@RequestBody String email) {
         String resetToken = null;
         if (userService.doesEmailAlreadyExist(email)) {
