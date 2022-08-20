@@ -56,13 +56,13 @@ public class PostController {
     @PutMapping
     public ResponseEntity<PostDTO> upsertPost(@RequestBody PostDTO post) {
     	User author = userService.getUser(post.getAuthor().getId());
+    	if (author == null) {
+        	return ResponseEntity.badRequest().build();
+        }
     	UserMiniDTO authMini = new UserMiniDTO(author);
         post.setAuthor(authMini);
         Post upsertPost = new Post(post);
         this.postService.upsert(upsertPost);
-        if (author == null) {
-        	return ResponseEntity.badRequest().build();
-        }
     	return ResponseEntity.ok(post);
     }
     

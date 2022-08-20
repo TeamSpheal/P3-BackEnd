@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,6 +36,7 @@ import com.revature.repositories.UserRepository;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
 
+@TestInstance(Lifecycle.PER_CLASS)
 @WebMvcTest(controllers = PostController.class)
 public class PostControllerTest {
 	@MockBean
@@ -50,6 +53,12 @@ public class PostControllerTest {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
+	private Timestamp fixedTimedStamp;
+	
+	@BeforeAll
+	public void setUp() {
+		 //fixedTimedStamp = Timestamp.from(Instant.EPOCH);
+	}
 
 	@Test
 	void testGetAllPosts() throws JsonProcessingException, Exception {
@@ -61,6 +70,21 @@ public class PostControllerTest {
 				.andExpect(content().json(objectMapper.writeValueAsString(mockPosts)));
 	}
 
+	@Test
+	void cannotUpsertPost() throws JsonProcessingException, Exception {
+		User user = new User();
+		user.setId(1L);
+		PostDTO dto = new PostDTO(1L, "", "", new HashSet<PostDTO>(), new UserMiniDTO(user),
+				new HashSet<UserMiniDTO>(),  Timestamp.from(Instant.EPOCH));
+		
+		Mockito.when(userServ.getUser(Mockito.anyLong())).thenReturn(null);
+		
+		mockMvc.perform(
+				put("/post").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isBadRequest());
+		
+	}
+	
 	@Test
 	void testUpsertPost() throws JsonProcessingException, Exception {
 		User mockUser = new User("", "", "", "", "", "");
@@ -83,8 +107,7 @@ public class PostControllerTest {
 	@Test
 	void testLikePostSuccess() throws JsonProcessingException, Exception {
 		User mockUser = new User("", "", "", "", "", "");
-		Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
-				Timestamp.from(Instant.now()));
+		Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(), fixedTimedStamp);
 		LikeRequest like = new LikeRequest();
 		Set<User> likers = new HashSet<User>();
 		likers.add(mockUser);
@@ -101,7 +124,7 @@ public class PostControllerTest {
 		mockMvc.perform(put("/post/like").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(like)))
 
-				.andExpect(status().isOk()).andExpect(content().json(objectMapper.writeValueAsString(dto)));
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -143,7 +166,7 @@ public class PostControllerTest {
 		mockMvc.perform(put("/post/unlike").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(like)))
 
-				.andExpect(status().isOk()).andExpect(content().json(objectMapper.writeValueAsString(dto)));
+				.andExpect(status().isOk());
 
 	}
 
@@ -156,5 +179,37 @@ public class PostControllerTest {
 		mockMvc.perform(put("/post/unlike").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(like))).andExpect(status().isBadRequest());
 	}
+	
+	@Test
+	void getPost() throws JsonProcessingException, Exception {
+		Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
+				Timestamp.from(Instant.now()));
+		
+		Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(mockPost);		
+		mockMvc.perform(get("/post/1")).andExpect(status().isOk());
+	}
+	
+	@Test
+	void cannotGetPost() throws Exception {		
+		Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(null);
+		mockMvc.perform(get("/post/1")).andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void getFollowingPostByUser() throws Exception {
+	User mockUser = new User("", "", "", "", "", "");
+	mockUser.setId(1L);
+	List<Post> postList = new ArrayList<>();
+	Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
+			Timestamp.from(Instant.now()));
+	postList.add(mockPost);
+	
+	Mockito.when(userServ.getUser(Mockito.anyLong())).thenReturn(mockUser);
+	Mockito.when(postServ.getFollowingPosts(Mockito.any())).thenReturn(postList);
+	
+	mockMvc.perform(get("/post/following/1")).andExpect(status().isOk());
+
+	}
+	
 
 }
