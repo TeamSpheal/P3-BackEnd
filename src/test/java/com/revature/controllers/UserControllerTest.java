@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
 import com.revature.models.User;
-import com.revature.services.AWSService;
+import com.revature.services.ImageService;
 import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
@@ -35,16 +34,13 @@ public class UserControllerTest {
     private UserService userService;
     
     @MockBean
-    private AWSService awsService;
+    private ResetPWService resetPWService;
     
     @MockBean
-    private ResetPWService resetPWService;
+    private ImageService imageService;
 
     @Autowired
     private MockMvc mockMvc;
-    
-    @Autowired
-    Environment env;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -144,6 +140,7 @@ public class UserControllerTest {
     	String email = "nonexistent@void.net";
     	
     	/*Test*/
+    	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(false);
     	mockMvc.perform(post("/user/resetPW")
     			.contentType(MediaType.APPLICATION_JSON)
     			.content(email))
@@ -152,19 +149,22 @@ public class UserControllerTest {
     
     /**
      * Passing an email that exists, should return a 200 status and a "ResetToken" header
-     * As of the writing of this test, the email does not exist
+     * As of the writing of this test, the email does exist
      * @throws Exception  
      */
-//    @Test
-//    void getResetPWTokenOk() throws Exception {
-//    	/*Local Variables*/
-//    	String email = "nonexistent@void.net";
-//    	
-//    	/*Test*/
-//    	mockMvc.perform(post("/user/resetPW")
-//    			.contentType(MediaType.APPLICATION_JSON)
-//    			.content(email))
-//    			.andExpect(status().isOk())
-//    			.andExpect(header().exists("ResetToken"));
-//    }
+    @Test
+    void getResetPWTokenOk() throws Exception {
+    	/*Local Variables*/
+    	String email = "testuser@gmail.com";
+        User mockUser = new User();
+    	
+    	/*Test*/
+    	Mockito.when(userService.doesEmailAlreadyExist(email)).thenReturn(true);
+        Mockito.when(resetPWService.generateResetToken(email)).thenReturn("123");
+        Mockito.when(userService.findByEmail(email)).thenReturn(mockUser);
+    	mockMvc.perform(post("/user/resetPW")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(email))
+    			.andExpect(status().isOk());
+    }
 }

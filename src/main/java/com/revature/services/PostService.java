@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,8 +35,12 @@ public class PostService {
 	public Post upsert(Post post) {
 		return this.postRepository.save(post);
 	}
-	
-	public Set<Post> getPostByAuthor(User user) {
-		return this.postRepository.findByUsers(user);
+	public List<Post> getFollowingPosts(User user) {
+		Set<User> following = user.getFollowing();
+		List<Post> posts = new ArrayList<>();
+		for (User u : following) {
+			posts.addAll(this.postRepository.findAllByAuthorId(u.getId()));
+		}
+		return posts;
 	}
 }

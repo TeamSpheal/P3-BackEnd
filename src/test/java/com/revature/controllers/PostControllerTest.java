@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.LikeRequest;
-import com.revature.dtos.PostDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
