@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.LikeRequest;
 import com.revature.dtos.PostDTO;
+import com.revature.dtos.UserMiniDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
@@ -53,14 +54,16 @@ public class PostController {
      */
     @Authorized
     @PutMapping
-    public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
+    public ResponseEntity<PostDTO> upsertPost(@RequestBody PostDTO post) {
     	User author = userService.getUser(post.getAuthor().getId());
-        Post newPost = new Post(post);
-        newPost.setAuthor(author);
+    	UserMiniDTO authMini = new UserMiniDTO(author);
+        post.setAuthor(authMini);
+        Post upsertPost = new Post(post);
+        this.postService.upsert(upsertPost);
         if (author == null) {
         	return ResponseEntity.badRequest().build();
         }
-    	return ResponseEntity.ok(this.postService.upsert(newPost));
+    	return ResponseEntity.ok(post);
     }
     
     
