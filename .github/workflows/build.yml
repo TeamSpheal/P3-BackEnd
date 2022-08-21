@@ -33,4 +33,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          REVASPHERE_FRONTEND_URL: "http://localhost:4200"
+          SPRING_PROFILES_ACTIVE: dev
+          REV_EMAIL: ${{ secrets.REV_EMAIL }}
+          REV_PASS: ${{ secrets.REV_PASS }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TeamSpheal_P3-BackEnd -Dmaven.test.failure.ignore=true
