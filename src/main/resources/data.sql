@@ -18,7 +18,7 @@ INSERT INTO users (id, email, password, first_name, last_name, profile_img, user
     'ctang'
 );
 
-INSERT INTO posts (id, text, image_url, author_id) VALUES (
+INSERT INTO posts (id, text, image_url, author_id, created_date) VALUES (
     default,
     'The classic',
     'https://i.imgur.com/fhgzVEt.jpeg',
@@ -31,5 +31,3 @@ INSERT INTO posts (id, text, image_url, author_id) VALUES (
     '',
     1, now()
 );
-
-ALTER TABLE users ALTER COLUMN id RESTART WITH (select max(id)+1 from users);
