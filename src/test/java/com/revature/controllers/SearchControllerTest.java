@@ -44,4 +44,17 @@ public class SearchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(mockUsers)));
     }
+    
+    @Test
+    void cannotSearchForUser() throws JsonProcessingException, Exception {
+        List<UserDTO> mockUsers = new ArrayList<>();
+
+        Mockito.when(searchService.queryUserTable("test")).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/search/test"))
+                .andExpect(status().isBadRequest());
+                
+    }
+    
+    
 }

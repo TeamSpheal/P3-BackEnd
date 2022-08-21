@@ -35,6 +35,11 @@ public class PostService {
 	public Post upsert(Post post) {
 		return this.postRepository.save(post);
 	}
+
+	public Set<Post> getPostByAuthor(User user) {
+		return this.postRepository.findByAuthor(user);
+	}
+	
 	public List<Post> getFollowingPosts(User user) {
 		Set<User> following = user.getFollowing();
 		List<Post> posts = new ArrayList<>();

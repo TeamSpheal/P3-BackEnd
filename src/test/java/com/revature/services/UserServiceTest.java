@@ -390,4 +390,25 @@ public class UserServiceTest {
 		Mockito.when(userRepo.existsByUsername(username)).thenReturn(true);
 		assertTrue(userServ.doesUsernameAlreadyExist(username));
 	}
+	
+	@Test
+	void findById(){
+		Mockito.when(userRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new User()));
+		Assertions.assertNotNull(userServ.findById(Mockito.anyLong()));
+	}
+	
+	@Test
+	void findAllUsers() {
+		Mockito.when(userRepo.findAll()).thenReturn(new ArrayList<User>());
+		Assertions.assertNotNull(userServ.findAllUsers());
+	}
+	
+	@Test
+	void findAllUsersFromList() {
+		Mockito.when(userRepo.findAllById(Mockito.anyIterable())).thenReturn(new ArrayList<User>());
+		Assertions.assertNotNull(userServ.findAllUsersFromList(Mockito.anyList()));
+	}
+	
+	
+	
 }
