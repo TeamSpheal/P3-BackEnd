@@ -29,17 +29,15 @@ public class User {
 	private String lastName;
 	private String profileImg;
 	// @JoinTable(name = "follow", joinColumns =
-	// @JoinColumn(name = "user_id"), inverseJoinColumns = 
+	// @JoinColumn(name = "user_id"), inverseJoinColumns =
 	// @JoinColumn(name = "target_id"))
 
 	@ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
 	private Set<User> followers;
 
-    @JoinTable(name = "follow",
-            joinColumns = {
-				@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false)},
-            inverseJoinColumns = {
-				@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)})
+	@JoinTable(name = "follow", joinColumns = {
+			@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) })
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<User> following;
 
@@ -75,12 +73,12 @@ public class User {
 		this.profileImg = author.getProfileImg();
 	}
 
-	public void followUser (User user) {
+	public void followUser(User user) {
 		this.following.add(user);
 		user.getFollowers().add(this);
 	}
 
-	public void unFollowUser (User user) {
+	public void unFollowUser(User user) {
 		if (following.contains(user)) {
 			this.following.remove(user);
 		}

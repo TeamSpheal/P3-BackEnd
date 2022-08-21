@@ -4,6 +4,7 @@ server:
 spring:
   profiles:
     active: dev
+
   jpa:
     hibernate:
       ddl-auto: create-drop
