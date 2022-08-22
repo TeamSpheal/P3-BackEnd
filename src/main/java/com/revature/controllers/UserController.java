@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +50,7 @@ public class UserController {
     private final AWSService awsService;
     private final ResetPWService resetPWService;
     private final Path root = Paths.get("src/main/resources/uploads");
+    private HashSet<User> setFollowing = new HashSet<User>();
 
     @Autowired
     Environment env;
@@ -102,6 +104,19 @@ public class UserController {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
+        }
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+    }
+    
+    // Get follower to the logged in user
+    @GetMapping("/{userId}/follower/{targetId}")
+    public ResponseEntity<HashSet<User>> isFollowing(@PathVariable("userId") Long userId,
+            @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
+        // check if id's are the same
+        if (!userId.equals(targetId)) {
+            Optional<User> user = userService.findById(userId);
+			setFollowing = (HashSet<User>) userService.getFollowing(user.get());
+			return ResponseEntity.ok(setFollowing);
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
     }
