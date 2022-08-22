@@ -2,7 +2,9 @@ package com.revature.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,11 +189,16 @@ public class UserController {
      * @throws IOException
      * @author Colby Tang
      */
-    @PostMapping("/image-upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+    @PostMapping(path="/image-upload", consumes="multipart/form-data", produces="application/json")
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
         try {
             String url = imageService.uploadMultipartFile(multipartFile);
-            return ResponseEntity.ok(url);
+
+            // Workaround for front end since it tries to parse response as a JSON
+            Map<String, String> urlMap = new HashMap<>();
+            urlMap.put("url", url);
+            
+            return ResponseEntity.ok(urlMap);
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
