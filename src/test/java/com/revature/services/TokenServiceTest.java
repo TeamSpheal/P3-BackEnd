@@ -1,6 +1,8 @@
 package com.revature.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Date;
 
@@ -8,17 +10,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.revature.SocialMediaApplication;
 import com.revature.auth.JwtConfig;
 import com.revature.dtos.UserDTO;
-import com.revature.models.User;
 import com.revature.exceptions.FailedAuthenticationException;
+import com.revature.models.User;
 
 import io.jsonwebtoken.Jwts;
 
 /**
  * @author Colby Tang
  */
-@SpringBootTest
+@SpringBootTest(classes = SocialMediaApplication.class)
 class TokenServiceTest {
     @Autowired
 	private JwtConfig jwtConfig;
