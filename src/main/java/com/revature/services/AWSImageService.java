@@ -3,6 +3,9 @@ package com.revature.services;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 @Profile(value="test")
 @Service
 public class AWSImageService implements ImageService {
+    private final Logger logger = LoggerFactory.getLogger(AWSImageService.class);
+
     /**
      * The region the S3 Bucket is in.
      */
@@ -56,16 +61,16 @@ public class AWSImageService implements ImageService {
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process 
             // it, so it returned an error response.
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw e;
         } catch (SdkClientException e) {
             // Amazon S3 couldn't be contacted for a response, or the client
             // couldn't parse the response from Amazon S3.
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw e;
         } catch (IOException e) {
             // Can't get InputStream from multipartFile
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw e;
         }
     }

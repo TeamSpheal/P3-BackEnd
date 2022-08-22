@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
@@ -43,6 +46,7 @@ public class UserController {
     private final ImageService imageService;
     private final ResetPWService resetPWService;
     private ObjectMapper objMapper = new ObjectMapper();
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     Environment env;
@@ -78,15 +82,15 @@ public class UserController {
     // Add follower to the logged in user
     @PostMapping("/{userId}/follower/{targetId}")
     public ResponseEntity<Void> addFollower(@PathVariable("userId") Long userId,
-            @PathVariable("targetId") Long targetId) {
+            @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
         // check if id's are the same
         if (!userId.equals(targetId)) {
             try {
                 userService.addFollower(userId, targetId);
                 return ResponseEntity.status(HttpStatus.OK).build();
             } catch (RecordNotFoundException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                logger.error(e.getMessage());
+                throw e;
             }
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
@@ -200,7 +204,7 @@ public class UserController {
             
             return ResponseEntity.ok(urlMap);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw e;
         }
     }
