@@ -16,13 +16,12 @@ import java.util.Optional;
 
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes=SearchServiceImpl.class)
 public class SearchServiceTest {
 	@MockBean
 	private UserRepository userRepo;
 
 	@Test
-	@DisplayName("Test should Pass when user search for friends")
 	public void showAllUser() {
 		List<UserDTO> mockUsers = new ArrayList<>();
 		SearchServiceImpl mockSearch = new SearchServiceImpl(userRepo);

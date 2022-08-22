@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.revature.SocialMediaApplication;
 import com.revature.dtos.UserDTO;
 import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.RecordNotFoundException;
@@ -26,7 +27,7 @@ import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
-@SpringBootTest
+@SpringBootTest(classes=UserService.class)
 public class UserServiceTest {
 	@MockBean
 	private UserRepository userRepo;

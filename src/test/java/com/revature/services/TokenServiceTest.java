@@ -21,7 +21,7 @@ import io.jsonwebtoken.Jwts;
 /**
  * @author Colby Tang
  */
-@SpringBootTest(classes = SocialMediaApplication.class)
+@SpringBootTest(classes=SocialMediaApplication.class)
 class TokenServiceTest {
     @Autowired
 	private JwtConfig jwtConfig;
