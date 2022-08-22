@@ -17,6 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	
 	List<Post> findAllByAuthorId(long user);
 	
-	@Query(value = "select * from posts where author_id in (select target_id from follow where user_id=?1 union select 1)order by created_date", nativeQuery=true)
+	//@Query(value = "select * from posts where author_id in (select target_id from follow where user_id=?1 union select 1)order by created_date", nativeQuery=true)
+	@Query(value="select * from (select * from (select * from posts left join posts_comments on posts.id=posts_comments.comments_id) as c where c.comments_id is null) as p where p.author_id in ( select target_id from follow where user_id=1 union select 1) order by p.created_date;", nativeQuery=true)
 	List<Post> findUserPostFeed(long user);
 }
