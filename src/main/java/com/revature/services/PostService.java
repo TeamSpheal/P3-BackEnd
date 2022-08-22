@@ -1,11 +1,14 @@
 package com.revature.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import com.revature.models.Post;
+import com.revature.models.User;
 import com.revature.repositories.PostRepository;
 
 @Service
@@ -31,5 +34,18 @@ public class PostService {
 
 	public Post upsert(Post post) {
 		return this.postRepository.save(post);
+	}
+
+	public Set<Post> getPostByAuthor(User user) {
+		return this.postRepository.findByAuthor(user);
+	}
+	
+	public List<Post> getFollowingPosts(User user) {
+		Set<User> following = user.getFollowing();
+		List<Post> posts = new ArrayList<>();
+		for (User u : following) {
+			posts.addAll(this.postRepository.findAllByAuthorId(u.getId()));
+		}
+		return posts;
 	}
 }

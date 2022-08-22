@@ -1,9 +1,10 @@
 package com.revature.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.util.regex.*;
 
 @Service
 public class EmailService {
@@ -13,7 +14,13 @@ public class EmailService {
 		this.mailSender = mailSender;
 	}
 	
-	public void sendEmail(String toEmail, String username, String subject, String body) {
+	public SimpleMailMessage sendEmail(String toEmail, String username, String subject, String body) {
+		
+		Boolean checkEmail = Pattern.matches("[a-z0-9_-]{1,63}@[a-z]{1,30}[.][a-z]{2,5}", toEmail);
+	
+		if(checkEmail == false) {
+			return null;
+		}
 		
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom("revSpherePassReset@gmail.com");
@@ -32,6 +39,8 @@ public class EmailService {
 		mailSender.send(message);
 		
 		System.out.println("Email Success!");
+		
+		return message;
 		
 	}
 	

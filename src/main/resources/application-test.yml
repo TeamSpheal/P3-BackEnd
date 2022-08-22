@@ -25,7 +25,7 @@ spring:
     defer-datasource-initialization: true
     open-in-view: true # Turn off OSIV warning
     properties:
-      hiberate.format_sql: true
+      hibernate.format_sql: true
     show-sql: true
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -43,4 +43,6 @@ logging:
     web: debug
 jwt.secret: ${JWT_SECRET}
 aws.bucket.name: ${AWS_BUCKET_NAME}
-teamspeal.frontend.url: ${REVASPHERE_FRONTEND_URL}
+teamspeal.frontend.url: http://localhost:4200
+
+
