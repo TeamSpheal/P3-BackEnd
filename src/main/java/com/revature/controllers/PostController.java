@@ -117,7 +117,7 @@ public class PostController {
     @GetMapping("/following/{userId}")
     public ResponseEntity<List<PostDTO>> getFollowingPostFeed(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserFeed(userId);
-    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
+    	List<PostDTO> postsDto = new ArrayList<>();
     	for(Post post : posts) {
     		postsDto.add(new PostDTO(post));
     	}
@@ -127,7 +127,7 @@ public class PostController {
     @GetMapping("/get/{userId}")
     public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserPosts(userId);
-    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
+    	List<PostDTO> postsDto = new ArrayList<>();
     	for(Post post : posts) {
     		postsDto.add(new PostDTO(post));
     	}
