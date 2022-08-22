@@ -83,13 +83,23 @@ public class PostController {
     
     @Authorized
     @GetMapping("/get/{id}")
-    public ResponseEntity<Set<PostDTO>> getAllPostsById(@PathVariable long id){
-    	User user  =  userService.getUser(id);
-    	Set<Post> list = postService.getPostByAuthor(user);
-    	Set<PostDTO> hashset = new HashSet<>();
+    public ResponseEntity<List<PostDTO>> getAllPostsByAuthor(@PathVariable long id){
+    	List<Post> list = postService.getPostsByAuthor(id);
+    	List<PostDTO> listDto = new ArrayList<>();
     	for(Post p : list) {
-    		hashset.add(new PostDTO(p));
+    		listDto.add(new PostDTO(p));
     	}
-    	return ResponseEntity.ok(hashset);
+    	return ResponseEntity.ok(listDto);
     }
+    
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<List<PostDTO>> getFollowingPostFeed(@PathVariable("userId") long userId) {
+    	List<Post> posts = postService.getUserFeed(userId);
+    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
+    	for(Post post : posts) {
+    		postsDto.add(new PostDTO(post));
+    	}
+    	return ResponseEntity.ok(postsDto);
+    }
+
 }

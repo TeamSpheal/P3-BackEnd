@@ -35,7 +35,12 @@ public class PostService {
 		return this.postRepository.save(post);
 	}
 	
-	public Set<Post> getPostByAuthor(User user) {
-		return this.postRepository.findByUsers(user);
+	public List<Post> getPostsByAuthor(long id) {
+		return this.postRepository.findByAuthorId(id);
+	}
+	
+	public List<Post> getUserFeed(long id) {
+		List<Post> posts = this.postRepository.findUserPostFeed(id);
+		return posts;
 	}
 }
