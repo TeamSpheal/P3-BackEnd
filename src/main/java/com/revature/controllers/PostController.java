@@ -1,7 +1,6 @@
 package com.revature.controllers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.LikeRequest;
 import com.revature.dtos.PostDTO;
-import com.revature.exceptions.UserDoesNotExistException;
+import com.revature.dtos.UserMiniDTO;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
@@ -34,6 +33,10 @@ public class PostController {
         this.userService = userService;
     }
     
+    
+    /** 
+     * @return ResponseEntity<List<PostDTO>>
+     */
     @Authorized
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
@@ -44,18 +47,30 @@ public class PostController {
     	return ResponseEntity.ok(listDto);
     }
     
+    
+    /** 
+     * @param post
+     * @return ResponseEntity<Post>
+     */
     @Authorized
     @PutMapping
-    public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
+    public ResponseEntity<PostDTO> upsertPost(@RequestBody PostDTO post) {
     	User author = userService.getUser(post.getAuthor().getId());
-        Post newPost = new Post(post);
-        newPost.setAuthor(author);
-        if (author == null) {
+    	if (author == null) {
         	return ResponseEntity.badRequest().build();
         }
-    	return ResponseEntity.ok(this.postService.upsert(newPost));
+    	UserMiniDTO authMini = new UserMiniDTO(author);
+        post.setAuthor(authMini);
+        Post upsertPost = new Post(post);
+        this.postService.upsert(upsertPost);
+    	return ResponseEntity.ok(post);
     }
     
+    
+    /** 
+     * @param like
+     * @return ResponseEntity<PostDTO>
+     */
     @PutMapping("/like")
     public ResponseEntity<PostDTO> likePost(@RequestBody LikeRequest like) {
     	User user = userService.getUser(like.getUserId());
@@ -70,6 +85,11 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
+    
+    /** 
+     * @param unlike
+     * @return ResponseEntity<PostDTO>
+     */
     @PutMapping("/unlike")
     public ResponseEntity<PostDTO> unlikePost(@RequestBody LikeRequest unlike) {
     	User user = userService.getUser(unlike.getUserId());

@@ -17,7 +17,7 @@ import com.revature.repositories.UserRepository;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	/**
 	 * A constructor to be used to inject dependencies
@@ -62,6 +62,19 @@ public class UserService {
 	public Optional<User> findById(long id) {
 		return userRepository.findById(id);
 	}
+	
+	/**
+	 * Returns a user object with a given email
+	 * @param email
+	 * @return
+	 */
+	public User findByEmail(String email) {
+		Optional<User> userOpt = userRepository.findByEmail(email);
+		if (userOpt.isPresent()) {
+			return userOpt.get();
+		}
+		return null;
+	}
 
 	/**
 	 * Returns a list of all users in the database
@@ -94,7 +107,7 @@ public class UserService {
 	public User save(User user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
 		/* Local Variables */
 		Optional<User> testOpt;
-		User test = new User();
+		User test;
 
 		/* Validate Data */
 		// Test if the email exists and if it does test if it is linked to the current
@@ -103,7 +116,7 @@ public class UserService {
 			testOpt = userRepository.findById(user.getId());
 			if (testOpt.isPresent()) {// Record with the given id exists
 				test = testOpt.get();
-				if (!user.getEmail().toString().equals(test.getEmail().toString())) {// Given email does not match the
+				if (!user.getEmail().equals(test.getEmail())) {// Given email does not match the
 																						// of current object in database
 					throw new EmailAlreadyExistsException();
 				}
@@ -118,7 +131,7 @@ public class UserService {
 			testOpt = userRepository.findById(user.getId());
 			if (testOpt.isPresent()) {// Record with the given id exists
 				test = testOpt.get();
-				if (!user.getUsername().toString().equals(test.getUsername().toString())) {// Given email does not match
+				if (!user.getUsername().equals(test.getUsername())) {// Given email does not match
 																							// the of current object in
 																							// database
 					throw new UsernameAlreadyExistsException();
@@ -139,7 +152,7 @@ public class UserService {
     		return userOpt.get().getFollowers(); 
     	}
     	else {
-    		return new HashSet<User>(); 
+    		return new HashSet<>(); 
     	}
     }
     
@@ -150,10 +163,10 @@ public class UserService {
     		return userOpt.get().getFollowing(); 
     	}
 		return new HashSet<>();
-    }
-    
-    // 
-    public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
+	}
+
+	//
+	public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
 		Optional<User> oUser = userRepository.findById(userId);
 		Optional<User> oTargetUser = userRepository.findById(targetId);
 		if (!oUser.isPresent()) {
@@ -162,7 +175,7 @@ public class UserService {
 		if (!oTargetUser.isPresent()) {
 			throw new RecordNotFoundException("Target user not found!");
 		}
-    	try {
+		try {
 			User user = oUser.get();
 			User targetUser = oTargetUser.get();
 
@@ -170,13 +183,13 @@ public class UserService {
 			user.followUser(targetUser);
 
 			// Save both users
-        	userRepository.save(user);
-        	userRepository.save(targetUser);
-        	return true;
-    	}catch (Exception e) {
-    		e.getStackTrace(); 
-    		return false; 
-    	}
+			userRepository.save(user);
+			userRepository.save(targetUser);
+			return true;
+		} catch (Exception e) {
+			e.getStackTrace();
+			return false;
+		}
 	}
 
 	/**
@@ -220,7 +233,7 @@ public class UserService {
 			testOpt = userRepository.findById(user.getId());
 			if (testOpt.isPresent()) {// Record with the given id exists
 				test = testOpt.get();
-				if (!user.getEmail().toString().equals(test.getEmail().toString())) {// Given email does not match the
+				if (!user.getEmail().equals(test.getEmail())) {// Given email does not match the
 																						// of current object in database
 					throw new EmailAlreadyExistsException();
 				}
@@ -235,7 +248,7 @@ public class UserService {
 			testOpt = userRepository.findById(user.getId());
 			if (testOpt.isPresent()) {// Record with the given id exists
 				test = testOpt.get();
-				if (!user.getUsername().toString().equals(test.getUsername().toString())) {// Given email does not match
+				if (!user.getUsername().equals(test.getUsername())) {// Given email does not match
 																							// the of current object in
 																							// database
 					throw new UsernameAlreadyExistsException();
