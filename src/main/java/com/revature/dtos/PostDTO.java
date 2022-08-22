@@ -2,6 +2,7 @@ package com.revature.dtos;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.revature.models.Post;

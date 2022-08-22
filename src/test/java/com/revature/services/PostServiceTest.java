@@ -1,26 +1,21 @@
 package com.revature.services;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.revature.SocialMediaApplication;
 import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 
-@SpringBootTest(classes = SocialMediaApplication.class)
+@SpringBootTest(classes = PostService.class)
 class PostServiceTest {
 	@MockBean
 	private UserRepository userRepo;
