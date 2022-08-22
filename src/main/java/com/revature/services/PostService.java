@@ -20,6 +20,11 @@ public class PostService {
 		this.postRepository = postRepository;
 	}
 	
+	
+	/** 
+	 * @param id
+	 * @return Post
+	 */
 	public Post getPost(long id) {
 		Optional<Post> postOpt = postRepository.findById(id);
 		if (postOpt.isPresent()) {
@@ -28,24 +33,42 @@ public class PostService {
 		return null;
 	}
 
+	
+	/** 
+	 * @return List<Post>
+	 */
 	public List<Post> getAll() {
 		return this.postRepository.findNonCommentPosts();
 	}
 
+	
+	/** 
+	 * @param post
+	 * @return Post
+	 */
 	public Post upsert(Post post) {
 		return this.postRepository.save(post);
 	}
 
-	public Set<Post> getPostByAuthor(User user) {
-		return this.postRepository.findByAuthor(user);
-	}
 	
-	public List<Post> getFollowingPosts(User user) {
-		Set<User> following = user.getFollowing();
-		List<Post> posts = new ArrayList<>();
-		for (User u : following) {
-			posts.addAll(this.postRepository.findAllByAuthorId(u.getId()));
-		}
+	/** 
+	 * Get all the posts from people they follow and themselves.
+	 * @param id
+	 * @return List<Post>
+	 */
+	public List<Post> getUserFeed(long id) {
+		List<Post> posts = this.postRepository.findUserPostFeed(id);
+		return posts;
+	}
+
+	
+	/** 
+	 * Get all the posts from a user.
+	 * @param id
+	 * @return List<Post>
+	 */
+	public List<Post> getUserPosts(long id) {
+		List<Post> posts = this.postRepository.findAllByAuthorId(id);
 		return posts;
 	}
 }

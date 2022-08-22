@@ -196,18 +196,17 @@ public class PostControllerTest {
 	}
 	
 	@Test
-	void getFollowingPostByUser() throws Exception {
-	User mockUser = new User("", "", "", "", "", "");
-	mockUser.setId(1L);
-	List<Post> postList = new ArrayList<>();
-	Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
-			Timestamp.from(Instant.now()));
-	postList.add(mockPost);
-	
-	Mockito.when(userServ.getUser(Mockito.anyLong())).thenReturn(mockUser);
-	Mockito.when(postServ.getFollowingPosts(Mockito.any())).thenReturn(postList);
-	
-	mockMvc.perform(get("/post/following/1")).andExpect(status().isOk());
+	void getFollowingPostFeed() throws Exception {
+		User mockUser = new User("", "", "", "", "", "");
+		mockUser.setId(1L);
+		List<Post> postList = new ArrayList<>();
+		Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
+				Timestamp.from(Instant.now()));
+		postList.add(mockPost);
+		
+		Mockito.when(postServ.getUserFeed(1l)).thenReturn(postList);
+		
+		mockMvc.perform(get("/post/following/1")).andExpect(status().isOk());
 
 	}
 	

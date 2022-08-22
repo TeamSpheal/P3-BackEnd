@@ -85,14 +85,14 @@ class PostServiceTest {
 
 	
 	@Test
-	public void getPostByAuthor() {
+	public void getUserFeed() {
 		User user = new User();
-		Set<Post> set = new HashSet<>();
+		user.setId(1l);
+		// Set<Post> set = new HashSet<>();
+		List<Post> postList = new ArrayList<>();
 		
-		Mockito.when(postRepo.findByAuthor(user)).thenReturn(set);
+		Mockito.when(postRepo.findUserPostFeed(user.getId())).thenReturn(postList);
 		
-		Assertions.assertNotNull(postServ.getPostByAuthor(user));
-		Assertions.assertEquals(postServ.getPostByAuthor(user), set);
-		
+		Assertions.assertNotNull(postServ.getUserFeed(user.getId()));
 	}
 }
