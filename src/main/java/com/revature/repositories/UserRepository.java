@@ -6,6 +6,7 @@ import java.util.Optional;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.revature.models.User;
@@ -13,6 +14,9 @@ import com.revature.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	// To check if the user is already following the target id. 
+	@Query(value = "select * from follow where target_id = ?1 and user_id = ?2", nativeQuery = true)
+	public boolean isAlready(int target, int user); 
 	/**
 	 * Returns a user object based on a given email and password
 	 * 

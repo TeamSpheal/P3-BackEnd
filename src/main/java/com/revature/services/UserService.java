@@ -155,6 +155,7 @@ public class UserService {
     // 
     public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
 		Optional<User> oUser = userRepository.findById(userId);
+		
 		Optional<User> oTargetUser = userRepository.findById(targetId);
 		if (!oUser.isPresent()) {
 			throw new RecordNotFoundException("Current user not found!");
@@ -162,6 +163,9 @@ public class UserService {
 		if (!oTargetUser.isPresent()) {
 			throw new RecordNotFoundException("Target user not found!");
 		}
+		
+		// to see if it already exist. 
+		
     	try {
 			User user = oUser.get();
 			User targetUser = oTargetUser.get();
