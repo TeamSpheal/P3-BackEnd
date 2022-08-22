@@ -35,12 +35,12 @@ public class PostService {
 	public Post upsert(Post post) {
 		return this.postRepository.save(post);
 	}
-	public List<Post> getFollowingPosts(User user) {
-		Set<User> following = user.getFollowing();
-		List<Post> posts = new ArrayList<Post>();
-		for (User u : following) {
-			posts.addAll(this.postRepository.findAllByAuthorId(u.getId()));
-		}
+	public List<Post> getUserFeed(long id) {
+		List<Post> posts = this.postRepository.findUserPostFeed(id);
+		return posts;
+	}
+	public List<Post> getUserPosts(long id) {
+		List<Post> posts = this.postRepository.findAllByAuthorId(id);
 		return posts;
 	}
 }

@@ -16,4 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	public List<Post> findNonCommentPosts();
 	
 	List<Post> findAllByAuthorId(long user);
+	
+	@Query(value = "select * from posts where author_id in (select target_id from follow where user_id=?1 union select 1)order by created_date", nativeQuery=true)
+	List<Post> findUserPostFeed(long user);
 }
