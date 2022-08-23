@@ -122,14 +122,14 @@ public class UserController {
      */
     @Authorized
     @PostMapping("/update/profile")
-    public ResponseEntity<UserMiniDTO> updateUser(@RequestBody UserDTO updatedUser)
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO updatedUser)
             throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         // Pass object to service layer
         User result = userService.update(updatedUser);
 
         // Assuming an exception is not thrown, remove unnecessary data and return it
         // with a status of 200
-        UserMiniDTO bodyDTO = new UserMiniDTO(result);
+        UserDTO bodyDTO = new UserDTO(result);
         return ResponseEntity.ok(bodyDTO);
     }
 
