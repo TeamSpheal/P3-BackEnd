@@ -62,10 +62,10 @@ public class UserDTO {
         this.followers = dtoFollowers;
 
         // // Convert each following into UserMiniDTO
-        Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();
-        for (User followering : user.getFollowing()) {
-            dtoFollowing.add(new UserMiniDTO(followering));
+        Set<UserMiniDTO> userMiniSetFollowing = new LinkedHashSet<>();
+        for (User followingUser : user.getFollowing()) {
+            userMiniSetFollowing.add(new UserMiniDTO(followingUser));
         }
-        this.following = dtoFollowing;
+        this.following = userMiniSetFollowing;
     }
 }
