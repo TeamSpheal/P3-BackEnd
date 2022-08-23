@@ -1,12 +1,10 @@
 package com.revature.controllers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,6 +33,10 @@ public class PostController {
         this.userService = userService;
     }
     
+    
+    /** 
+     * @return ResponseEntity<List<PostDTO>>
+     */
     @Authorized
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
@@ -45,14 +47,30 @@ public class PostController {
     	return ResponseEntity.ok(listDto);
     }
     
+    
+    /** 
+     * @param post
+     * @return ResponseEntity<Post>
+     */
     @Authorized
     @PutMapping
-    public ResponseEntity<Post> upsertPost(@RequestBody PostDTO post) {
-        post.setAuthor(new UserMiniDTO(1l, "username", "profileURL"));
-        Post newPost = new Post(post);
-    	return ResponseEntity.ok(this.postService.upsert(newPost));
+    public ResponseEntity<PostDTO> upsertPost(@RequestBody PostDTO post) {
+    	User author = userService.getUser(post.getAuthor().getId());
+    	if (author == null) {
+        	return ResponseEntity.badRequest().build();
+        }
+    	UserMiniDTO authMini = new UserMiniDTO(author);
+        post.setAuthor(authMini);
+        Post upsertPost = new Post(post);
+        this.postService.upsert(upsertPost);
+    	return ResponseEntity.ok(post);
     }
     
+    
+    /** 
+     * @param like
+     * @return ResponseEntity<PostDTO>
+     */
     @PutMapping("/like")
     public ResponseEntity<PostDTO> likePost(@RequestBody LikeRequest like) {
     	User user = userService.getUser(like.getUserId());
@@ -67,6 +85,11 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
+    
+    /** 
+     * @param unlike
+     * @return ResponseEntity<PostDTO>
+     */
     @PutMapping("/unlike")
     public ResponseEntity<PostDTO> unlikePost(@RequestBody LikeRequest unlike) {
     	User user = userService.getUser(unlike.getUserId());

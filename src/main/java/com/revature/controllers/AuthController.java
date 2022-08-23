@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +36,13 @@ public class AuthController {
         this.tokenService = tokenService;
     }
 
+    
+    /** 
+     * @param loginRequest
+     * @param session
+     * @return ResponseEntity<UserDTO>
+     * @throws FailedAuthenticationException
+     */
     @PostMapping(path="/login", produces="application/json")
     public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest, HttpSession session) throws FailedAuthenticationException {
         Optional<User> optional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
@@ -53,6 +59,11 @@ public class AuthController {
         return ResponseEntity.status(200).header("Auth", jws).body(user);
     }
 
+    
+    /** 
+     * @param session
+     * @return ResponseEntity<Void>
+     */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpSession session) {
         session.removeAttribute("user");
@@ -60,6 +71,13 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    
+    /** 
+     * @param registerRequest
+     * @return ResponseEntity<UserDTO>
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody RegisterRequest registerRequest) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         User created = new User(
