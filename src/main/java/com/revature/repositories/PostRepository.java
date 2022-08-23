@@ -17,18 +17,12 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 	
 	List<Post> findAllByAuthorId(long user);
 	
-	@Query(value = "select * from posts "
-			+ "where author_id in "
-			+ "( "
-			+ "  select user_id from follow where target_id=?1 "
-			+ "  union "
-			+ "  select ?1 "
-			+ ") "
-			+ "and id not in "
-			+ "( "
-			+ "  SELECT COMMENTS_ID FROM POSTS_COMMENTS "
-			+ ") "
-			+ "order by created_date desc "
-			+ ";", nativeQuery=true)
+	@Query(value = "select * from posts\r\n"
+			+ "where author_id in\r\n"
+			+ "( select target_id from follow where user_id=1\r\n"
+			+ "  union\r\n"
+			+ "  select 1\r\n"
+			+ ")\r\n"
+			+ "order by created_date desc;", nativeQuery=true)
 	List<Post> findUserPostFeed(long user);
 }
