@@ -84,7 +84,6 @@ public class UserController {
     public ResponseEntity<Void> removeFollower(@PathVariable("userId") Long userId, 
 			@PathVariable("targetId") Long targetId) throws RecordNotFoundException {
  
-    		//boolean isRemoved;
 			try {
 				userService.removeFollower(userId, targetId);
     			return ResponseEntity.status(HttpStatus.OK).build();
@@ -228,8 +227,7 @@ public class UserController {
             
             return ResponseEntity.ok(urlMap);
         } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw e;
+            throw new IOException(e);
         }
     }
 }

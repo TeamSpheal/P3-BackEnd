@@ -9,12 +9,12 @@ import java.util.LinkedHashSet;
 
 import com.revature.models.User;
 
-
 /**
  * A DTO of User that does not have the password
  * and the following and followers are UserMiniDTOs
  * rather than full Users. Primarily used to pass
  * the user from a request and in a response.
+ * 
  * @author Colby Tang
  */
 @Data
@@ -33,15 +33,17 @@ public class UserDTO {
 
     /**
      * This is for validating a JWT in TokenServiceImpl
+     * 
      * @author Colby Tang
      */
-    public UserDTO (long id, String username) {
+    public UserDTO(long id, String username) {
         this.id = id;
         this.username = username;
     }
 
     /**
      * This is to convert a user object into a dto
+     * 
      * @param user
      */
     public UserDTO(User user) {
@@ -51,13 +53,15 @@ public class UserDTO {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.profileImg = user.getProfileImg();
-        
+
+        // Convert each follower into UserMiniDTO
         Set<UserMiniDTO> dtoFollowers = new LinkedHashSet<>();
         for (User follower : user.getFollowers()) {
-           dtoFollowers.add(new UserMiniDTO(follower));
-       }
+            dtoFollowers.add(new UserMiniDTO(follower));
+        }
         this.followers = dtoFollowers;
 
+        // // Convert each following into UserMiniDTO
         Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();
         for (User followering : user.getFollowing()) {
             dtoFollowing.add(new UserMiniDTO(followering));

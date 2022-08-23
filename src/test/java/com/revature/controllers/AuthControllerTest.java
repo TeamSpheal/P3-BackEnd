@@ -31,7 +31,7 @@ import com.revature.dtos.LoginRequest;
 
 
 @WebMvcTest(controllers = AuthController.class)
-public class AuthControllerTest {
+class AuthControllerTest {
 	
 	@MockBean
 	private AuthService authServ;

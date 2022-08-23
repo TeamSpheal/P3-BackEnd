@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
  */
 @ResponseStatus (value = HttpStatus.UNAUTHORIZED, reason = "Authentication failed!")
 public class FailedAuthenticationException extends Exception {
-    public FailedAuthenticationException () { super(); };
+    public FailedAuthenticationException () { super(); }
 
     public FailedAuthenticationException (String message) {
         super(message);
