@@ -4,11 +4,8 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,22 +27,27 @@ public class AuthController {
 
     private final AuthService authService;
     private final TokenService tokenService;
-    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthService authService, TokenService tokenService) {
         this.authService = authService;
         this.tokenService = tokenService;
     }
 
+    
+    /** 
+     * @param loginRequest
+     * @param session
+     * @return ResponseEntity<UserDTO>
+     * @throws FailedAuthenticationException
+     */
     @PostMapping(path="/login", produces="application/json")
-    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest, HttpSession session) throws FailedAuthenticationException {
+    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest) throws FailedAuthenticationException {
         Optional<User> optional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
 
         if(optional.isEmpty()) {
             throw new FailedAuthenticationException("Credentials for the email " + loginRequest.getEmail() + " were invalid, please try again!");
         }
         
-        session.setAttribute("user", optional.get());
         UserDTO user = new UserDTO(optional.get());
 
         // Create a JWT and attach it to the header "Auth" in the response.
@@ -53,6 +55,11 @@ public class AuthController {
         return ResponseEntity.status(200).header("Auth", jws).body(user);
     }
 
+    
+    /** 
+     * @param session
+     * @return ResponseEntity<Void>
+     */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpSession session) {
         session.removeAttribute("user");
@@ -60,6 +67,13 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    
+    /** 
+     * @param registerRequest
+     * @return ResponseEntity<UserDTO>
+     * @throws EmailAlreadyExistsException
+     * @throws UsernameAlreadyExistsException
+     */
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody RegisterRequest registerRequest) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         User created = new User(
@@ -75,11 +89,9 @@ public class AuthController {
             UserDTO dto = new UserDTO(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         } catch (EmailAlreadyExistsException e) {
-            logger.error("ERROR: EmailAlreadyExistsException", e);
-            throw e;
+            throw new EmailAlreadyExistsException("Email" + registerRequest.getEmail() + "already exists!", e);
         } catch (UsernameAlreadyExistsException e) {
-            logger.error("ERROR: UsernameAlreadyExistsException", e);
-            throw e;
+            throw new UsernameAlreadyExistsException("Username " + registerRequest.getUsername() + " already exists!", e);
         }
     }
     

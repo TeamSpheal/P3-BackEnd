@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 
@@ -16,29 +17,51 @@ import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
 @SpringBootTest
-public class AuthServiceTest {
+class AuthServiceTest {
 	@MockBean
-	private UserService userServ;
+	private UserRepository userRepo;
 	
+	@MockBean
+	private UserService userService;
+
 	@Autowired
-	private AuthService authServ;
+	private AuthService authService;
 	
 	@Test
 	void testFindByCredentials() {
 		User mockUser = new User();
 		String email = "testuser@gmail.com";
 		String password = "password";
-		Mockito.when(userServ.findByCredentials(email, password)).thenReturn(Optional.of(mockUser));
-		assertNotNull(authServ.findByCredentials(email, password));
+		Mockito.when(userRepo.findByEmailAndPassword(email, password)).thenReturn(Optional.of(mockUser));
+		assertNotNull(authService.findByCredentials(email, password));
 	}
-	
+
 	@Test
-	void testUserSave() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	void testRegister() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
 		User mockUser = new User();
-		User mockUserWithId = new User();
-		mockUser.setId(1);
-		Mockito.when(userServ.save(mockUser)).thenReturn(mockUserWithId);
-		User returnedUser = authServ.register(mockUser);
-		assertNotNull(returnedUser);
+		mockUser.setEmail("email");
+		mockUser.setUsername("username");
+		Mockito.when(userService.doesEmailAlreadyExist(mockUser.getEmail())).thenReturn(false);
+		Mockito.when(userService.doesUsernameAlreadyExist(mockUser.getUsername())).thenReturn(false);
+		Mockito.when(userService.save(mockUser)).thenReturn(mockUser);
+		assertNotNull(authService.register(mockUser));
+	}
+
+	@Test
+	void testRegisterEmailAlreadyExists() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+		User mockUser = new User();
+		mockUser.setEmail("email");
+		mockUser.setUsername("username");
+		Mockito.when(userService.doesEmailAlreadyExist(mockUser.getEmail())).thenReturn(true);
+		assertThrows(EmailAlreadyExistsException.class, () -> {authService.register(mockUser);});
+	}
+
+	@Test
+	void testRegisterUsernameAlreadyExists() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+		User mockUser = new User();
+		mockUser.setEmail("email");
+		mockUser.setUsername("username");
+		Mockito.when(userService.doesUsernameAlreadyExist(mockUser.getUsername())).thenReturn(true);
+		assertThrows(UsernameAlreadyExistsException.class, () -> {authService.register(mockUser);});
 	}
 }
