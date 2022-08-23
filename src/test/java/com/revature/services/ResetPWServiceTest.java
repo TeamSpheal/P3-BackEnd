@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.revature.SocialMediaApplication;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
@@ -28,7 +27,7 @@ public class ResetPWServiceTest {
 	 * Testing reset token generation
 	 */
 	@Test
-	public void testGenerateResetToken() {
+	void testGenerateResetToken() {
 		/*Local Variables*/
 		String result = null;
 		String email = "email";

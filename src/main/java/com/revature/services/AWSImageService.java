@@ -56,17 +56,14 @@ public class AWSImageService implements ImageService {
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process 
             // it, so it returned an error response.
-            e.printStackTrace();
-            throw e;
+            throw new AmazonServiceException(fileObjKeyName, e);
         } catch (SdkClientException e) {
             // Amazon S3 couldn't be contacted for a response, or the client
             // couldn't parse the response from Amazon S3.
-            e.printStackTrace();
-            throw e;
+            throw new SdkClientException(fileObjKeyName, e);
         } catch (IOException e) {
             // Can't get InputStream from multipartFile
-            e.printStackTrace();
-            throw e;
+            throw new IOException(fileObjKeyName, e);
         }
     }
 }
