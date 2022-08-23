@@ -78,6 +78,11 @@ class PostServiceTest {
 		
 	}
 
+	@Test
+	void getUserPost() {
+		Mockito.when(postRepo.findAllByAuthorId(Mockito.anyLong())).thenReturn(new ArrayList<Post>());
+		Assertions.assertNotNull(postServ.getUserPosts(1));
+	}
 	
 	@Test
 	void getUserFeed() {

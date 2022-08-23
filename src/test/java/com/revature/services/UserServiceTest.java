@@ -23,6 +23,7 @@ import com.revature.dtos.UserDTO;
 import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.RecordNotFoundException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
+import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
@@ -135,6 +136,51 @@ class UserServiceTest {
 			userServ.save(mockUser);
 		});
 	}
+	
+	@Test
+	void removeFollwer() throws RecordNotFoundException {
+		User mockUser = new User();
+		mockUser.setId(1);
+		User mockTest = new User();
+		mockTest.setId(2L);
+		Optional<User> user = Optional.of(mockUser);
+		Optional<User> user1 = Optional.of(mockTest);
+		UserDTO dto = new UserDTO(mockUser);
+		
+		Mockito.when(userRepo.findById(1L)).thenReturn(user);
+		Mockito.when(userRepo.findById(2L)).thenReturn(user1);
+		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUser);
+		Mockito.when(userRepo.save(mockTest)).thenReturn(mockTest);
+
+		Assertions.assertEquals(dto, userServ.removeFollower(1L, 2L));
+}
+	@Test
+	void cannotRemoveFollwerByUserId() throws RecordNotFoundException {
+		User mockUser = new User();
+		mockUser.setId(1);
+		Optional<User> user = Optional.empty();
+		
+		Mockito.when(userRepo.findById(1L)).thenReturn(user);
+	
+		assertThrows(RecordNotFoundException.class, () -> {
+			userServ.removeFollower(1L, 2L);
+		});}
+	
+	@Test
+	void cannotRemoveFollwerBecauseOfOtherId() throws RecordNotFoundException {
+		User mockUser = new User();
+		mockUser.setId(1);
+		User mockTest = new User();
+		mockTest.setId(2L);
+		Optional<User> user = Optional.of(mockUser);
+		Optional<User> user1 = Optional.empty();
+		
+		Mockito.when(userRepo.findById(1L)).thenReturn(user);
+		Mockito.when(userRepo.findById(2L)).thenReturn(user1);
+
+		assertThrows(RecordNotFoundException.class, () -> {
+			userServ.removeFollower(1L, 2L);
+		});}
 	
 	@Test
 	void testSaveEmailAndUsernameMatches() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {

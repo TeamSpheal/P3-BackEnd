@@ -1,6 +1,9 @@
 package com.revature.services;
 
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,17 +21,26 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.revature.exceptions.RecordNotFoundException;
+
 @SpringBootTest(classes = LocalImageService.class)
 public class LocalImageServiceTest {
 
 	@Autowired
 	LocalImageService localImageServ;
 
-	/*
-	 * Path root = Mockito.mock(Path.class);
-		root = Paths.get("src/main/resources/img.jpg");
+	
+	@Test
+	void cannotUploadImage() throws FileNotFoundException, IOException {
+		final MockMultipartFile multipartFile = new MockMultipartFile("images", "images.jpg", "image/jpeg", "random".getBytes());
+				
+		assertThrows(IOException.class, () -> {
+			localImageServ.uploadMultipartFile(multipartFile);
+	});
 		
-	 */
+	}
+	
+	
 	@Test
 	void uploadImage() throws FileNotFoundException, IOException {
 		final MockMultipartFile multipartFile = new MockMultipartFile("images", "image.jpg", "image/jpeg", "random".getBytes());
@@ -36,4 +48,5 @@ public class LocalImageServiceTest {
 		Assertions.assertNotNull(localImageServ.uploadMultipartFile(multipartFile));
 		Files.deleteIfExists(root);
 	}
+	
 }
