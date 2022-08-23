@@ -75,7 +75,7 @@ public class PostService {
 	 * @return List<Post>
 	 */
 	public List<Post> getUserPosts(long id) {
-		return this.postRepository.findAllByAuthorId(id);
+		return this.postRepository.findByAuthorId(id);
 	}
 	
 //	public List<Post> getUserFeed(long id) {

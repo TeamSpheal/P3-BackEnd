@@ -104,6 +104,10 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
+    /** 
+     * @param userId
+     * @return ResponseEntity<PostDTO>
+     */
     @Authorized
     @GetMapping("/get/{userId}")
     public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
@@ -115,6 +119,11 @@ public class PostController {
     	return ResponseEntity.ok(postsDto);
     }
     
+    
+    /** 
+     * @param userId
+     * @return ResponseEntity<PostDTO>
+     */
     @GetMapping("/following/{userId}")
     public ResponseEntity<List<PostDTO>> getFollowingPostFeed(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserFeed(userId);
@@ -124,5 +133,4 @@ public class PostController {
     	}
     	return ResponseEntity.ok(postsDto);
     }
-
-}
+ }

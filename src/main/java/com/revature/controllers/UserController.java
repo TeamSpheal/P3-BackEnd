@@ -126,16 +126,12 @@ public class UserController {
     
     // Get follower to the logged in user
     @GetMapping("/{userId}/follower/{targetId}")
-    public ResponseEntity<Set<User>> isFollowing(@PathVariable("userId") Long userId,
+    public ResponseEntity<HashSet<User>> isFollowing(@PathVariable("userId") Long userId,
             @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
-
         // check if id's are the same
         if (!userId.equals(targetId)) {
             Optional<User> user = userService.findById(userId);
-            if (!user.isPresent()) {
-                throw new RecordNotFoundException();
-            }
-			Set<User> setFollowing = userService.getFollowing(user.get());
+			setFollowing = (HashSet<User>) userService.getFollowing(user.get());
 			return ResponseEntity.ok(setFollowing);
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
@@ -172,7 +168,7 @@ public class UserController {
      * @throws UsernameAlreadyExistsException
      * @throws RecordNotFoundException
      */
-    @Authorized
+   @Authorized
     @PostMapping("/update/profile")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO updatedUser)
             throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
@@ -192,24 +188,6 @@ public class UserController {
             throw new EmailAlreadyExistsException("Email " + updatedUser.getEmail() + " already exists!", e);
         }
     }
-    
-//    public ResponseEntity<UserMiniDTO> updateUser(@RequestBody UserDTO updatedUser)
-//            throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
-//        // Pass object to service layer
-//        try {
-//            User result = userService.update(updatedUser);
-//            
-//            // Assuming an exception is not thrown, remove unnecessary data and return it
-//            // with a status of 200
-//            UserMiniDTO bodyDTO = new UserMiniDTO(result);
-//            return ResponseEntity.ok(bodyDTO);
-//        } catch (RecordNotFoundException e) {
-//            throw new RecordNotFoundException("User " + updatedUser.getUsername() + " does not exist!");
-//        } catch (UsernameAlreadyExistsException e) {
-//            throw new UsernameAlreadyExistsException("Username " + updatedUser.getUsername() + " already exists!", e);
-//        } catch (EmailAlreadyExistsException e) {
-//            throw new EmailAlreadyExistsException("Email " + updatedUser.getEmail() + " already exists!", e);
-//        }
 
     /**
      * Update a user's password based on a given user object
