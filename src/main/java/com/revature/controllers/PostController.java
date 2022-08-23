@@ -103,6 +103,7 @@ public class PostController {
         PostDTO postDto = new PostDTO(postService.upsert(post));
         return ResponseEntity.ok(postDto);
     }
+    
     @Authorized
     @GetMapping("/get/{id}")
     public ResponseEntity<List<PostDTO>> getAllPostsByAuthor(@PathVariable long id){
@@ -137,7 +138,8 @@ public class PostController {
     @GetMapping("/get/{userId}")
     public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserPosts(userId);
-    	List<PostDTO> postsDto = new ArrayList<>();
+    	//List<PostDTO> postsDto = new ArrayList<>();
+    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
     	for(Post post : posts) {
     		postsDto.add(new PostDTO(post));
     	}

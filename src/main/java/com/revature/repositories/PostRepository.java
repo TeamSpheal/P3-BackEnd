@@ -18,9 +18,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 //	@Query(value = "select * from posts where author_id in (select target_id from follow where user_id=?1 union select 1)order by created_date", nativeQuery=true)
 //	List<Post> findUserPostFeed(long user);
 	
-	List<Post> findByAuthorId(long id);
-	List<Post> findAllByAuthorId(long user);
-	
 	@Query(value = "select * from posts "
 			+ "where author_id in "
 			+ "( "
@@ -35,4 +32,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 			+ "order by created_date desc "
 			+ ";", nativeQuery=true)
 	List<Post> findUserPostFeed(long user);
+	
+	List<Post> findByAuthorId(long id);
 }

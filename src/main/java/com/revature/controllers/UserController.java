@@ -5,7 +5,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+<<<<<<< HEAD
 import java.util.HashMap;
+=======
+>>>>>>> 85d8d717cb3372df3b5088b08f47d97eaa5ef3a7
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -157,24 +160,34 @@ public class UserController {
      */
     @Authorized
     @PostMapping("/update/profile")
-    public ResponseEntity<UserMiniDTO> updateUser(@RequestBody UserDTO updatedUser)
-            throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO updatedUser)
+            throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
         // Pass object to service layer
-        try {
-            User result = userService.update(updatedUser);
-            
-            // Assuming an exception is not thrown, remove unnecessary data and return it
-            // with a status of 200
-            UserMiniDTO bodyDTO = new UserMiniDTO(result);
-            return ResponseEntity.ok(bodyDTO);
-        } catch (RecordNotFoundException e) {
-            throw new RecordNotFoundException("User " + updatedUser.getUsername() + " does not exist!");
-        } catch (UsernameAlreadyExistsException e) {
-            throw new UsernameAlreadyExistsException("Username " + updatedUser.getUsername() + " already exists!", e);
-        } catch (EmailAlreadyExistsException e) {
-            throw new EmailAlreadyExistsException("Email " + updatedUser.getEmail() + " already exists!", e);
-        }
+        User result = userService.update(updatedUser);
+
+        // Assuming an exception is not thrown, remove unnecessary data and return it
+        // with a status of 200
+        UserDTO bodyDTO = new UserDTO(result);
+        return ResponseEntity.ok(bodyDTO);
     }
+    
+//    public ResponseEntity<UserMiniDTO> updateUser(@RequestBody UserDTO updatedUser)
+//            throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
+//        // Pass object to service layer
+//        try {
+//            User result = userService.update(updatedUser);
+//            
+//            // Assuming an exception is not thrown, remove unnecessary data and return it
+//            // with a status of 200
+//            UserMiniDTO bodyDTO = new UserMiniDTO(result);
+//            return ResponseEntity.ok(bodyDTO);
+//        } catch (RecordNotFoundException e) {
+//            throw new RecordNotFoundException("User " + updatedUser.getUsername() + " does not exist!");
+//        } catch (UsernameAlreadyExistsException e) {
+//            throw new UsernameAlreadyExistsException("Username " + updatedUser.getUsername() + " already exists!", e);
+//        } catch (EmailAlreadyExistsException e) {
+//            throw new EmailAlreadyExistsException("Email " + updatedUser.getEmail() + " already exists!", e);
+//        }
 
     /**
      * Update a user's password based on a given user object
