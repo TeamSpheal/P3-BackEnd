@@ -110,7 +110,7 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserPosts(userId);
     	List<PostDTO> postsDto = posts.stream()
-    	        .map(post -> new PostDTO(post))
+    	        .map(PostDTO::new)
     	        .collect(Collectors.toList());
     	return ResponseEntity.ok(postsDto);
     }
@@ -119,7 +119,7 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getFollowingPostFeed(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserFeed(userId);
     	List<PostDTO> postsDto = posts.stream()
-    	        .map(post -> new PostDTO(post))
+    	        .map(PostDTO::new)
     	        .collect(Collectors.toList());
     	return ResponseEntity.ok(postsDto);
     }
