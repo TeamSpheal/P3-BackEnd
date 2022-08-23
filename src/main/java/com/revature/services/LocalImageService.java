@@ -39,6 +39,11 @@ public class LocalImageService implements ImageService {
     public String uploadMultipartFile (MultipartFile multipartFile) throws IOException {
         String fileName = multipartFile.getOriginalFilename();
         try {
+            Path path = this.root.resolve(fileName);
+            if (Files.exists(path)) {
+                throw new IOException("File already exists: " + path);
+            }
+
             Files.copy(multipartFile.getInputStream(), this.root.resolve(fileName));
             Path file = root.resolve(fileName);
             Resource resource = new UrlResource(file.toUri());

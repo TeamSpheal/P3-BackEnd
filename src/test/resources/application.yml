@@ -1,9 +1,9 @@
-# This profile is the default
+# This profile is the default for unit tests
 server:
   port: 8080
 spring:
   profiles:
-    active: test
+    active: dev
 
   jpa:
     hibernate:

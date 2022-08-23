@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes=SearchServiceImpl.class)
 class SearchServiceTest {
 	@MockBean
 	private UserRepository userRepo;
@@ -27,6 +27,19 @@ class SearchServiceTest {
 		SearchServiceImpl mockSearch = new SearchServiceImpl(userRepo);
 
 		Optional<List<UserDTO>> serviceReturn = mockSearch.queryUserTable("test_user");
+		Mockito.when(userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(
+				"test", "User"))
+				.thenReturn(Optional.of(mockUsers));
+
+		assertNotNull("Good",serviceReturn);
+	}
+	
+	@Test
+	void showAllUserVersionTwo() {
+		List<UserDTO> mockUsers = new ArrayList<>();
+		SearchServiceImpl mockSearch = new SearchServiceImpl(userRepo);
+
+		Optional<List<UserDTO>> serviceReturn = mockSearch.queryUserTable("test-user");
 		Mockito.when(userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(
 				"test", "User"))
 				.thenReturn(Optional.of(mockUsers));

@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
-@SpringBootTest
+@SpringBootTest(classes=ResetPWService.class)
 class ResetPWServiceTest {
 	@MockBean
 	private EmailService emailService;
