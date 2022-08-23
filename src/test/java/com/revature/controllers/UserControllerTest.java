@@ -322,33 +322,4 @@ class UserControllerTest {
 				.andExpect(content().json(objectMapper.writeValueAsString(bodyDTO)));
 	}
 	
-	// All this needs is for me to figure out how to add a image through a MultiPartFile in the request body (.perform).
-	// -- Franklyn S.
-
-/*	@Test
-	void uploadImage() throws IOException {
-		
-		MockMultipartFile file = new MockMultipartFile("file", "your_pic.jpg", MediaType.IMAGE_JPEG_VALUE);
-		
-		Mockito.when(imageService.uploadMultipartFile(Mockito.any())).thenReturn(Mockito.anyString());
-
-		mockMvc.perform(post("/user/image-upload")
-				
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(passDto))).andExpect(status().isOk())
-				.andExpect(content().json(objectMapper.writeValueAsString(bodyDTO)));
-	}
-
-	@Test
-	void cannotUploadImage() {
-		
-		Mockito.when(imageService.uploadMultipartFile(Mockito.any())).thenThrow(new IOException());
-
-		mockMvc.perform(post("/user/image-upload")
-				
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(passDto))).andExpect(status().isOk())
-				.andExpect(content().json(objectMapper.writeValueAsString(bodyDTO)));
-	}
-*/
 }

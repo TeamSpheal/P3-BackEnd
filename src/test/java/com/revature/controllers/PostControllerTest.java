@@ -34,7 +34,6 @@ import com.revature.repositories.UserRepository;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
 
-@TestInstance(Lifecycle.PER_CLASS)
 @WebMvcTest(controllers = PostController.class)
 class PostControllerTest {
 	@MockBean
@@ -53,10 +52,6 @@ class PostControllerTest {
 	
 	private Timestamp fixedTimedStamp;
 	
-	@BeforeAll
-	public void setUp() {
-		 //fixedTimedStamp = Timestamp.from(Instant.EPOCH);
-	}
 
 	@Test
 	void testGetAllPosts() throws JsonProcessingException, Exception {

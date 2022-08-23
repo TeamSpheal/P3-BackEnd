@@ -31,17 +31,6 @@ public class LocalImageServiceTest {
 
 	
 	@Test
-	void cannotUploadImage() throws FileNotFoundException, IOException {
-		final MockMultipartFile multipartFile = new MockMultipartFile("images", "images.jpg", "image/jpeg", "random".getBytes());
-				
-		assertThrows(IOException.class, () -> {
-			localImageServ.uploadMultipartFile(multipartFile);
-	});
-		
-	}
-	
-	
-	@Test
 	void uploadImage() throws FileNotFoundException, IOException {
 		final MockMultipartFile multipartFile = new MockMultipartFile("images", "image.jpg", "image/jpeg", "random".getBytes());
 		Path root = Paths.get("src/main/resources/uploads").resolve(multipartFile.getOriginalFilename());
