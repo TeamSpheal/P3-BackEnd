@@ -28,7 +28,7 @@ public class SearchServiceTest {
 		SearchServiceImpl mockSearch = new SearchServiceImpl(userRepo);
 
 		Optional<List<UserDTO>> serviceReturn = mockSearch.queryUserTable("test_user");
-		Mockito.when(userRepo.findAllByFirstNameStartingOrLastNameStartingWithOrderByFirstName(
+		Mockito.when(userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithIgnoreCaseOrderByFirstName(
 				"test", "User"))
 				.thenReturn(Optional.of(mockUsers));
 

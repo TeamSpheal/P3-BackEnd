@@ -78,4 +78,6 @@ public class PostController {
         PostDTO postDto = new PostDTO(postService.upsert(post));
         return ResponseEntity.ok(postDto);
     }
+
+
 }
