@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes=SearchServiceImpl.class)
 class SearchServiceTest {
 	@MockBean
 	private UserRepository userRepo;
