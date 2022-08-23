@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -122,10 +123,8 @@ public class UserController {
     
     // Get follower to the logged in user
     @GetMapping("/{userId}/follower/{targetId}")
-    public ResponseEntity<HashSet<User>> isFollowing(@PathVariable("userId") Long userId,
+    public ResponseEntity<Set<User>> isFollowing(@PathVariable("userId") Long userId,
             @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
-
-        HashSet<User> setFollowing = new HashSet<>();
 
         // check if id's are the same
         if (!userId.equals(targetId)) {
@@ -133,7 +132,7 @@ public class UserController {
             if (!user.isPresent()) {
                 throw new RecordNotFoundException();
             }
-			setFollowing = (HashSet<User>) userService.getFollowing(user.get());
+			Set<User> setFollowing = userService.getFollowing(user.get());
 			return ResponseEntity.ok(setFollowing);
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
