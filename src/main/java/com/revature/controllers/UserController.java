@@ -107,7 +107,7 @@ public class UserController {
     // Add follower to the logged in user
     @PostMapping("/{userId}/follower/{targetId}")
     public ResponseEntity<UserDTO> addFollower(@PathVariable("userId") Long userId,
-            @PathVariable("targetId") Long targetId) {
+            @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
     	UserDTO result = null;
         // check if id's are the same
         if (!userId.equals(targetId)) {

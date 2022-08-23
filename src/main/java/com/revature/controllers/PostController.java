@@ -105,14 +105,14 @@ public class PostController {
     }
     
     @Authorized
-    @GetMapping("/get/{id}")
-    public ResponseEntity<List<PostDTO>> getAllPostsByAuthor(@PathVariable long id){
-    	List<Post> list = postService.getPostsByAuthor(id);
-    	List<PostDTO> listDto = new ArrayList<>();
-    	for(Post p : list) {
-    		listDto.add(new PostDTO(p));
+    @GetMapping("/get/{userId}")
+    public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
+    	List<Post> posts = postService.getUserPosts(userId);
+    	List<PostDTO> postsDto = new ArrayList<>();
+    	for(Post post : posts) {
+    		postsDto.add(new PostDTO(post));
     	}
-    	return ResponseEntity.ok(listDto);
+    	return ResponseEntity.ok(postsDto);
     }
     
     @GetMapping("/following/{userId}")

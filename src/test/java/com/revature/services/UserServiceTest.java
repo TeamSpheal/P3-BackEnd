@@ -260,7 +260,7 @@ class UserServiceTest {
 		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUser);
 		Mockito.when(userRepo.save(mockTarget)).thenReturn(mockTarget);
 		
-		assertTrue(userServ.addFollower(mockUser.getId(), mockTarget.getId()));
+		assertNotNull(userServ.addFollower(mockUser.getId(), mockTarget.getId()));
 		
 	}
 	

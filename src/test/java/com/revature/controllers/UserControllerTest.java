@@ -172,7 +172,8 @@ class UserControllerTest {
 
 	@Test
 	void cannotAddFollower() throws Exception {
-		Mockito.when(userService.addFollower(1L, 1L)).thenReturn(false);
+		UserDTO dto = new UserDTO();
+		Mockito.when(userService.addFollower(1L, 1L)).thenReturn(dto);
 
 		mockMvc.perform(post("/user/1/follower/1")).andExpect(status().isPreconditionFailed());
 
@@ -180,7 +181,8 @@ class UserControllerTest {
 
 	@Test
 	void addFollower() throws Exception {
-		Mockito.when(userService.addFollower(1L, 2L)).thenReturn(true);
+		UserDTO dto = new UserDTO();
+		Mockito.when(userService.addFollower(1L, 2L)).thenReturn(dto);
 
 		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isOk());
 	}
