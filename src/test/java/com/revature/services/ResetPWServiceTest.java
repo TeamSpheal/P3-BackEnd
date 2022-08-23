@@ -13,7 +13,7 @@ import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
 @SpringBootTest(classes=ResetPWService.class)
-public class ResetPWServiceTest {
+class ResetPWServiceTest {
 	@MockBean
 	private EmailService emailService;
 
