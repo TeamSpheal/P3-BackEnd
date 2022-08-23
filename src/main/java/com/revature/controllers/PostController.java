@@ -104,14 +104,15 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostDTO> getPost(@PathVariable long postId){
-    	Post initPost = postService.getPost(postId);
-    	if(initPost == null) {
-    		return ResponseEntity.badRequest().build();
+    @Authorized
+    @GetMapping("/get/{userId}")
+    public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
+    	List<Post> posts = postService.getUserPosts(userId);
+    	List<PostDTO> postsDto = new ArrayList<>();
+    	for(Post post : posts) {
+    		postsDto.add(new PostDTO(post));
     	}
-    	return ResponseEntity.ok(new PostDTO(initPost));
-
+    	return ResponseEntity.ok(postsDto);
     }
     
     @GetMapping("/following/{userId}")
@@ -123,14 +124,5 @@ public class PostController {
     	}
     	return ResponseEntity.ok(postsDto);
     }
-    
-    @GetMapping("/get/{userId}")
-    public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
-    	List<Post> posts = postService.getUserPosts(userId);
-    	List<PostDTO> postsDto = new ArrayList<>();
-    	for(Post post : posts) {
-    		postsDto.add(new PostDTO(post));
-    	}
-    	return ResponseEntity.ok(postsDto);
-    }
+
 }
