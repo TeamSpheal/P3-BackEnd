@@ -193,7 +193,7 @@ public class UserController {
             String url = imageService.uploadMultipartFile(multipartFile);
             return ResponseEntity.ok(url);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw e;
         }
     }
