@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.revature.models;
 
 import java.util.LinkedHashSet;
@@ -14,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.revature.dtos.UserMiniDTO;
+import com.revature.dtos.UserPassDTO;
 
 @Entity
 @Table(name = "users")
@@ -28,18 +30,13 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String profileImg;
-	// @JoinTable(name = "follow", joinColumns =
-	// @JoinColumn(name = "user_id"), inverseJoinColumns = 
-	// @JoinColumn(name = "target_id"))
 
 	@ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
 	private Set<User> followers;
 
-    @JoinTable(name = "follow",
-            joinColumns = {
-				@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false)},
-            inverseJoinColumns = {
-				@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)})
+	@JoinTable(name = "follow", joinColumns = {
+			@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) })
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<User> following;
 
@@ -69,18 +66,43 @@ public class User {
 		this.following = new LinkedHashSet<>();
 	}
 
-	public User(UserMiniDTO author) {
-		this.id = author.getId();
-		this.username = author.getUsername();
-		this.profileImg = author.getProfileImg();
+	public User(UserMiniDTO dto) {
+		this.id = dto.getId();
+		this.username = dto.getUsername();
+		this.profileImg = dto.getProfileImg();
 	}
 
-	public void followUser (User user) {
+	/**
+	 * Convert a UserPassDTO into a User
+	 * @author Colby Tang
+	 * @param dto
+	 */
+	public User(UserPassDTO dto) {
+		this.id = dto.getId();
+		this.username = dto.getUsername();
+		this.email = dto.getEmail();
+		this.password = dto.getPassword();
+		this.profileImg = dto.getProfileImg();
+		this.firstName = dto.getFirstName();
+		this.lastName = dto.getLastName();
+
+		this.followers = new LinkedHashSet<>();
+		for (UserMiniDTO user : dto.getFollowers()) {
+			followers.add(new User(user));
+		}
+
+		this.following = new LinkedHashSet<>();
+		for (UserMiniDTO user : dto.getFollowing()) {
+			following.add(new User(user));
+		}
+	}
+
+	public void followUser(User user) {
 		this.following.add(user);
 		user.getFollowers().add(this);
 	}
 
-	public void unFollowUser (User user) {
+	public void unFollowUser(User user) {
 		if (following.contains(user)) {
 			this.following.remove(user);
 		}

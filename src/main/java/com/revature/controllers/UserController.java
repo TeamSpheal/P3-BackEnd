@@ -1,45 +1,42 @@
 package com.revature.controllers;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.HeadersBuilder;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
+import com.revature.dtos.UserPassDTO;
 import com.revature.exceptions.EmailAlreadyExistsException;
 import com.revature.exceptions.RecordNotFoundException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
-import com.revature.services.AWSService;
+import com.revature.services.ImageService;
 import com.revature.services.ResetPWService;
 import com.revature.services.UserService;
 
@@ -47,25 +44,18 @@ import com.revature.services.UserService;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-    private final AWSService awsService;
+    private final ImageService imageService;
     private final ResetPWService resetPWService;
-    private final Path root = Paths.get("src/main/resources/uploads");
+    private ObjectMapper objMapper = new ObjectMapper();
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     Environment env;
 
-    public UserController(UserService userService, ResetPWService resetPWService, AWSService awsService) {
+    public UserController(UserService userService, ResetPWService resetPWService, ImageService imageService) {
         this.userService = userService;
         this.resetPWService = resetPWService;
-        this.awsService = awsService;
-
-        try {
-            if (!Files.exists(root)) {
-                Files.createDirectory(root);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
-        }
+        this.imageService = imageService;
     }
 
     /**
@@ -112,15 +102,15 @@ public class UserController {
     // Add follower to the logged in user
     @PostMapping("/{userId}/follower/{targetId}")
     public ResponseEntity<Void> addFollower(@PathVariable("userId") Long userId,
-            @PathVariable("targetId") Long targetId) {
+            @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
         // check if id's are the same
         if (!userId.equals(targetId)) {
             try {
                 userService.addFollower(userId, targetId);
                 return ResponseEntity.status(HttpStatus.OK).build();
             } catch (RecordNotFoundException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                logger.error(e.getMessage());
+                throw e;
             }
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
@@ -178,10 +168,13 @@ public class UserController {
      * @throws UsernameAlreadyExistsException
      */
     @PostMapping("/update/password")
-    public ResponseEntity<UserMiniDTO> updatePW(@RequestBody User updatedUser)
+    public ResponseEntity<UserMiniDTO> updatePW(@RequestBody UserPassDTO updatedUser)
             throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+                
+        // Convert UserPassDTO into a real User
+        User inputUser = new User(updatedUser);
         // Pass object to service layer
-        User result = userService.save(updatedUser);
+        User result = userService.save(inputUser);
 
         // Assuming an exception is not thrown, remove unnecessary data and return it
         // with a status of 200
@@ -195,44 +188,44 @@ public class UserController {
      * 
      * @param email
      * @return
+     * @throws JsonProcessingException 
      */
-    @PostMapping("resetPW")
-    public ResponseEntity<String> getResetPWToken(@RequestBody String email) {
+    @PostMapping("/resetPW")
+    public ResponseEntity<String> getResetPWToken(@RequestBody String email) throws JsonProcessingException {
         String resetToken = null;
+        UserDTO resetUser = null;
         if (userService.doesEmailAlreadyExist(email)) {
             resetToken = resetPWService.generateResetToken(email);
-            return ResponseEntity.status(200).header("ResetToken", resetToken).build();
+            resetUser = new UserDTO(userService.findByEmail(email));
+            return ResponseEntity.status(200).header("ResetToken", resetToken).body(objMapper.writeValueAsString(resetUser));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The email provided does not have an account");
         }
     }
 
-    @PostMapping("/image-upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
-        String url = "";
-        String fileName = multipartFile.getOriginalFilename();
-        if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
-            url = awsService.uploadImageToAWS(multipartFile);
-        } else {
-            try {
-                Files.copy(multipartFile.getInputStream(), this.root.resolve(fileName));
-                try {
-                    Path file = root.resolve(fileName);
-                    Resource resource = new UrlResource(file.toUri());
-                    if (resource.exists() || resource.isReadable()) {
-                      url = resource.getURL().toString();
-                    } else {
-                      throw new RuntimeException("Could not read the file!");
-                    }
-                  } catch (MalformedURLException e) {
-                    throw new RuntimeException("Error: " + e.getMessage());
-                  }
+    /**
+     * Takes in a multipart file (usually an image)
+     * and uploads using an image service. It will
+     * upload locally for the dev profile and
+     * upload to S3 for the test profile.
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     * @author Colby Tang
+     */
+    @PostMapping(path="/image-upload", consumes="multipart/form-data", produces="application/json")
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+        try {
+            String url = imageService.uploadMultipartFile(multipartFile);
 
-            } catch (IOException e) {
-                throw new IOException("Could not store the file. Error: " + e.getMessage());
-            }
+            // Workaround for front end since it tries to parse response as a JSON
+            Map<String, String> urlMap = new HashMap<>();
+            urlMap.put("url", url);
+            
+            return ResponseEntity.ok(urlMap);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw e;
         }
-
-        return ResponseEntity.ok(url);
     }
 }

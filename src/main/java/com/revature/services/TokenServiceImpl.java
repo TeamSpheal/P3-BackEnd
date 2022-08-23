@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.revature.auth.JwtConfig;
 import com.revature.exceptions.FailedAuthenticationException;
 import com.revature.exceptions.TokenExpirationException;
-import com.revature.models.User;
 import com.revature.dtos.UserDTO;
 
 import io.jsonwebtoken.Claims;
