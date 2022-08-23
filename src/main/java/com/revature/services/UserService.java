@@ -187,7 +187,6 @@ public class UserService {
 			user.followUser(targetUser);
 
 			// Save both users
-<<<<<<< HEAD
         	userRepository.save(user);
         	userRepository.save(targetUser);
         	return true;
@@ -228,41 +227,6 @@ public class UserService {
     		return false; 
     	}
     }
-
-    /**
-     * To remove follower from the table
-     * @param userId, the user that follows
-     * @param targetId, the followed user
-     * @return
-     */
-	public boolean removeFollower(long userId, long targetId) throws RecordNotFoundException {
-		Optional<User> fUser = userRepository.findById(userId);
-		Optional<User> oTargetUser = userRepository.findById(targetId);
-		if (!fUser.isPresent()) {
-			throw new RecordNotFoundException("Current user not found!");
-		}
-		if (!oTargetUser.isPresent()) {
-			throw new RecordNotFoundException("Target user not found!");
-		}
-    	try {
-			User user = fUser.get();
-			User targetUser = oTargetUser.get();
-
-			// Update user follower/following lists
-			user.unFollowUser(targetUser);
-
-			// Save both users
-        	userRepository.save(user);
-        	userRepository.save(targetUser);
-        	return true;
-    	}catch (Exception e) {
-    		e.getStackTrace(); 
-    		return false; 
-    	}
-	}
-	
-	
-
 
 	/**
 	 * Checks if email is already in the database.

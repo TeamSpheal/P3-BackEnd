@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.revature.models;
 
 import java.util.LinkedHashSet;
