@@ -1,7 +1,7 @@
 package com.revature.services;
 
+import java.security.SecureRandom;
 import java.util.Optional;
-import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class ResetPWService {
 	
 	private UserRepository userRepo;
 
-	Random random = new Random();
+	SecureRandom random = new SecureRandom();
 
 	/**
 	 * A constructor to be used to inject dependencies

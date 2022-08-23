@@ -7,7 +7,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.revature.SocialMediaApplication;
 import com.revature.repositories.UserRepository;
 
 import java.util.ArrayList;
@@ -17,13 +16,13 @@ import java.util.Optional;
 import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 @SpringBootTest
-public class SearchServiceTest {
+class SearchServiceTest {
 	@MockBean
 	private UserRepository userRepo;
 
 	@Test
 	@DisplayName("Test should Pass when user search for friends")
-	public void showAllUser() {
+	void showAllUser() {
 		List<UserDTO> mockUsers = new ArrayList<>();
 		SearchServiceImpl mockSearch = new SearchServiceImpl(userRepo);
 

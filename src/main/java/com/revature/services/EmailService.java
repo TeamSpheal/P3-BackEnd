@@ -16,9 +16,9 @@ public class EmailService {
 	
 	public SimpleMailMessage sendEmail(String toEmail, String username, String subject, String body) {
 		
-		Boolean checkEmail = Pattern.matches("[a-z0-9_-]{1,63}@[a-z]{1,30}[.][a-z]{2,5}", toEmail);
+		boolean checkEmail = Pattern.matches("[a-z0-9_-]{1,63}@[a-z]{1,30}[.][a-z]{2,5}", toEmail);
 	
-		if(checkEmail == false) {
+		if(!checkEmail) {
 			return null;
 		}
 		
@@ -33,12 +33,8 @@ public class EmailService {
 				+ "Token Here: ";
 		
 		completeBody += body;
-		
 		message.setText(completeBody);
-		
 		mailSender.send(message);
-		
-		System.out.println("Email Success!");
 		
 		return message;
 		

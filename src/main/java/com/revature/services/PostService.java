@@ -1,14 +1,11 @@
 package com.revature.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import com.revature.models.Post;
-import com.revature.models.User;
 import com.revature.repositories.PostRepository;
 
 @Service
@@ -57,11 +54,15 @@ public class PostService {
 	 * @return List<Post>
 	 */
 	public List<Post> getUserFeed(long id) {
-		List<Post> posts = this.postRepository.findUserPostFeed(id);
-		return posts;
+		return this.postRepository.findUserPostFeed(id);
 	}
-  
-	public List<Post> getPostsByAuthor(long id) {
-		return this.postRepository.findByAuthorId(id);
+	
+	/** 
+	 * Get all the posts from a user.
+	 * @param id
+	 * @return List<Post>
+	 */
+	public List<Post> getUserPosts(long id) {
+		return this.postRepository.findAllByAuthorId(id);
 	}
 }

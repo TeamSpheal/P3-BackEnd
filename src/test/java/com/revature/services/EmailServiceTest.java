@@ -10,7 +10,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @SpringBootTest
-public class EmailServiceTest {
+class EmailServiceTest {
 	
 	@MockBean
 	private JavaMailSender mailSender;
@@ -19,7 +19,7 @@ public class EmailServiceTest {
 	private EmailService testEmailService;
 	
 	@Test
-	public void testBadEmail() {
+	void testBadEmail() {
 		/*Local Variables*/
 		SimpleMailMessage resultMessage = testEmailService.sendEmail("sioughsohosjdhf", "", "", "");
 	
@@ -29,7 +29,7 @@ public class EmailServiceTest {
 	}
 	
 	@Test
-	public void testGoodEmail() {
+	void testGoodEmail() {
 		/*Local Variables*/
 		SimpleMailMessage resultMessage = testEmailService.sendEmail("cheeseandpie2000@gmail.com", "", "", "");
 	

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +84,6 @@ public class UserController {
     }
 
 
-    // TODO: unfollow 
     @DeleteMapping("/{userId}/unfollow/{targetId}") 
     public ResponseEntity<UserDTO> removeFollower(@PathVariable("userId") Long userId, 
 			@PathVariable("targetId") Long targetId) {
@@ -118,8 +119,7 @@ public class UserController {
                 	return ResponseEntity.badRequest().build();
                 }
             } catch (RecordNotFoundException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                throw new RecordNotFoundException("Could not find user!");
             }
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
@@ -167,18 +167,27 @@ public class UserController {
      * @return a UserMiniDTO object
      * @throws EmailAlreadyExistsException
      * @throws UsernameAlreadyExistsException
+     * @throws RecordNotFoundException
      */
     @Authorized
     @PostMapping("/update/profile")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO updatedUser)
-            throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+            throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
         // Pass object to service layer
-        User result = userService.update(updatedUser);
-
-        // Assuming an exception is not thrown, remove unnecessary data and return it
-        // with a status of 200
-        UserDTO bodyDTO = new UserDTO(result);
-        return ResponseEntity.ok(bodyDTO);
+        try {
+            User result = userService.update(updatedUser);
+            
+            // Assuming an exception is not thrown, remove unnecessary data and return it
+            // with a status of 200
+            UserDTO bodyDTO = new UserDTO(result);
+            return ResponseEntity.ok(bodyDTO);
+        } catch (RecordNotFoundException e) {
+            throw new RecordNotFoundException("User " + updatedUser.getUsername() + " does not exist!");
+        } catch (UsernameAlreadyExistsException e) {
+            throw new UsernameAlreadyExistsException("Username " + updatedUser.getUsername() + " already exists!", e);
+        } catch (EmailAlreadyExistsException e) {
+            throw new EmailAlreadyExistsException("Email " + updatedUser.getEmail() + " already exists!", e);
+        }
     }
 
     /**
@@ -235,14 +244,18 @@ public class UserController {
      * @throws IOException
      * @author Colby Tang
      */
-    @PostMapping("/image-upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+    @PostMapping(path="/image-upload", consumes="multipart/form-data", produces="application/json")
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
         try {
             String url = imageService.uploadMultipartFile(multipartFile);
-            return ResponseEntity.ok(url);
+
+            // Workaround for front end since it tries to parse response as a JSON
+            Map<String, String> urlMap = new HashMap<>();
+            urlMap.put("url", url);
+            
+            return ResponseEntity.ok(urlMap);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+            throw new IOException(e);
         }
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Exception that throws when the same username already exists in the database!
+ * HttpStatus.CONFLICT (409)
  * @author Colby Tang
  */
 
@@ -17,5 +18,9 @@ public class UsernameAlreadyExistsException extends Exception {
 
     public UsernameAlreadyExistsException (String username) {
         super ("Username [" + username + "] already exists in the database! ");
+    }
+
+    public UsernameAlreadyExistsException(String string, UsernameAlreadyExistsException e) {
+        super (string, e);
     }
 }
