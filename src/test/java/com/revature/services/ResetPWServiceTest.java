@@ -13,7 +13,7 @@ import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
 @SpringBootTest
-public class ResetPWServiceTest {
+class ResetPWServiceTest {
 	@MockBean
 	private EmailService emailService;
 
@@ -27,7 +27,7 @@ public class ResetPWServiceTest {
 	 * Testing reset token generation
 	 */
 	@Test
-	public void testGenerateResetToken() {
+	void testGenerateResetToken() {
 		/*Local Variables*/
 		String result = null;
 		String email = "email";

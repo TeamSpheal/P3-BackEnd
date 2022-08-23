@@ -113,56 +113,24 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	void testUserSaveEmailAlreadyExistsUserNotPresent() throws EmailAlreadyExistsException {
+	void testUserSaveEmailAlreadyExists() throws EmailAlreadyExistsException {
 		User mockUser = new User();
 		String email = "testuser@gmail.com";
 		mockUser.setId(1);
 		mockUser.setEmail(email);
-		Mockito.when(userRepo.findByEmail(email)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.empty());
+		Mockito.when(userRepo.existsByEmail(email)).thenReturn(true);
 		assertThrows(EmailAlreadyExistsException.class, () -> {
 			userServ.save(mockUser);
 		});
 	}
 	
 	@Test
-	void testUserSaveEmailAlreadyExistsUserIsPresent() throws EmailAlreadyExistsException {
-		User mockUser = new User();
-		User mockTest = new User();
-		String email = "testuser@gmail.com";
-		mockUser.setId(1);
-		mockUser.setEmail(email);	
-		Mockito.when(userRepo.findByEmail(email)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.of(mockTest));
-		Assertions.assertNotEquals(mockUser.getEmail(), Optional.of(mockTest).get().getEmail());
-		assertThrows(EmailAlreadyExistsException.class, () -> {
-			userServ.save(mockUser);
-		});
-	}
-	
-	@Test
-	void testUserSaveUsernameAlreadyExistsUserNotPresent() throws UsernameAlreadyExistsException {
+	void testUserSaveUsernameAlreadyExistsUser() throws UsernameAlreadyExistsException {
 		User mockUser = new User();
 		String username = "testuser";
 		mockUser.setId(1);
 		mockUser.setUsername(username);
-		Mockito.when(userRepo.findByUsername(username)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.empty());
-		assertThrows(UsernameAlreadyExistsException.class, () -> {
-			userServ.save(mockUser);
-		});
-	}
-	
-	@Test
-	void testUserSaveUsernameAlreadyExistsUserIsPresent() throws UsernameAlreadyExistsException {
-		User mockUser = new User();
-		User mockTest = new User();
-		String username = "testuser";
-		mockUser.setId(1);
-		mockUser.setUsername(username);
-		Mockito.when(userRepo.findByUsername(username)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.of(mockTest));
-		Assertions.assertNotEquals(mockUser.getUsername(), Optional.of(mockTest).get().getUsername());
+		Mockito.when(userRepo.existsByUsername(username)).thenReturn(true);
 		assertThrows(UsernameAlreadyExistsException.class, () -> {
 			userServ.save(mockUser);
 		});
@@ -181,9 +149,8 @@ public class UserServiceTest {
 		mockTest.setUsername(username);
 		mockUser.setEmail(email);
 		mockTest.setEmail(email);
-		Mockito.when(userRepo.findByEmail(email)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findByUsername(username)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.of(mockTest));
+		Mockito.when(userRepo.existsByUsername(username)).thenReturn(false);
+		Mockito.when(userRepo.existsByEmail(email)).thenReturn(false);
 		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUserWithId);
 		Assertions.assertEquals(mockUser.getUsername(), Optional.of(mockTest).get().getUsername());
 		Assertions.assertEquals(mockUser.getEmail(), Optional.of(mockTest).get().getEmail());
@@ -191,81 +158,77 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	void testUserUpdate() throws UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	void testUserUpdate() throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RecordNotFoundException {
 		User mockUser = new User();
-		User mockUserWithId = new User();
-		mockUserWithId.setId(1);
-		mockUserWithId.setEmail("test@gmail.com");
-		mockUserWithId.setUsername("testuser");
-		mockUserWithId.setFirstName("testfirst");
-		mockUserWithId.setLastName("testlast");
-		mockUserWithId.setProfileImg("http://testimg.com");
+		mockUser.setId(1);
+		mockUser.setEmail("test@gmail.com");
+		mockUser.setUsername("testuser");
+		mockUser.setFirstName("testfirst");
+		mockUser.setLastName("testlast");
+		mockUser.setProfileImg("http://testimg.com");
+		UserDTO dto = new UserDTO(mockUser);
+
+		Mockito.when(userRepo.findById(dto.getId())).thenReturn(Optional.of(mockUser));
+		Mockito.when(userRepo.existsByEmail(dto.getEmail())).thenReturn(false);
+		Mockito.when(userRepo.existsByUsername(dto.getUsername())).thenReturn(false);
+		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUser);
 		
-		Mockito.when(userRepo.save(mockUser)).thenReturn(mockUserWithId);
+		User returnedUser = userServ.update(dto); 
 		
-		User returnedUser = userServ.update(new UserDTO(mockUserWithId)); 
-		
-		assertNull(returnedUser);
+		assertNotNull(returnedUser);
 	}
 	
 	@Test
-	void testUserUpdateEmailAlreadyExistsUserNotPresent() throws EmailAlreadyExistsException {
+	void testUserUpdateUserNotPresent() throws EmailAlreadyExistsException {
 		User mockUser = new User();
-		String email = "testuser@gmail.com";
 		mockUser.setId(1);
-		mockUser.setEmail(email);
-		Mockito.when(userRepo.findByEmail(email)).thenReturn(Optional.of(mockUser));
+		mockUser.setEmail("testuser@gmail.com");
 		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.empty());
+		assertThrows(RecordNotFoundException.class, () -> {
+			userServ.update(new UserDTO(mockUser));
+		});
+	}
+	
+	@Test
+	void testUserUpdateEmailAlreadyExists() throws EmailAlreadyExistsException {
+		User mockUser = new User();
+		mockUser.setId(1);
+		mockUser.setEmail("test@gmail.com");
+		mockUser.setUsername("testuser");
+		mockUser.setFirstName("testfirst");
+		mockUser.setLastName("testlast");
+		mockUser.setProfileImg("http://testimg.com");
+		UserDTO dto = new UserDTO(mockUser);
+		dto.setEmail("differentEmail@email.com");
+
+		Mockito.when(userRepo.findById(dto.getId())).thenReturn(Optional.of(mockUser));
+		Mockito.when(userRepo.existsByEmail(dto.getEmail())).thenReturn(true);
 		assertThrows(EmailAlreadyExistsException.class, () -> {
-			userServ.update(new UserDTO(mockUser));
+			userServ.update(dto);
 		});
 	}
-	
+
 	@Test
-	void testUserUpdateEmailAlreadyExistsUserIsPresent() throws EmailAlreadyExistsException {
+	void testUserUpdateUsernameAlreadyExists() throws UsernameAlreadyExistsException {
 		User mockUser = new User();
-		User mockTest = new User();
-		String email = "testuser@gmail.com";
 		mockUser.setId(1);
-		mockUser.setEmail(email);	
-		Mockito.when(userRepo.findByEmail(email)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.of(mockTest));
-		Assertions.assertNotEquals(mockUser.getEmail(), Optional.of(mockTest).get().getEmail());
-		assertThrows(EmailAlreadyExistsException.class, () -> {
-			userServ.update(new UserDTO(mockUser));
-		});
-	}
-	
-	@Test
-	void testUserUpdateUsernameAlreadyExistsUserNotPresent() throws UsernameAlreadyExistsException {
-		User mockUser = new User();
-		String username = "testuser";
-		mockUser.setId(1);
-		mockUser.setUsername(username);
-		Mockito.when(userRepo.findByUsername(username)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.empty());
+		mockUser.setEmail("test@gmail.com");
+		mockUser.setUsername("testuser");
+		mockUser.setFirstName("testfirst");
+		mockUser.setLastName("testlast");
+		mockUser.setProfileImg("http://testimg.com");
+		UserDTO dto = new UserDTO(mockUser);
+		dto.setUsername("differentUsername");
+
+		Mockito.when(userRepo.findById(dto.getId())).thenReturn(Optional.of(mockUser));
+		Mockito.when(userRepo.existsByUsername(dto.getUsername())).thenReturn(true);
 		assertThrows(UsernameAlreadyExistsException.class, () -> {
-			userServ.update(new UserDTO(mockUser));
+			userServ.update(dto);
 		});
 	}
 	
 	@Test
-	void testUserUpdateUsernameAlreadyExistsUserIsPresent() throws UsernameAlreadyExistsException {
-		User mockUser = new User();
-		User mockTest = new User();
-		String username = "testuser";
-		mockUser.setId(1);
-		mockUser.setUsername(username);
-		Mockito.when(userRepo.findByUsername(username)).thenReturn(Optional.of(mockUser));
-		Mockito.when(userRepo.findById(mockUser.getId())).thenReturn(Optional.of(mockTest));
-		Assertions.assertNotEquals(mockUser.getUsername(), Optional.of(mockTest).get().getUsername());
-		assertThrows(UsernameAlreadyExistsException.class, () -> {
-			userServ.update(new UserDTO(mockUser));
-		});
-	}
-	
-	@Test
-	void testUpdateEmailAndUsernameMatches() throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+	void testUpdateEmailAndUsernameMatches() throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
 		User mockUser = new User();
 		User mockTest = new User();
 		User mockUserWithId = new User();

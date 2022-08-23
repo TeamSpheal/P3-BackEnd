@@ -85,7 +85,7 @@ class PostServiceTest {
 
 	
 	@Test
-	public void getUserFeed() {
+	void getUserFeed() {
 		User user = new User();
 		user.setId(1l);
 		// Set<Post> set = new HashSet<>();

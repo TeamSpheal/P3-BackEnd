@@ -29,7 +29,7 @@ class TokenServiceTest {
      * Creates a successful token.
      */
 	@Test
-	public void createTokenSuccess() {
+	void createTokenSuccess() {
 		UserDTO user = new UserDTO();
         user.setId(1l);
         user.setUsername("username");
@@ -44,7 +44,7 @@ class TokenServiceTest {
      * Tries to create a token from a null user.
      */
 	@Test
-	public void createTokenNullUser() {
+	void createTokenNullUser() {
 		assertEquals("", tokenService.createToken(null));
 	}
 	
@@ -52,7 +52,7 @@ class TokenServiceTest {
      * Tries to create a token from invalid user configuration.
      */
 	@Test
-	public void createTokenInvalidUser() {
+	void createTokenInvalidUser() {
 		assertEquals("", tokenService.createToken(new UserDTO()));
 	}
 	
@@ -60,7 +60,7 @@ class TokenServiceTest {
      * Validates the token successfully.
      */
 	@Test
-	public void validateTokenSuccess() {
+	void validateTokenSuccess() {
         long now = System.currentTimeMillis();
         User mockUser = new User();
         mockUser.setId(1l);
@@ -85,7 +85,7 @@ class TokenServiceTest {
      * Should fail to validate an expired token.
      */
 	@Test
-	public void validateExpiredToken() {
+	void validateExpiredToken() {
         long now = System.currentTimeMillis();
         User mockUser = new User();
         mockUser.setId(1l);
@@ -111,7 +111,7 @@ class TokenServiceTest {
      * Should fail authentication on an invalid token.
      */
 	@Test
-	public void validateTokenInvalidToken() {
+	void validateTokenInvalidToken() {
 		assertThrows(FailedAuthenticationException.class, () -> {
 			tokenService.validateToken("aaaaa");
 		});
