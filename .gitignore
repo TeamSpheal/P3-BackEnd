@@ -4,6 +4,12 @@
 database.properties
 cov.xml
 
+# Locally uploaded pictures for testing
+uploads/
+
+# To ignore the debug logs that Spring generates
+logs
+
 ### Eclipse ###
 .metadata
 bin/
@@ -16,6 +22,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+images/
 
 ### VS CODE ###
 .vscode
