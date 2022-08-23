@@ -105,8 +105,7 @@ public class UserController {
                 userService.addFollower(userId, targetId);
                 return ResponseEntity.status(HttpStatus.OK).build();
             } catch (RecordNotFoundException e) {
-                logger.error(e.getMessage());
-                throw e;
+                throw new RecordNotFoundException("Could not find user!");
             }
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
@@ -141,18 +140,27 @@ public class UserController {
      * @return a UserMiniDTO object
      * @throws EmailAlreadyExistsException
      * @throws UsernameAlreadyExistsException
+     * @throws RecordNotFoundException
      */
     @Authorized
     @PostMapping("/update/profile")
     public ResponseEntity<UserMiniDTO> updateUser(@RequestBody UserDTO updatedUser)
-            throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+            throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
         // Pass object to service layer
-        User result = userService.update(updatedUser);
-
-        // Assuming an exception is not thrown, remove unnecessary data and return it
-        // with a status of 200
-        UserMiniDTO bodyDTO = new UserMiniDTO(result);
-        return ResponseEntity.ok(bodyDTO);
+        try {
+            User result = userService.update(updatedUser);
+            
+            // Assuming an exception is not thrown, remove unnecessary data and return it
+            // with a status of 200
+            UserMiniDTO bodyDTO = new UserMiniDTO(result);
+            return ResponseEntity.ok(bodyDTO);
+        } catch (RecordNotFoundException e) {
+            throw new RecordNotFoundException("User " + updatedUser.getUsername() + " does not exist!");
+        } catch (UsernameAlreadyExistsException e) {
+            throw new UsernameAlreadyExistsException("Username " + updatedUser.getUsername() + " already exists!", e);
+        } catch (EmailAlreadyExistsException e) {
+            throw new EmailAlreadyExistsException("Email " + updatedUser.getEmail() + " already exists!", e);
+        }
     }
 
     /**

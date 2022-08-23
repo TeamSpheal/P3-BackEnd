@@ -8,11 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,7 +36,7 @@ import com.revature.services.UserService;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @WebMvcTest(controllers = PostController.class)
-public class PostControllerTest {
+class PostControllerTest {
 	@MockBean
 	private PostService postServ;
 
@@ -112,7 +110,6 @@ public class PostControllerTest {
 		Set<User> likers = new HashSet<User>();
 		likers.add(mockUser);
 		mockPost.setUsers(likers);
-		PostDTO dto = new PostDTO(mockPost);
 
 		like.setPostId(mockPost.getId());
 		like.setUserId(mockUser.getId());
@@ -154,7 +151,6 @@ public class PostControllerTest {
 		Set<User> likers = new HashSet<User>();
 		likers.remove(mockUser);
 		mockPost.setUsers(likers);
-		PostDTO dto = new PostDTO(mockPost);
 
 		like.setPostId(mockPost.getId());
 		like.setUserId(mockUser.getId());
