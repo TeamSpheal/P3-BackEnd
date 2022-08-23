@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Exception for when a record is not found in the database!
  * Used to prevent UPDATE and DELETE queries from happening if entry
- * is not in the database!
+ * is not in the database! HttpStatus.NOT_FOUND (404)
  * @author Colby Tang
  */
 @ResponseStatus (value = HttpStatus.NOT_FOUND, reason = "Record not found!")

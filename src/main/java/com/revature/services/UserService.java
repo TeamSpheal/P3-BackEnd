@@ -17,7 +17,7 @@ import com.revature.repositories.UserRepository;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	/**
 	 * A constructor to be used to inject dependencies
@@ -62,6 +62,19 @@ public class UserService {
 	public Optional<User> findById(long id) {
 		return userRepository.findById(id);
 	}
+	
+	/**
+	 * Returns a user object with a given email
+	 * @param email
+	 * @return
+	 */
+	public User findByEmail(String email) {
+		Optional<User> userOpt = userRepository.findByEmail(email);
+		if (userOpt.isPresent()) {
+			return userOpt.get();
+		}
+		return null;
+	}
 
 	/**
 	 * Returns a list of all users in the database
@@ -83,8 +96,7 @@ public class UserService {
 	}
 
 	/**
-	 * Validate the information within a given user object and saves the object ot
-	 * the database
+	 * Validates a given user object and saves the object to the database.
 	 * 
 	 * @param user
 	 * @return
@@ -92,40 +104,15 @@ public class UserService {
 	 * @throws UsernameAlreadyExistsException
 	 */
 	public User save(User user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
-		/* Local Variables */
-		Optional<User> testOpt;
-		User test = new User();
 
-		/* Validate Data */
-		// Test if the email exists and if it does test if it is linked to the current
-		// user object
-		if (!userRepository.findByEmail(user.getEmail()).equals(Optional.empty())) {// Email already exists
-			testOpt = userRepository.findById(user.getId());
-			if (testOpt.isPresent()) {// Record with the given id exists
-				test = testOpt.get();
-				if (!user.getEmail().toString().equals(test.getEmail().toString())) {// Given email does not match the
-																						// of current object in database
-					throw new EmailAlreadyExistsException();
-				}
-			} else {// Record with given id does not exists
-				throw new EmailAlreadyExistsException();
-			}
+		// If email already exists in the database, throw an EmailAlreadyExistsException.
+		if (userRepository.existsByEmail(user.getEmail())) {
+			throw new EmailAlreadyExistsException();
 		}
 
-		// Test if the username exists and if it does test if it is linked to the
-		// current user object
-		if (!userRepository.findByUsername(user.getUsername()).equals(Optional.empty())) {// Username already exists
-			testOpt = userRepository.findById(user.getId());
-			if (testOpt.isPresent()) {// Record with the given id exists
-				test = testOpt.get();
-				if (!user.getUsername().toString().equals(test.getUsername().toString())) {// Given email does not match
-																							// the of current object in
-																							// database
-					throw new UsernameAlreadyExistsException();
-				}
-			} else {// Record with given id does not exists
-				throw new UsernameAlreadyExistsException();
-			}
+		// If username already exists in the database, throw an UsernameAlreadyExistsException.
+		if (userRepository.existsByUsername(user.getUsername())) {
+			throw new UsernameAlreadyExistsException();
 		}
 
 		/* Pass to repository and return the result */
@@ -139,7 +126,7 @@ public class UserService {
     		return userOpt.get().getFollowers(); 
     	}
     	else {
-    		return new HashSet<User>(); 
+    		return new HashSet<>(); 
     	}
     }
     
@@ -150,11 +137,12 @@ public class UserService {
     		return userOpt.get().getFollowing(); 
     	}
 		return new HashSet<>();
-    }
-    
-    // 
-    public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
+	}
+
+	//
+	public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
 		Optional<User> oUser = userRepository.findById(userId);
+		
 		Optional<User> oTargetUser = userRepository.findById(targetId);
 		if (!oUser.isPresent()) {
 			throw new RecordNotFoundException("Current user not found!");
@@ -162,6 +150,9 @@ public class UserService {
 		if (!oTargetUser.isPresent()) {
 			throw new RecordNotFoundException("Target user not found!");
 		}
+		
+		// to see if it already exist. 
+		
     	try {
 			User user = oUser.get();
 			User targetUser = oTargetUser.get();
@@ -177,7 +168,39 @@ public class UserService {
     		e.getStackTrace(); 
     		return false; 
     	}
-	}
+    }
+
+    /**
+     * To remove follower from the table
+     * @param userId, the user that follows
+     * @param targetId, the followed user
+     * @return
+     */
+	public boolean removeFollower(long userId, long targetId) throws RecordNotFoundException {
+		Optional<User> fUser = userRepository.findById(userId);
+		Optional<User> oTargetUser = userRepository.findById(targetId);
+		if (!fUser.isPresent()) {
+			throw new RecordNotFoundException("Current user not found!");
+		}
+		if (!oTargetUser.isPresent()) {
+			throw new RecordNotFoundException("Target user not found!");
+		}
+    	try {
+			User user = fUser.get();
+			User targetUser = oTargetUser.get();
+
+			// Update user follower/following lists
+			user.unFollowUser(targetUser);
+
+			// Save both users
+        	userRepository.save(user);
+        	userRepository.save(targetUser);
+        	return true;
+    	}catch (Exception e) {
+    		e.getStackTrace(); 
+    		return false; 
+    	}
+    }
 
 	/**
 	 * Checks if email is already in the database.
@@ -203,56 +226,46 @@ public class UserService {
 	 * Validate the information within a given user object and saves the object ot
 	 * the database
 	 * 
-	 * @param user
+	 * @param dto
 	 * @return
 	 * @throws EmailAlreadyExistsException
 	 * @throws UsernameAlreadyExistsException
+	 * @throws RecordNotFoundException
 	 */
-	public User update(UserDTO user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+	public User update(UserDTO dto) throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
 		/* Local Variables */
-		Optional<User> testOpt;
-		User test = new User();
+		Optional<User> oUser = userRepository.findById(dto.getId());
+		User user;
 
 		/* Validate Data */
-		// Test if the email exists and if it does test if it is linked to the current
-		// user object
-		if (!userRepository.findByEmail(user.getEmail()).equals(Optional.empty())) {// Email already exists
-			testOpt = userRepository.findById(user.getId());
-			if (testOpt.isPresent()) {// Record with the given id exists
-				test = testOpt.get();
-				if (!user.getEmail().toString().equals(test.getEmail().toString())) {// Given email does not match the
-																						// of current object in database
-					throw new EmailAlreadyExistsException();
-				}
-			} else {// Record with given id does not exists
-				throw new EmailAlreadyExistsException();
-			}
+
+		// If user does not exist, throw an exception.
+		if (!oUser.isPresent()) {
+			throw new RecordNotFoundException("User is not found!");
 		}
 
-		// Test if the username exists and if it does test if it is linked to the
-		// current user object
-		if (!userRepository.findByUsername(user.getUsername()).equals(Optional.empty())) {// Username already exists
-			testOpt = userRepository.findById(user.getId());
-			if (testOpt.isPresent()) {// Record with the given id exists
-				test = testOpt.get();
-				if (!user.getUsername().toString().equals(test.getUsername().toString())) {// Given email does not match
-																							// the of current object in
-																							// database
-					throw new UsernameAlreadyExistsException();
-				}
-			} else {// Record with given id does not exists
-				throw new UsernameAlreadyExistsException();
-			}
+		// Unwrap the user from the optional
+		user = oUser.get();
+
+		// If emails are different and if it already exists in the database, throw an EmailAlreadyExistsException.
+		if (!dto.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(dto.getEmail())) {
+			throw new EmailAlreadyExistsException();
+		}
+
+		// If usernames are different and if it already exists in the database, throw an UsernameAlreadyExistsException.
+		if (!dto.getUsername().equals(user.getUsername()) && userRepository.existsByUsername(dto.getUsername())) {
+			throw new UsernameAlreadyExistsException();
 		}
 
 		/* Construct User Object */
-		test.setEmail(user.getEmail());
-		test.setUsername(user.getUsername());
-		test.setFirstName(user.getFirstName());
-		test.setLastName(user.getLastName());
-		test.setProfileImg(user.getProfileImg());
+		user.setEmail(dto.getEmail());
+		user.setUsername(dto.getUsername());
+		user.setFirstName(dto.getFirstName());
+		user.setLastName(dto.getLastName());
+		user.setProfileImg(dto.getProfileImg());
 
 		/* Pass to repository and return the result */
-		return userRepository.save(test);
+		return userRepository.save(user);
 	}
 }
+

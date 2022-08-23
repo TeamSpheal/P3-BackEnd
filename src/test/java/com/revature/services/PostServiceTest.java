@@ -3,7 +3,6 @@ package com.revature.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,10 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.revature.models.Post;
+import com.revature.models.User;
 import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 
-@SpringBootTest
+@SpringBootTest(classes = PostService.class)
 class PostServiceTest {
 	@MockBean
 	private UserRepository userRepo;
@@ -78,4 +78,16 @@ class PostServiceTest {
 		
 	}
 
+	
+	@Test
+	void getUserFeed() {
+		User user = new User();
+		user.setId(1l);
+		// Set<Post> set = new HashSet<>();
+		List<Post> postList = new ArrayList<>();
+		
+		Mockito.when(postRepo.findUserPostFeed(user.getId())).thenReturn(postList);
+		
+		Assertions.assertNotNull(postServ.getUserFeed(user.getId()));
+	}
 }

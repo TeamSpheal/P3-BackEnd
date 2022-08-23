@@ -2,15 +2,25 @@
 server:
   port: 8080
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${REV_EMAIL}
+    password: ${REV_PASS}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
   config:
     activate:
       on-profile: test
   jpa:
     hibernate:
-      jdbc:
-        lob:
-          non_contextual_creation: true
-      ddl-auto: update
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     defer-datasource-initialization: true
     open-in-view: true # Turn off OSIV warning
@@ -33,4 +43,6 @@ logging:
     web: debug
 jwt.secret: ${JWT_SECRET}
 aws.bucket.name: ${AWS_BUCKET_NAME}
-teamspeal.frontend.url: ${REVASPHERE_FRONTEND_URL}
+teamspeal.frontend.url: http://localhost:4200
+
+
