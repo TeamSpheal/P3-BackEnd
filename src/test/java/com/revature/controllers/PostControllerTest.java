@@ -191,5 +191,18 @@ class PostControllerTest {
 
 	}
 	
+	@Test
+	void getUsersPost() throws JsonProcessingException, Exception {
+		List<Post> listPost = new ArrayList<>();
+    	List<PostDTO> listDTO = new ArrayList<>();
+    	listPost.add( new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
+				Timestamp.from(Instant.now())));
+    	listDTO.add(new PostDTO());
+    	
+    	Mockito.when(postServ.getUserPosts(Mockito.anyLong())).thenReturn(listPost);
+
+		mockMvc.perform(get("/post/get/1")).andExpect(status().isOk());
+	}
+	
 
 }

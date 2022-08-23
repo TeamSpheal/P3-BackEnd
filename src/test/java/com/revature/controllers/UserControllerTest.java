@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -186,6 +187,41 @@ class UserControllerTest {
 
 		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isOk());
 	}
+	
+	@Test
+	void addFollowerBadRequest() throws Exception {
+		UserDTO dto = new UserDTO();
+		Mockito.when(userService.addFollower(1L, 2L)).thenReturn(null);
+
+		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isBadRequest());
+	}
+	
+	
+	@Test
+	void removeFollower() throws JsonProcessingException, Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+		Mockito.when(userService.removeFollower(Mockito.anyLong(), Mockito.anyLong())).thenReturn(dto);
+		
+		mockMvc.perform(delete("/user/1/unfollow/2")).andExpect(status().isOk())
+		.andExpect(content().json(objectMapper.writeValueAsString(dto)));
+
+	}
+	
+	@Test
+	void removeFollowerBadRequest() throws JsonProcessingException, Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+		Mockito.when(userService.removeFollower(Mockito.anyLong(), Mockito.anyLong())).thenReturn(null);
+		
+		mockMvc.perform(delete("/user/1/unfollow/2")).andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void removeFollowerRecordNotFound() throws JsonProcessingException, Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+		Mockito.when(userService.removeFollower(Mockito.anyLong(), Mockito.anyLong())).thenThrow(new RecordNotFoundException());
+		
+		mockMvc.perform(delete("/user/1/unfollow/2")).andExpect(status().isNotFound());
+	}
 
 	@Test
 	void cannotFindFollower() throws Exception {
@@ -193,7 +229,37 @@ class UserControllerTest {
 
 		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isNotFound());
 	}
+	
+	@Test
+	void isFollowing() throws JsonProcessingException, Exception {
+		User mockUser = new User("","","","","","");
+		mockUser.setId(1L);
+		Optional<User> user = Optional.of(mockUser);
+		Set<User> set = new HashSet<>();
+		set.add(mockUser);
+		
+		Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(user);
+		Mockito.when(userService.getFollowing(Mockito.any())).thenReturn(set);
+		
+		
+		mockMvc.perform(get("/user/1/follower/2")).andExpect(status().isOk())
+		.andExpect(content().json(objectMapper.writeValueAsString(set)));
+	}
+	
+	@Test
+	void isFollowingPreConditionFail() throws JsonProcessingException, Exception {
+		mockMvc.perform(get("/user/1/follower/1")).andExpect(status().isPreconditionFailed());
+	}
 
+	@Test
+	void isFollowingNotFound() throws Exception {
+		Optional<User> user = Optional.empty();
+		
+		Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(user);
+		
+		mockMvc.perform(get("/user/1/follower/2")).andExpect(status().isNotFound());
+	}
+	
 	@Test
 	void updateUser() throws Exception {
 		UserDTO dto = new UserDTO(1L, "user");
