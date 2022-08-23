@@ -104,16 +104,16 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
-    @Authorized
-    @GetMapping("/get/{id}")
-    public ResponseEntity<List<PostDTO>> getAllPostsByAuthor(@PathVariable long id){
-    	List<Post> list = postService.getPostsByAuthor(id);
-    	List<PostDTO> listDto = new ArrayList<>();
-    	for(Post p : list) {
-    		listDto.add(new PostDTO(p));
-    	}
-    	return ResponseEntity.ok(listDto);
-    }
+//    @Authorized
+//    @GetMapping("/get/{id}")
+//    public ResponseEntity<List<PostDTO>> getAllPostsByAuthor(@PathVariable long id){
+//    	List<Post> list = postService.getPostsByAuthor(id);
+//    	List<PostDTO> listDto = new ArrayList<>();
+//    	for(Post p : list) {
+//    		listDto.add(new PostDTO(p));
+//    	}
+//    	return ResponseEntity.ok(listDto);
+//    }
     	
     @GetMapping("/{postId}")
     public ResponseEntity<PostDTO> getPost(@PathVariable long postId){

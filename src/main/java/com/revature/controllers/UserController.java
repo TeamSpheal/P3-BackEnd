@@ -5,10 +5,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-<<<<<<< HEAD
 import java.util.HashMap;
-=======
->>>>>>> 85d8d717cb3372df3b5088b08f47d97eaa5ef3a7
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -161,7 +158,7 @@ public class UserController {
     @Authorized
     @PostMapping("/update/profile")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO updatedUser)
-            throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+            throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
         // Pass object to service layer
         User result = userService.update(updatedUser);
 

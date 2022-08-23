@@ -46,22 +46,19 @@ public class PostService {
 	public Post upsert(Post post) {
 		return this.postRepository.save(post);
 	}
-
-<<<<<<< HEAD
-	/** 
-	 * Get all the posts from a specific author.
-	 * @param id
-	 * @return List<Post>
-	 */
-	public List<Post> getPostsByAuthor(long id) {
-		return this.postRepository.findByAuthorId(id);
-	}
+	
+//	/** 
+//	 * Get all the posts from a specific author.
+//	 * @param id
+//	 * @return List<Post>
+//	 */
+//	public List<Post> getPostsByAuthor(long id) {
+//		return this.postRepository.findByAuthorId(id);
+//	}
 	
 //	public List<Post> getUserFeed(long id) {
 //		List<Post> posts = this.postRepository.findUserPostFeed(id);
 //		return posts;
-=======
->>>>>>> 85d8d717cb3372df3b5088b08f47d97eaa5ef3a7
 	
 	/** 
 	 * Get all the posts from people they follow and themselves.
@@ -71,23 +68,18 @@ public class PostService {
 	public List<Post> getUserFeed(long id) {
 		return this.postRepository.findUserPostFeed(id);
 	}
-  
-	public List<Post> getPostsByAuthor(long id) {
-		return this.postRepository.findByAuthorId(id);
-	}
 	
-<<<<<<< HEAD
 	/** 
 	 * Get all the posts from a user.
 	 * @param id
 	 * @return List<Post>
 	 */
 	public List<Post> getUserPosts(long id) {
-		return this.postRepository.findAllByAuthorId(id);
-=======
-	public List<Post> getUserFeed(long id) {
-		List<Post> posts = this.postRepository.findUserPostFeed(id);
-		return posts;
->>>>>>> 85d8d717cb3372df3b5088b08f47d97eaa5ef3a7
+		return this.postRepository.findByAuthorId(id);
 	}
+	
+//	public List<Post> getUserFeed(long id) {
+//		List<Post> posts = this.postRepository.findUserPostFeed(id);
+//		return posts;
+//	}
 }
