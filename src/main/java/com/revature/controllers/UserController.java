@@ -46,8 +46,8 @@ public class UserController {
     private final UserService userService;
     private final ImageService imageService;
     private final ResetPWService resetPWService;
-    private final Path root = Paths.get("src/main/resources/uploads");
     private HashSet<User> setFollowing = new HashSet<User>();
+    private ObjectMapper objMapper;
 
     @Autowired
     Environment env;
@@ -56,6 +56,7 @@ public class UserController {
         this.userService = userService;
         this.resetPWService = resetPWService;
         this.imageService = imageService;
+        this.objMapper = new ObjectMapper();
     }
 
     /**
@@ -83,14 +84,17 @@ public class UserController {
 
     // TODO: unfollow 
     @DeleteMapping("/{userId}/unfollow/{targetId}") 
-    public ResponseEntity<Void> removeFollower(@PathVariable("userId") Long userId, 
+    public ResponseEntity<UserDTO> removeFollower(@PathVariable("userId") Long userId, 
 			@PathVariable("targetId") Long targetId) {
- 
+    	UserDTO result = null;
     		//boolean isRemoved;
 			try {
-				userService.removeFollower(userId, targetId);
-    			return ResponseEntity.status(HttpStatus.OK).build();
-
+				result = userService.removeFollower(userId, targetId);
+				if (result != null) {
+                	return ResponseEntity.ok(result);
+                } else {
+                	return ResponseEntity.badRequest().build();
+                }
 			} catch (RecordNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -101,13 +105,18 @@ public class UserController {
     
     // Add follower to the logged in user
     @PostMapping("/{userId}/follower/{targetId}")
-    public ResponseEntity<Void> addFollower(@PathVariable("userId") Long userId,
+    public ResponseEntity<UserDTO> addFollower(@PathVariable("userId") Long userId,
             @PathVariable("targetId") Long targetId) {
+    	UserDTO result = null;
         // check if id's are the same
         if (!userId.equals(targetId)) {
             try {
-                userService.addFollower(userId, targetId);
-                return ResponseEntity.status(HttpStatus.OK).build();
+                result = userService.addFollower(userId, targetId);
+                if (result != null) {
+                	return ResponseEntity.ok(result);
+                } else {
+                	return ResponseEntity.badRequest().build();
+                }
             } catch (RecordNotFoundException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();

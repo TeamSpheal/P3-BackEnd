@@ -166,10 +166,10 @@ public class UserService {
 	}
 
 	//
-	public boolean addFollower(long userId, long targetId) throws RecordNotFoundException {
-		Optional<User> oUser = userRepository.findById(userId);
-		
+	public UserDTO addFollower(long userId, long targetId) throws RecordNotFoundException {
+		Optional<User> oUser = userRepository.findById(userId);		
 		Optional<User> oTargetUser = userRepository.findById(targetId);
+		User result;
 		if (!oUser.isPresent()) {
 			throw new RecordNotFoundException("Current user not found!");
 		}
@@ -183,14 +183,15 @@ public class UserService {
 
 			// Update user follower/following lists
 			user.followUser(targetUser);
+			targetUser.addFollower(user);
 
 			// Save both users
-        	userRepository.save(user);
+        	result = userRepository.save(user);
         	userRepository.save(targetUser);
-        	return true;
+        	return new UserDTO(result);
     	} catch (Exception e) {
     		e.getStackTrace(); 
-    		return false; 
+    		return null; 
     	}
     }
 
@@ -200,9 +201,10 @@ public class UserService {
      * @param targetId, the followed user
      * @return
      */
-	public boolean removeFollower(long userId, long targetId) throws RecordNotFoundException {
+	public UserDTO removeFollower(long userId, long targetId) throws RecordNotFoundException {
 		Optional<User> fUser = userRepository.findById(userId);
 		Optional<User> oTargetUser = userRepository.findById(targetId);
+		User result;
 		if (!fUser.isPresent()) {
 			throw new RecordNotFoundException("Current user not found!");
 		}
@@ -215,14 +217,15 @@ public class UserService {
 
 			// Update user follower/following lists
 			user.unFollowUser(targetUser);
+			targetUser.removeFollower(user);
 
 			// Save both users
-        	userRepository.save(user);
+        	result = userRepository.save(user);
         	userRepository.save(targetUser);
-        	return true;
+        	return new UserDTO(result);
     	}catch (Exception e) {
     		e.getStackTrace(); 
-    		return false; 
+    		return null; 
     	}
 	}
 	
