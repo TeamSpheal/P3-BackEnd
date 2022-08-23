@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
@@ -48,7 +47,6 @@ public class UserController {
     private final UserService userService;
     private final ImageService imageService;
     private final ResetPWService resetPWService;
-    private HashSet<User> setFollowing = new HashSet<User>();
     private ObjectMapper objMapper;
 
     @Autowired
@@ -88,7 +86,6 @@ public class UserController {
     public ResponseEntity<UserDTO> removeFollower(@PathVariable("userId") Long userId, 
 			@PathVariable("targetId") Long targetId) {
     	UserDTO result = null;
-    		//boolean isRemoved;
 			try {
 				result = userService.removeFollower(userId, targetId);
 				if (result != null) {
@@ -97,7 +94,6 @@ public class UserController {
                 	return ResponseEntity.badRequest().build();
                 }
 			} catch (RecordNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
     			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			} 
@@ -129,9 +125,15 @@ public class UserController {
     @GetMapping("/{userId}/follower/{targetId}")
     public ResponseEntity<HashSet<User>> isFollowing(@PathVariable("userId") Long userId,
             @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
+
+        HashSet<User> setFollowing = new HashSet<>();
+
         // check if id's are the same
         if (!userId.equals(targetId)) {
             Optional<User> user = userService.findById(userId);
+            if (!user.isPresent()) {
+                throw new RecordNotFoundException();
+            }
 			setFollowing = (HashSet<User>) userService.getFollowing(user.get());
 			return ResponseEntity.ok(setFollowing);
         }
