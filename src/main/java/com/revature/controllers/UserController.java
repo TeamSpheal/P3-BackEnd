@@ -16,6 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.annotations.Authorized;
@@ -79,6 +79,22 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+
+    @DeleteMapping("/{userId}/unfollow/{targetId}") 
+    public ResponseEntity<Void> removeFollower(@PathVariable("userId") Long userId, 
+			@PathVariable("targetId") Long targetId) throws RecordNotFoundException {
+ 
+    		//boolean isRemoved;
+			try {
+				userService.removeFollower(userId, targetId);
+    			return ResponseEntity.status(HttpStatus.OK).build();
+
+			} catch (RecordNotFoundException e) {
+				throw new RecordNotFoundException (e);
+			} 
+ 
+    }
+    
     // Add follower to the logged in user
     @PostMapping("/{userId}/follower/{targetId}")
     public ResponseEntity<Void> addFollower(@PathVariable("userId") Long userId,
