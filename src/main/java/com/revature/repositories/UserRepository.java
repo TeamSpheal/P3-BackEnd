@@ -23,8 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param password (String)
 	 * @return a user object
 	 */
+	
 	Optional<User> findByEmailAndPassword(String email, String password);
-
 	/**
 	 * Returns a user object based on a given email
 	 * 
