@@ -60,15 +60,13 @@ public class PostService {
 		List<Post> posts = this.postRepository.findUserPostFeed(id);
 		return posts;
 	}
-
+  
+	public List<Post> getPostsByAuthor(long id) {
+		return this.postRepository.findByAuthorId(id);
+	}
 	
-	/** 
-	 * Get all the posts from a user.
-	 * @param id
-	 * @return List<Post>
-	 */
-	public List<Post> getUserPosts(long id) {
-		List<Post> posts = this.postRepository.findAllByAuthorId(id);
+	public List<Post> getUserFeed(long id) {
+		List<Post> posts = this.postRepository.findUserPostFeed(id);
 		return posts;
 	}
 }
