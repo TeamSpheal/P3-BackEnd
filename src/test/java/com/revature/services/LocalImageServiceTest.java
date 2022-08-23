@@ -4,6 +4,7 @@ package com.revature.services;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -30,14 +31,9 @@ public class LocalImageServiceTest {
 	 */
 	@Test
 	void uploadImage() throws FileNotFoundException, IOException {
-
-		MultipartFile mockFile = Mockito.mock(MultipartFile.class);
-		MockMultipartFile multipartFile = new MockMultipartFile("img.jpg", mockFile.getBytes());
-		FileInputStream input = Mockito.mock(FileInputStream.class);
-	
-		//Mockito.when(mockFile.getOriginalFilename()).thenReturn("img.jpg");
-		Mockito.when(mockFile.getInputStream()).thenReturn(input);		
-
+		final MockMultipartFile multipartFile = new MockMultipartFile("images", "image.jpg", "image/jpeg", "random".getBytes());
+		Path root = Paths.get("src/main/resources/uploads").resolve(multipartFile.getOriginalFilename());
 		Assertions.assertNotNull(localImageServ.uploadMultipartFile(multipartFile));
+		Files.deleteIfExists(root);
 	}
 }
