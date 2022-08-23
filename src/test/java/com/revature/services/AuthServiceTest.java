@@ -17,7 +17,7 @@ import com.revature.exceptions.UsernameAlreadyExistsException;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
-@SpringBootTest(classes=UserService.class)
+@SpringBootTest(classes=SocialMediaApplication.class)
 public class AuthServiceTest {
 	@MockBean
 	private UserRepository userRepo;
