@@ -10,7 +10,10 @@ import org.springframework.core.env.Environment;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.http.ResponseEntity.HeadersBuilder;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
@@ -73,6 +77,25 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+
+    // TODO: unfollow 
+    @DeleteMapping("/{userId}/unfollow/{targetId}") 
+    public ResponseEntity<Void> removeFollower(@PathVariable("userId") Long userId, 
+			@PathVariable("targetId") Long targetId) {
+ 
+    		//boolean isRemoved;
+			try {
+				userService.removeFollower(userId, targetId);
+    			return ResponseEntity.status(HttpStatus.OK).build();
+
+			} catch (RecordNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+    			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			} 
+ 
+    }
+    
     // Add follower to the logged in user
     @PostMapping("/{userId}/follower/{targetId}")
     public ResponseEntity<Void> addFollower(@PathVariable("userId") Long userId,
