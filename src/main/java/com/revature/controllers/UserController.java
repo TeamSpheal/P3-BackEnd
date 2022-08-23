@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.PutMapping;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.annotations.Authorized;
@@ -81,10 +80,9 @@ public class UserController {
     }
 
 
-    // TODO: unfollow 
     @DeleteMapping("/{userId}/unfollow/{targetId}") 
     public ResponseEntity<Void> removeFollower(@PathVariable("userId") Long userId, 
-			@PathVariable("targetId") Long targetId) {
+			@PathVariable("targetId") Long targetId) throws RecordNotFoundException {
  
     		//boolean isRemoved;
 			try {
@@ -92,9 +90,7 @@ public class UserController {
     			return ResponseEntity.status(HttpStatus.OK).build();
 
 			} catch (RecordNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-    			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+				throw new RecordNotFoundException (e);
 			} 
  
     }
