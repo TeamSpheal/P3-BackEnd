@@ -3,6 +3,7 @@ package com.revature.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,20 +109,18 @@ public class PostController {
     @GetMapping("/get/{userId}")
     public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserPosts(userId);
-    	List<PostDTO> postsDto = new ArrayList<>();
-    	for(Post post : posts) {
-    		postsDto.add(new PostDTO(post));
-    	}
+    	List<PostDTO> postsDto = posts.stream()
+    	        .map(post -> new PostDTO(post))
+    	        .collect(Collectors.toList());
     	return ResponseEntity.ok(postsDto);
     }
     
     @GetMapping("/following/{userId}")
     public ResponseEntity<List<PostDTO>> getFollowingPostFeed(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserFeed(userId);
-    	List<PostDTO> postsDto = new ArrayList<>();
-    	for(Post post : posts) {
-    		postsDto.add(new PostDTO(post));
-    	}
+    	List<PostDTO> postsDto = posts.stream()
+    	        .map(post -> new PostDTO(post))
+    	        .collect(Collectors.toList());
     	return ResponseEntity.ok(postsDto);
     }
 
