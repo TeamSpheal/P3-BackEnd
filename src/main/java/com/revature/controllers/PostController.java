@@ -104,33 +104,25 @@ public class PostController {
         return ResponseEntity.ok(postDto);
     }
     
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostDTO> getPost(@PathVariable long postId){
-    	Post initPost = postService.getPost(postId);
-    	if(initPost == null) {
-    		return ResponseEntity.badRequest().build();
+    @Authorized
+    @GetMapping("/get/{id}")
+    public ResponseEntity<List<PostDTO>> getAllPostsByAuthor(@PathVariable long id){
+    	List<Post> list = postService.getPostsByAuthor(id);
+    	List<PostDTO> listDto = new ArrayList<>();
+    	for(Post p : list) {
+    		listDto.add(new PostDTO(p));
     	}
-    	return ResponseEntity.ok(new PostDTO(initPost));
-
+    	return ResponseEntity.ok(listDto);
     }
     
     @GetMapping("/following/{userId}")
     public ResponseEntity<List<PostDTO>> getFollowingPostFeed(@PathVariable("userId") long userId) {
     	List<Post> posts = postService.getUserFeed(userId);
-    	List<PostDTO> postsDto = new ArrayList<>();
+    	List<PostDTO> postsDto = new ArrayList<PostDTO>();
     	for(Post post : posts) {
     		postsDto.add(new PostDTO(post));
     	}
     	return ResponseEntity.ok(postsDto);
     }
-    
-    @GetMapping("/get/{userId}")
-    public ResponseEntity<List<PostDTO>> getUsersPosts(@PathVariable("userId") long userId) {
-    	List<Post> posts = postService.getUserPosts(userId);
-    	List<PostDTO> postsDto = new ArrayList<>();
-    	for(Post post : posts) {
-    		postsDto.add(new PostDTO(post));
-    	}
-    	return ResponseEntity.ok(postsDto);
-    }
+
 }
