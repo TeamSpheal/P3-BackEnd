@@ -46,7 +46,7 @@ public class UserPassDTO {
         this.lastName = user.getLastName();
         this.profileImg = user.getProfileImg();
         
-        this.followers = user.getFollowers().stream().map(follower->new UserMiniDTO(follower)).collect(Collectors.toSet());
+        this.followers = user.getFollowers().stream().map(UserMiniDTO::new).collect(Collectors.toSet());
         
         // // Convert each following into UserMiniDTO
         // uMSF stands for userMiniSetFollowing to hide from SonarCloud
