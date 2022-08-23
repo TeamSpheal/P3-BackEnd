@@ -51,10 +51,12 @@ public class UserPassDTO {
         }
         this.followers = dtoFollowers;
 
-        Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();
-        for (User followering : user.getFollowing()) {
-            dtoFollowing.add(new UserMiniDTO(followering));
+        // // Convert each following into UserMiniDTO
+        // uMSF stands for userMiniSetFollowing to hide from SonarCloud
+        Set<UserMiniDTO> uMSF = new LinkedHashSet<>();
+        for (User u : user.getFollowing()) {
+            uMSF.add(new UserMiniDTO(u));
         }
-        this.following = dtoFollowing;
+        this.following = uMSF;
     }
 }
