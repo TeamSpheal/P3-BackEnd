@@ -110,7 +110,6 @@ class PostControllerTest {
 		Set<User> likers = new HashSet<User>();
 		likers.add(mockUser);
 		mockPost.setUsers(likers);
-		PostDTO dto = new PostDTO(mockPost);
 
 		like.setPostId(mockPost.getId());
 		like.setUserId(mockUser.getId());
@@ -152,7 +151,6 @@ class PostControllerTest {
 		Set<User> likers = new HashSet<User>();
 		likers.remove(mockUser);
 		mockPost.setUsers(likers);
-		PostDTO dto = new PostDTO(mockPost);
 
 		like.setPostId(mockPost.getId());
 		like.setUserId(mockUser.getId());
