@@ -177,21 +177,6 @@ class PostControllerTest {
 	}
 	
 	@Test
-	void getPost() throws JsonProcessingException, Exception {
-		Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
-				Timestamp.from(Instant.now()));
-		
-		Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(mockPost);		
-		mockMvc.perform(get("/post/1")).andExpect(status().isOk());
-	}
-	
-	@Test
-	void cannotGetPost() throws Exception {		
-		Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(null);
-		mockMvc.perform(get("/post/1")).andExpect(status().isBadRequest());
-	}
-	
-	@Test
 	void getFollowingPostFeed() throws Exception {
 		User mockUser = new User("", "", "", "", "", "");
 		mockUser.setId(1L);
