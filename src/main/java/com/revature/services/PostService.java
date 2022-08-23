@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,53 @@ public class PostService {
 	public PostService(PostRepository postRepository) {
 		this.postRepository = postRepository;
 	}
-
-	public List<Post> getAll() {
-		return this.postRepository.findAll();
+	
+	
+	/** 
+	 * @param id
+	 * @return Post
+	 */
+	public Post getPost(long id) {
+		Optional<Post> postOpt = postRepository.findById(id);
+		if (postOpt.isPresent()) {
+			return postOpt.get();
+		}
+		return null;
 	}
 
+	
+	/** 
+	 * @return List<Post>
+	 */
+	public List<Post> getAll() {
+		return this.postRepository.findNonCommentPosts();
+	}
+
+	
+	/** 
+	 * @param post
+	 * @return Post
+	 */
 	public Post upsert(Post post) {
 		return this.postRepository.save(post);
+	}
+
+	
+	/** 
+	 * Get all the posts from people they follow and themselves.
+	 * @param id
+	 * @return List<Post>
+	 */
+	public List<Post> getUserFeed(long id) {
+		return this.postRepository.findUserPostFeed(id);
+	}
+	
+	/** 
+	 * Get all the posts from a user.
+	 * @param id
+	 * @return List<Post>
+	 */
+	public List<Post> getUserPosts(long id) {
+		return this.postRepository.findAllByAuthorId(id);
 	}
 }

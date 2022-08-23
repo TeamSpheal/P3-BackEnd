@@ -85,6 +85,7 @@ git branch -m <oldname> <newname>
 To rename the current branch:
 ```
 git branch -m <newname>
+```
 
 ### Contact
 Developer's Name: Michael Bollinger

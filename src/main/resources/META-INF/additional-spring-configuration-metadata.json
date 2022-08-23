@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "'jwt.secret' is used to salt a JWT."
+  },
+  {
+    "name": "aws.region",
+    "type": "java.lang.String",
+    "description": "'aws.region' is the region of the S3 Bucket."
+  },
+  {
+    "name": "teamspeal.frontend.url",
+    "type": "java.lang.String",
+    "description": "Location at which the front end is running."
+  }
+]}
