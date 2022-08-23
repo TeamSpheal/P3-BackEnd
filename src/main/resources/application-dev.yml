@@ -1,6 +1,6 @@
 # This profile is the for connecting to your local H2 Database
 server:
-  port: 8080
+  port: 5000
 spring:
   mail:
     host: smtp.gmail.com

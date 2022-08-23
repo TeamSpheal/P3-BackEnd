@@ -1,6 +1,6 @@
 # This profile is for connecting to AWS RDS
 server:
-  port: 8080
+  port: 5000
 spring:
   mail:
     host: smtp.gmail.com
