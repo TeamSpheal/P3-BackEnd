@@ -84,7 +84,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}/unfollow/{targetId}") 
     public ResponseEntity<UserDTO> removeFollower(@PathVariable("userId") Long userId, 
-			@PathVariable("targetId") Long targetId) {
+			@PathVariable("targetId") Long targetId) throws RecordNotFoundException {
     	UserDTO result = null;
 			try {
 				result = userService.removeFollower(userId, targetId);
@@ -94,8 +94,7 @@ public class UserController {
                 	return ResponseEntity.badRequest().build();
                 }
 			} catch (RecordNotFoundException e) {
-				e.printStackTrace();
-    			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    			throw new RecordNotFoundException(e);
 			} 
  
     }
