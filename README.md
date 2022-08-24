@@ -1,32 +1,31 @@
-# Title: RevaSphere Social Media Website (Back-End)
-
+# RevaSphere Social Media Website (Back-End)
+![RevaSphere Logo](https://github.com/TeamSpheal/P3-FrontEnd/blob/main/src/assets/images/revasphere-logo-orange.png?raw=true)
 ## Table of Contents
 
-[Description](#description)
+* [Description](#description)
 
-[Links](#links)
+* [Links](#links)
 
-[Installation](#installation)
+* [Installation](#installation)
 
-[Usage](#usage)
+* [Usage](#usage)
 
-[Licenses](#licenses)
+* [Licenses](#licenses)
 
-[Contribution](#contribution)
+* [Contribution](#contribution)
 
-[Contact](#contact)
+* [Contact](#contact)
 
-### Description
+## Description
 A blockchain social media application, in which a User can create an account, follow users whose posts they want to see on their feed, and make their own posts. Every user also has a profile which displays that user's statistics, allows the current user to follow another user, or allows the current user to edit their profile settings when on their own page. A user can also like a post, leave a comment on a post, or reply to a previous comment. Users can also toggle dark mode, and their choice will be persisted after logging out. If a user forgets their password, they can request a reset via email.
 
-### Links
-Github Link: https://github.com/TeamSpheal
+## Links
+Github Organization Link: https://github.com/TeamSpheal
 
 Deployed Application: [On AWS Elastic Beanstalk](http://p3-socialmedia.us-east-1.elasticbeanstalk.com/)
 
-### Installation
-Maven, Spring, Angular
-#### Dependencies
+## Installation
+### Dependencies
 * Java 11
 * Maven
 * Spring Boot
@@ -40,7 +39,7 @@ scoop install ojdkbuild11
 scoop install maven
 ```
 
-#### Set Up
+#### Setup
 Assuming you're in a terminal, do the following to build a Spring .jar file:
 
 Clone this repository:
@@ -72,10 +71,7 @@ AWS_BUCKET_NAME: # name of the bucket on S3
 ### Usage
 Professional skill development.
 
-### Licenses
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
-
-### Contribution
+## Contribution
 Create a personal branch named [feature]-[your_name] e.g. user-colby would be a branch for user from colby. 
 Please make sure to run your build and update tests to make sure everything works before making a pull request to the feature branch.
 
@@ -87,6 +83,9 @@ To rename the current branch:
 ```
 git branch -m <newname>
 ```
+
+## Licenses
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ### Contact
 Developer's Name: Michael Bollinger
