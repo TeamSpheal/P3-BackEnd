@@ -104,15 +104,31 @@ public class UserService {
 	 * @throws UsernameAlreadyExistsException
 	 */
 	public User save(User user) throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+		Optional<User> oUser = userRepository.findById(user.getId());
 
-		// If email already exists in the database, throw an EmailAlreadyExistsException.
-		if (userRepository.existsByEmail(user.getEmail())) {
-			throw new EmailAlreadyExistsException();
+		if (oUser.isPresent()) {
+			User foundUser = oUser.get();
+
+			// If emails are different and if it already exists in the database, throw an EmailAlreadyExistsException.
+			if (!foundUser.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(foundUser.getEmail())) {
+				throw new EmailAlreadyExistsException();
+			}
+
+			// If usernames are different and if it already exists in the database, throw an UsernameAlreadyExistsException.
+			if (!foundUser.getUsername().equals(user.getUsername()) && userRepository.existsByUsername(foundUser.getUsername())) {
+				throw new UsernameAlreadyExistsException();
+			}
 		}
+		else {
+			// If email already exists in the database, throw an EmailAlreadyExistsException.
+			if (userRepository.existsByEmail(user.getEmail())) {
+				throw new EmailAlreadyExistsException();
+			}
 
-		// If username already exists in the database, throw an UsernameAlreadyExistsException.
-		if (userRepository.existsByUsername(user.getUsername())) {
-			throw new UsernameAlreadyExistsException();
+			// If username already exists in the database, throw an UsernameAlreadyExistsException.
+			if (userRepository.existsByUsername(user.getUsername())) {
+				throw new UsernameAlreadyExistsException();
+			}
 		}
 
 		/* Pass to repository and return the result */
