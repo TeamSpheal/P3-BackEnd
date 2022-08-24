@@ -21,7 +21,8 @@ A blockchain social media application, in which a User can create an account, fo
 
 ### Links
 Github Link: https://github.com/TeamSpheal
-Deployed Application: ***Replace w deployed!!!***
+
+Deployed Application: [On AWS Elastic Beanstalk](http://p3-socialmedia.us-east-1.elasticbeanstalk.com/)
 
 ### Installation
 Maven, Spring, Angular
