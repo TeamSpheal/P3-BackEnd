@@ -34,8 +34,8 @@ public class User {
 	private Set<User> followers;
 
 	@JoinTable(name = "follow", joinColumns = {
-			@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) })
+			@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false) })
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<User> following;
 
@@ -98,15 +98,21 @@ public class User {
 
 	public void followUser(User user) {
 		this.following.add(user);
-		user.getFollowers().add(this);
 	}
 
 	public void unFollowUser(User user) {
 		if (following.contains(user)) {
 			this.following.remove(user);
 		}
-		if (user.getFollowers().contains(this)) {
-			user.getFollowers().remove(this);
+	}
+	
+	public void addFollower(User user) {
+		this.followers.add(user);
+	}
+	
+	public void removeFollower(User user) {
+		if (followers.contains(user)) {
+			this.followers.remove(user);
 		}
 	}
 

@@ -33,4 +33,17 @@ class SearchServiceTest {
 
 		assertNotNull("Good",serviceReturn);
 	}
+	
+	@Test
+	void showAllUserVersionTwo() {
+		List<UserDTO> mockUsers = new ArrayList<>();
+		SearchServiceImpl mockSearch = new SearchServiceImpl(userRepo);
+
+		Optional<List<UserDTO>> serviceReturn = mockSearch.queryUserTable("test-user");
+		Mockito.when(userRepo.findAllByFirstNameStartingWithOrLastNameStartingWithOrderByFirstName(
+				"test", "User"))
+				.thenReturn(Optional.of(mockUsers));
+
+		assertNotNull("Good",serviceReturn);
+	}
 }

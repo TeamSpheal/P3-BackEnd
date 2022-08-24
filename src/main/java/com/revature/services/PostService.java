@@ -56,7 +56,6 @@ public class PostService {
 	public List<Post> getUserFeed(long id) {
 		return this.postRepository.findUserPostFeed(id);
 	}
-
 	
 	/** 
 	 * Get all the posts from a user.

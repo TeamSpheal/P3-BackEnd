@@ -1,6 +1,6 @@
 # This profile is the default
 server:
-  port: 8080
+  port: 5000
 spring:
   profiles:
     active: test
