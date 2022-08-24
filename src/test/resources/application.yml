@@ -1,6 +1,6 @@
 # This profile is the default for unit tests
 server:
-  port: 5000
+  port: 8080
 spring:
   profiles:
     active: dev

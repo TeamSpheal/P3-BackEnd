@@ -34,8 +34,8 @@ public class User {
 	private Set<User> followers;
 
 	@JoinTable(name = "follow", joinColumns = {
-			@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) })
+			@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "target_id", referencedColumnName = "id", nullable = false) })
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<User> following;
 
