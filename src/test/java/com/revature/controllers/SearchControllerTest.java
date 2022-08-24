@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = SearchController.class)
-public class SearchControllerTest {
+class SearchControllerTest {
 
     @MockBean
     private SearchServiceImpl searchService;
@@ -47,8 +47,6 @@ public class SearchControllerTest {
     
     @Test
     void cannotSearchForUser() throws JsonProcessingException, Exception {
-        List<UserDTO> mockUsers = new ArrayList<>();
-
         Mockito.when(searchService.queryUserTable("test")).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/search/test"))

@@ -2,15 +2,16 @@ package com.revature.services;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import com.revature.SocialMediaApplication;
+
 @SpringBootTest
-public class EmailServiceTest {
+class EmailServiceTest {
 	
 	@MockBean
 	private JavaMailSender mailSender;
@@ -19,7 +20,7 @@ public class EmailServiceTest {
 	private EmailService testEmailService;
 	
 	@Test
-	public void testBadEmail() {
+	void testBadEmail() {
 		/*Local Variables*/
 		SimpleMailMessage resultMessage = testEmailService.sendEmail("sioughsohosjdhf", "", "", "");
 	
@@ -29,7 +30,7 @@ public class EmailServiceTest {
 	}
 	
 	@Test
-	public void testGoodEmail() {
+	void testGoodEmail() {
 		/*Local Variables*/
 		SimpleMailMessage resultMessage = testEmailService.sendEmail("cheeseandpie2000@gmail.com", "", "", "");
 	

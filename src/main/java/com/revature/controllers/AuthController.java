@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +27,6 @@ public class AuthController {
 
     private final AuthService authService;
     private final TokenService tokenService;
-    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthService authService, TokenService tokenService) {
         this.authService = authService;
@@ -44,14 +41,13 @@ public class AuthController {
      * @throws FailedAuthenticationException
      */
     @PostMapping(path="/login", produces="application/json")
-    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest, HttpSession session) throws FailedAuthenticationException {
+    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest) throws FailedAuthenticationException {
         Optional<User> optional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
 
         if(optional.isEmpty()) {
             throw new FailedAuthenticationException("Credentials for the email " + loginRequest.getEmail() + " were invalid, please try again!");
         }
         
-        session.setAttribute("user", optional.get());
         UserDTO user = new UserDTO(optional.get());
 
         // Create a JWT and attach it to the header "Auth" in the response.
@@ -93,11 +89,9 @@ public class AuthController {
             UserDTO dto = new UserDTO(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         } catch (EmailAlreadyExistsException e) {
-            logger.error("ERROR: EmailAlreadyExistsException", e);
-            throw e;
+            throw new EmailAlreadyExistsException("Email" + registerRequest.getEmail() + "already exists!", e);
         } catch (UsernameAlreadyExistsException e) {
-            logger.error("ERROR: UsernameAlreadyExistsException", e);
-            throw e;
+            throw new UsernameAlreadyExistsException("Username " + registerRequest.getUsername() + " already exists!", e);
         }
     }
     

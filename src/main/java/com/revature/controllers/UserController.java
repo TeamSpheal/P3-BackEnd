@@ -6,16 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.revature.annotations.Authorized;
 import com.revature.dtos.UserDTO;
 import com.revature.dtos.UserMiniDTO;
@@ -45,8 +43,7 @@ public class UserController {
     private final UserService userService;
     private final ImageService imageService;
     private final ResetPWService resetPWService;
-    private ObjectMapper objMapper = new ObjectMapper();
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private ObjectMapper objMapper;
 
     @Autowired
     Environment env;
@@ -55,6 +52,7 @@ public class UserController {
         this.userService = userService;
         this.resetPWService = resetPWService;
         this.imageService = imageService;
+        this.objMapper = new ObjectMapper();
     }
 
     /**
@@ -81,33 +79,56 @@ public class UserController {
 
 
     @DeleteMapping("/{userId}/unfollow/{targetId}") 
-    public ResponseEntity<Void> removeFollower(@PathVariable("userId") Long userId, 
+    public ResponseEntity<UserDTO> removeFollower(@PathVariable("userId") Long userId, 
 			@PathVariable("targetId") Long targetId) throws RecordNotFoundException {
- 
-    		//boolean isRemoved;
+    	UserDTO result = null;
 			try {
-				userService.removeFollower(userId, targetId);
-    			return ResponseEntity.status(HttpStatus.OK).build();
-
+				result = userService.removeFollower(userId, targetId);
+				if (result != null) {
+                	return ResponseEntity.ok(result);
+                } else {
+                	return ResponseEntity.badRequest().build();
+                }
 			} catch (RecordNotFoundException e) {
-				throw new RecordNotFoundException (e);
+    			throw new RecordNotFoundException(e);
 			} 
  
     }
     
     // Add follower to the logged in user
     @PostMapping("/{userId}/follower/{targetId}")
-    public ResponseEntity<Void> addFollower(@PathVariable("userId") Long userId,
+    public ResponseEntity<UserDTO> addFollower(@PathVariable("userId") Long userId,
             @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
+    	UserDTO result = null;
         // check if id's are the same
         if (!userId.equals(targetId)) {
             try {
-                userService.addFollower(userId, targetId);
-                return ResponseEntity.status(HttpStatus.OK).build();
+                result = userService.addFollower(userId, targetId);
+                if (result != null) {
+                	return ResponseEntity.ok(result);
+                } else {
+                	return ResponseEntity.badRequest().build();
+                }
             } catch (RecordNotFoundException e) {
-                logger.error(e.getMessage());
-                throw e;
+                throw new RecordNotFoundException("Could not find user!");
             }
+        }
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+    }
+    
+    // Get follower to the logged in user
+    @GetMapping("/{userId}/follower/{targetId}")
+    public ResponseEntity<Set<User>> isFollowing(@PathVariable("userId") Long userId,
+            @PathVariable("targetId") Long targetId) throws RecordNotFoundException {
+
+        // check if id's are the same
+        if (!userId.equals(targetId)) {
+            Optional<User> user = userService.findById(userId);
+            if (!user.isPresent()) {
+                throw new RecordNotFoundException();
+            }
+			Set<User> setFollowing = userService.getFollowing(user.get());
+			return ResponseEntity.ok(setFollowing);
         }
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
     }
@@ -141,18 +162,27 @@ public class UserController {
      * @return a UserMiniDTO object
      * @throws EmailAlreadyExistsException
      * @throws UsernameAlreadyExistsException
+     * @throws RecordNotFoundException
      */
     @Authorized
     @PostMapping("/update/profile")
-    public ResponseEntity<UserMiniDTO> updateUser(@RequestBody UserDTO updatedUser)
-            throws EmailAlreadyExistsException, UsernameAlreadyExistsException {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO updatedUser)
+            throws EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordNotFoundException {
         // Pass object to service layer
-        User result = userService.update(updatedUser);
-
-        // Assuming an exception is not thrown, remove unnecessary data and return it
-        // with a status of 200
-        UserMiniDTO bodyDTO = new UserMiniDTO(result);
-        return ResponseEntity.ok(bodyDTO);
+        try {
+            User result = userService.update(updatedUser);
+            
+            // Assuming an exception is not thrown, remove unnecessary data and return it
+            // with a status of 200
+            UserDTO bodyDTO = new UserDTO(result);
+            return ResponseEntity.ok(bodyDTO);
+        } catch (RecordNotFoundException e) {
+            throw new RecordNotFoundException("User " + updatedUser.getUsername() + " does not exist!");
+        } catch (UsernameAlreadyExistsException e) {
+            throw new UsernameAlreadyExistsException("Username " + updatedUser.getUsername() + " already exists!", e);
+        } catch (EmailAlreadyExistsException e) {
+            throw new EmailAlreadyExistsException("Email " + updatedUser.getEmail() + " already exists!", e);
+        }
     }
 
     /**
@@ -220,8 +250,7 @@ public class UserController {
             
             return ResponseEntity.ok(urlMap);
         } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw e;
+            throw new IOException(e);
         }
     }
 }

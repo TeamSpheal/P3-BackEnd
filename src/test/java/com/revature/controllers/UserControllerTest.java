@@ -3,11 +3,11 @@ package com.revature.controllers;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -35,7 +35,7 @@ import com.revature.services.UserService;
  * @author Colby Tang
  */
 @WebMvcTest(controllers = UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 	@MockBean
 	private UserService userService;
 
@@ -173,7 +173,8 @@ public class UserControllerTest {
 
 	@Test
 	void cannotAddFollower() throws Exception {
-		Mockito.when(userService.addFollower(1L, 1L)).thenReturn(false);
+		UserDTO dto = new UserDTO();
+		Mockito.when(userService.addFollower(1L, 1L)).thenReturn(dto);
 
 		mockMvc.perform(post("/user/1/follower/1")).andExpect(status().isPreconditionFailed());
 
@@ -181,18 +182,84 @@ public class UserControllerTest {
 
 	@Test
 	void addFollower() throws Exception {
-		Mockito.when(userService.addFollower(1L, 2L)).thenReturn(true);
+		UserDTO dto = new UserDTO();
+		Mockito.when(userService.addFollower(1L, 2L)).thenReturn(dto);
 
 		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isOk());
+	}
+	
+	@Test
+	void addFollowerBadRequest() throws Exception {
+		UserDTO dto = new UserDTO();
+		Mockito.when(userService.addFollower(1L, 2L)).thenReturn(null);
+
+		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isBadRequest());
+	}
+	
+	
+	@Test
+	void removeFollower() throws JsonProcessingException, Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+		Mockito.when(userService.removeFollower(Mockito.anyLong(), Mockito.anyLong())).thenReturn(dto);
+		
+		mockMvc.perform(delete("/user/1/unfollow/2")).andExpect(status().isOk())
+		.andExpect(content().json(objectMapper.writeValueAsString(dto)));
+
+	}
+	
+	@Test
+	void removeFollowerBadRequest() throws JsonProcessingException, Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+		Mockito.when(userService.removeFollower(Mockito.anyLong(), Mockito.anyLong())).thenReturn(null);
+		
+		mockMvc.perform(delete("/user/1/unfollow/2")).andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	void removeFollowerRecordNotFound() throws JsonProcessingException, Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+		Mockito.when(userService.removeFollower(Mockito.anyLong(), Mockito.anyLong())).thenThrow(new RecordNotFoundException());
+		
+		mockMvc.perform(delete("/user/1/unfollow/2")).andExpect(status().isNotFound());
 	}
 
 	@Test
 	void cannotFindFollower() throws Exception {
 		Mockito.when(userService.addFollower(1L, 2L)).thenThrow(new RecordNotFoundException());
 
-		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isConflict());
+		mockMvc.perform(post("/user/1/follower/2")).andExpect(status().isNotFound());
+	}
+	
+	@Test
+	void isFollowing() throws JsonProcessingException, Exception {
+		User mockUser = new User("","","","","","");
+		mockUser.setId(1L);
+		Optional<User> user = Optional.of(mockUser);
+		Set<User> set = new HashSet<>();
+		set.add(mockUser);
+		
+		Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(user);
+		Mockito.when(userService.getFollowing(Mockito.any())).thenReturn(set);
+		
+		
+		mockMvc.perform(get("/user/1/follower/2")).andExpect(status().isOk())
+		.andExpect(content().json(objectMapper.writeValueAsString(set)));
+	}
+	
+	@Test
+	void isFollowingPreConditionFail() throws JsonProcessingException, Exception {
+		mockMvc.perform(get("/user/1/follower/1")).andExpect(status().isPreconditionFailed());
 	}
 
+	@Test
+	void isFollowingNotFound() throws Exception {
+		Optional<User> user = Optional.empty();
+		
+		Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(user);
+		
+		mockMvc.perform(get("/user/1/follower/2")).andExpect(status().isNotFound());
+	}
+	
 	@Test
 	void updateUser() throws Exception {
 		UserDTO dto = new UserDTO(1L, "user");
@@ -206,7 +273,39 @@ public class UserControllerTest {
 		mockMvc.perform(post("/user/update/profile").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(dto))).andExpect(status().isOk())
 				.andExpect(content().json(objectMapper.writeValueAsString(bodyDTO)));
+	}
 
+	@Test
+	void updateUserNotFound() throws Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+
+		Mockito.when(userService.update(Mockito.any())).thenThrow(RecordNotFoundException.class);
+
+		mockMvc.perform(post("/user/update/profile").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	void updateUserUsernameAlreadyExists() throws Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+
+		Mockito.when(userService.update(Mockito.any())).thenThrow(UsernameAlreadyExistsException.class);
+
+		mockMvc.perform(post("/user/update/profile").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isConflict());
+	}
+
+	@Test
+	void updateUserEmailAlreadyExists() throws Exception {
+		UserDTO dto = new UserDTO(1L, "user");
+
+		Mockito.when(userService.update(Mockito.any())).thenThrow(EmailAlreadyExistsException.class);
+
+		mockMvc.perform(post("/user/update/profile").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isConflict());
 	}
 
 	@Test
@@ -223,33 +322,4 @@ public class UserControllerTest {
 				.andExpect(content().json(objectMapper.writeValueAsString(bodyDTO)));
 	}
 	
-	// All this needs is for me to figure out how to add a image through a MultiPartFile in the request body (.perform).
-	// -- Franklyn S.
-
-/*	@Test
-	void uploadImage() throws IOException {
-		
-		MockMultipartFile file = new MockMultipartFile("file", "your_pic.jpg", MediaType.IMAGE_JPEG_VALUE);
-		
-		Mockito.when(imageService.uploadMultipartFile(Mockito.any())).thenReturn(Mockito.anyString());
-
-		mockMvc.perform(post("/user/image-upload")
-				
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(passDto))).andExpect(status().isOk())
-				.andExpect(content().json(objectMapper.writeValueAsString(bodyDTO)));
-	}
-
-	@Test
-	void cannotUploadImage() {
-		
-		Mockito.when(imageService.uploadMultipartFile(Mockito.any())).thenThrow(new IOException());
-
-		mockMvc.perform(post("/user/image-upload")
-				
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(passDto))).andExpect(status().isOk())
-				.andExpect(content().json(objectMapper.writeValueAsString(bodyDTO)));
-	}
-*/
 }

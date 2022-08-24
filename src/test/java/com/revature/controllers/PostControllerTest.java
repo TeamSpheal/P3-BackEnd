@@ -8,11 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,9 +34,8 @@ import com.revature.repositories.UserRepository;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
 
-@TestInstance(Lifecycle.PER_CLASS)
 @WebMvcTest(controllers = PostController.class)
-public class PostControllerTest {
+class PostControllerTest {
 	@MockBean
 	private PostService postServ;
 
@@ -55,10 +52,6 @@ public class PostControllerTest {
 	
 	private Timestamp fixedTimedStamp;
 	
-	@BeforeAll
-	public void setUp() {
-		 //fixedTimedStamp = Timestamp.from(Instant.EPOCH);
-	}
 
 	@Test
 	void testGetAllPosts() throws JsonProcessingException, Exception {
@@ -112,7 +105,6 @@ public class PostControllerTest {
 		Set<User> likers = new HashSet<User>();
 		likers.add(mockUser);
 		mockPost.setUsers(likers);
-		PostDTO dto = new PostDTO(mockPost);
 
 		like.setPostId(mockPost.getId());
 		like.setUserId(mockUser.getId());
@@ -154,7 +146,6 @@ public class PostControllerTest {
 		Set<User> likers = new HashSet<User>();
 		likers.remove(mockUser);
 		mockPost.setUsers(likers);
-		PostDTO dto = new PostDTO(mockPost);
 
 		like.setPostId(mockPost.getId());
 		like.setUserId(mockUser.getId());
@@ -181,21 +172,6 @@ public class PostControllerTest {
 	}
 	
 	@Test
-	void getPost() throws JsonProcessingException, Exception {
-		Post mockPost = new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
-				Timestamp.from(Instant.now()));
-		
-		Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(mockPost);		
-		mockMvc.perform(get("/post/1")).andExpect(status().isOk());
-	}
-	
-	@Test
-	void cannotGetPost() throws Exception {		
-		Mockito.when(postServ.getPost(Mockito.anyLong())).thenReturn(null);
-		mockMvc.perform(get("/post/1")).andExpect(status().isBadRequest());
-	}
-	
-	@Test
 	void getFollowingPostFeed() throws Exception {
 		User mockUser = new User("", "", "", "", "", "");
 		mockUser.setId(1L);
@@ -208,6 +184,19 @@ public class PostControllerTest {
 		
 		mockMvc.perform(get("/post/following/1")).andExpect(status().isOk());
 
+	}
+	
+	@Test
+	void getUsersPost() throws JsonProcessingException, Exception {
+		List<Post> listPost = new ArrayList<>();
+    	List<PostDTO> listDTO = new ArrayList<>();
+    	listPost.add( new Post(1L, "", "", new HashSet<Post>(), new User(), new HashSet<User>(),
+				Timestamp.from(Instant.now())));
+    	listDTO.add(new PostDTO());
+    	
+    	Mockito.when(postServ.getUserPosts(Mockito.anyLong())).thenReturn(listPost);
+
+		mockMvc.perform(get("/post/get/1")).andExpect(status().isOk());
 	}
 	
 

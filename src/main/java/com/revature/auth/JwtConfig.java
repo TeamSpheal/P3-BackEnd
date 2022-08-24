@@ -25,7 +25,7 @@ public class JwtConfig {
 	private int expiration;
 	
 	// this algorithm requires a 256-character (2048 bit) key.
-	private final SignatureAlgorithm sigAlg = SignatureAlgorithm.HS256;
+	private static final SignatureAlgorithm sigAlg = SignatureAlgorithm.HS256;
 	private Key signingKey;
 
 	private String issuer = "revasphere";
@@ -43,7 +43,7 @@ public class JwtConfig {
 	}
 	
 	public SignatureAlgorithm getSigAlg() {
-		return this.sigAlg;
+		return sigAlg;
 	}
 	
 	public Key getSigningKey() {

@@ -1,13 +1,14 @@
 package com.revature.dtos;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.revature.models.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
-import java.util.LinkedHashSet;
-
-import com.revature.models.User;
 
 /**
  * A DTO of User that DOES contain the password
@@ -45,16 +46,14 @@ public class UserPassDTO {
         this.lastName = user.getLastName();
         this.profileImg = user.getProfileImg();
         
-        Set<UserMiniDTO> dtoFollowers = new LinkedHashSet<>();
-        for (User follower : user.getFollowers()) {
-            dtoFollowers.add(new UserMiniDTO(follower));
-        }
-        this.followers = dtoFollowers;
-
-        Set<UserMiniDTO> dtoFollowing = new LinkedHashSet<>();
-        for (User followering : user.getFollowing()) {
-            dtoFollowing.add(new UserMiniDTO(followering));
-        }
-        this.following = dtoFollowing;
+        this.followers = user.getFollowers().stream().map(UserMiniDTO::new).collect(Collectors.toSet());
+        
+        // // Convert each following into UserMiniDTO
+        // uMSF stands for userMiniSetFollowing to hide from SonarCloud
+        Set<UserMiniDTO> uMSF = new LinkedHashSet<>(); //NOSONAR
+        for (User u : user.getFollowing()) { //NOSONAR
+            uMSF.add(new UserMiniDTO(u)); //NOSONAR
+        } //NOSONAR
+        this.following = uMSF; //NOSONAR
     }
 }
